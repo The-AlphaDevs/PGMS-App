@@ -147,14 +147,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   validator: (value) {
                     if (value == "") {
-                      return 'Roll Number cannot be left Empty';
+                      return 'Phone Number cannot be left Empty';
                     }
                     final n = num.tryParse(value);
                     if (n == null) {
-                      return '"$value" is not a valid roll number';
+                      return '"$value" is not a valid phone number';
                     }
-                    if (value.length != 8)
-                      return 'Roll Number must contain 8 digits';
+                    if (value.length != 10)
+                      return 'Phone Number must contain 10 digits';
                     return null;
                   },
                   controller: _rollNoController,
@@ -166,7 +166,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         borderSide: BorderSide(color: Colors.black)),
-                    labelText: 'Roll Number',
+                    labelText: 'Phone Number',
                   ),
                 ),
                 SizedBox(
@@ -183,7 +183,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       hint: Container(
                         padding: EdgeInsets.symmetric(horizontal: 11),
                         child: Text(
-                          'Hostel',
+                          'Ward',
                           style: Theme.of(context)
                               .textTheme
                               .bodyText2
@@ -199,22 +199,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyText1,
                       items: <String>[
-                        'C.V. Raman',
-                        'Morvi',
-                        'Dhanrajgiri',
-                        'Rajputana',
-                        'Limbdi',
-                        'Vivekanand',
-                        'Vishwakarma',
-                        'Vishweshvaraiya',
-                        'Aryabhatt-I',
-                        'Aryabhatt-II',
-                        'S.N. Bose',
-                        'Ramanujan',
-                        'Gandhi Smriti Chhatravas (OLD)',
-                        'Gandhi Smriti Chhatravas (Extension)',
-                        'IIT (BHU) Girls’ Hostel',
-                        'S.C. Dey Girls',
+                        "Ward A",
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
