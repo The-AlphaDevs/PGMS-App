@@ -288,15 +288,8 @@ class _RegisterFormState extends State<RegisterForm> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                  height: 170,
-                  width: 170,
-                  child: Image.asset(
-                    "assets/app_logo.png",
-                  ),
-                ),
-                Text('© InstiComplaints',
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
+                // Text('PGMS',
+                //     style: TextStyle(fontSize: 16, color: Colors.black)),
                 SizedBox(
                   height: 20,
                 )
