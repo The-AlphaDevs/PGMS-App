@@ -199,7 +199,30 @@ class _RegisterFormState extends State<RegisterForm> {
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyText1,
                       items: <String>[
-                        "Ward A",
+                        'Ward A',
+                        'Ward B',
+                        'Ward C',
+                        'Ward D',
+                        'Ward E',
+                        'Ward F North',
+                        'Ward F South',
+                        'Ward G North',
+                        'Ward G South',
+                        'Ward H East',
+                        'Ward H West',
+                        'Ward K East',
+                        'Ward K West',
+                        'Ward L',
+                        'Ward M East',
+                        'Ward M West',
+                        'Ward N',
+                        'Ward P North',
+                        'Ward P South',
+                        'Ward R Central',
+                        'Ward R North',
+                        'Ward R South',
+                        'Ward S',
+                        'Ward T',
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -224,7 +247,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Room Number cannot be left Empty';
+                      return 'Ward cannot be left Empty';
                     }
                     return null;
                   },
@@ -233,7 +256,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     labelStyle: TextStyle(
                       color: Colors.black,
                     ),
-                    labelText: 'Room',
+                    labelText: 'Ward',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         borderSide: BorderSide(color: Colors.black)),
