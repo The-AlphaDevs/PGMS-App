@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:ly_project/utils/constants.dart';
+
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key key}) : super(key: key);
 
@@ -17,27 +19,53 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Scaffold(
             body: Container(
                 child: ListView(children: [
+          // Container(
+          //   decoration: BoxDecoration(
+          //       border: Border.all(
+          //         color: Color(0xFF181D3D),
+          //       ),
+          //       borderRadius: BorderRadius.all(Radius.circular(20))),
+          //   width: MediaQuery.of(context).size.width,
+          //   height: MediaQuery.of(context).size.height / 8,
+          //    Container(
+          //     constraints: BoxConstraints.expand(),
+          //     color: Color(0xFF181D3D),
+          //     child: Column(children: [
+          //       SizedBox(height: MediaQuery.of(context).size.height / 16),
+          //       Text(
+          //         'Sign Up',
+          //         style: Theme.of(context)
+          //             .textTheme
+          //             .headline5
+          //             .apply(color: Colors.white),
+          //       )
+          //     ]),
+          //   )),
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            child: ClipPath(
-                clipper: CurveClipper(),
-                child: Container(
-                  constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
                   color: Color(0xFF181D3D),
-                  child: Column(children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 16),
-                    Text(
-                      'Sign Up',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .apply(color: Colors.white),
-                    )
-                  ]),
-                )),
-          ),
-          RegisterForm()
+                  border: Border.all(
+                    color: Color(0xFF181D3D),
+                  ),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15))),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 8,
+              child: Center(
+                child: Text(
+                  "Sign Up",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .apply(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              )),
+          Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 20),
+              child: RegisterForm())
         ]))),
       ),
     );
@@ -50,10 +78,14 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  String hostelname;
+  String ward = "Ward A";
+  String occupation = "Business";
   final _nameController = TextEditingController();
-  final _rollNoController = TextEditingController();
-  final _roomNoController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _ageController = TextEditingController();
+  // final _occupationController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   // User user;
 
@@ -146,6 +178,62 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 TextFormField(
                   validator: (value) {
+                    if (value.trim().isEmpty) {
+                      return 'Age cannot be left Empty';
+                    }
+                    final n = num.tryParse(value);
+                    if (n == null) {
+                      return '"$value" is not a valid age';
+                    }
+                    if (int.parse(value) > 125 || int.parse(value) < 5) {
+                      return "Enter valid age! (5-125)";
+                    }
+                    return null;
+                  },
+                  controller: _ageController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    labelText: 'Age',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value.trim().isEmpty) {
+                      return 'Email cannot be left Empty';
+                    }
+                    String p =
+                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                    RegExp regExp = new RegExp(p);
+                    if (!regExp.hasMatch(value)) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  validator: (value) {
                     if (value == "") {
                       return 'Phone Number cannot be left Empty';
                     }
@@ -157,7 +245,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       return 'Phone Number must contain 10 digits';
                     return null;
                   },
-                  controller: _rollNoController,
+                  controller: _phoneController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
@@ -183,6 +271,54 @@ class _RegisterFormState extends State<RegisterForm> {
                       hint: Container(
                         padding: EdgeInsets.symmetric(horizontal: 11),
                         child: Text(
+                          'Occupation',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              .copyWith(fontSize: 16),
+                        ),
+                      ),
+                      value: occupation,
+                      onChanged: (String occ) {
+                        setState(() {
+                          occupation = occ;
+                        });
+                      },
+                      isExpanded: true,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      items: OCCUPATIONS
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 11),
+                            child: Text(
+                              value,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .copyWith(fontSize: 16),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    border: Border.all(color: Colors.black.withOpacity(0.3)),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      hint: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 11),
+                        child: Text(
                           'Ward',
                           style: Theme.of(context)
                               .textTheme
@@ -190,40 +326,16 @@ class _RegisterFormState extends State<RegisterForm> {
                               .copyWith(fontSize: 16),
                         ),
                       ),
-                      value: hostelname,
-                      onChanged: (String newValue) {
+                      value: ward,
+                      onChanged: (String selectedWard) {
                         setState(() {
-                          hostelname = newValue;
+                          ward = selectedWard;
                         });
                       },
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyText1,
-                      items: <String>[
-                        'Ward A',
-                        'Ward B',
-                        'Ward C',
-                        'Ward D',
-                        'Ward E',
-                        'Ward F North',
-                        'Ward F South',
-                        'Ward G North',
-                        'Ward G South',
-                        'Ward H East',
-                        'Ward H West',
-                        'Ward K East',
-                        'Ward K West',
-                        'Ward L',
-                        'Ward M East',
-                        'Ward M West',
-                        'Ward N',
-                        'Ward P North',
-                        'Ward P South',
-                        'Ward R Central',
-                        'Ward R North',
-                        'Ward R South',
-                        'Ward S',
-                        'Ward T',
-                      ].map<DropdownMenuItem<String>>((String value) {
+                      items:
+                          WARDS.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Container(
@@ -247,16 +359,16 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Ward cannot be left Empty';
+                      return 'Address cannot be left Empty';
                     }
                     return null;
                   },
-                  controller: _roomNoController,
+                  controller: _addressController,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
                     ),
-                    labelText: 'Ward',
+                    labelText: 'Address',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         borderSide: BorderSide(color: Colors.black)),
@@ -315,11 +427,11 @@ class CurveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path()
       // set the "current point"
-      ..addArc(Rect.fromLTWH(0, 0, size.width / 2, size.width / 3), pi, -1.57)
+      ..addArc(Rect.fromLTWH(-3, -1, size.width / 3, size.width / 3), pi, -1.37)
       ..lineTo(9 * size.width / 10, size.width / 3)
       ..addArc(
           Rect.fromLTWH(
-              size.width / 2, size.width / 3, size.width / 2, size.width / 3),
+              size.width / 2, size.width / 3, size.width / 2, size.width / 6),
           pi + 1.57,
           1.57)
       ..lineTo(size.width, 0)
