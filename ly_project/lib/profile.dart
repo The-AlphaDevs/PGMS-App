@@ -1,15 +1,17 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:daybook/Provider/email_sign_in.dart';
 // import 'package:daybook/Services/user_services.dart';
 // import 'package:daybook/Utils/constantStrings.dart';
 // import 'package:daybook/Utils/constants.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:ly_project/raise_complaint.dart';
+// import 'package:intl/intl.dart';
+// import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -232,15 +234,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Container(
                                 child: Row(children: [
-                                  // ClipRRect(
-                                  //   borderRadius: BorderRadius.circular(60),
-                                  //   child: CachedNetworkImage(
-                                  //     height: 70,
-                                  //     width: 70,
-                                  //     fit: BoxFit.cover,
-                                  //     imageUrl: "https://picsum.photos/200/300",
-                                  //   ),
-                                  // ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(60),
+                                    child: CachedNetworkImage(
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.cover,
+                                      imageUrl: "https://picsum.photos/200/300",
+                                    ),
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -320,10 +322,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     size: 15,
                                   ),
                                   onPressed: () => {
-                                    Navigator.pushNamed(
-                                      context, '/editProfile',
-                                      // arguments: [data, showSnackBar]
-                                    )
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RaiseComplaint()),
+                                    ),
                                   },
                                 ),
                               ),
@@ -468,7 +472,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: Center(
-                                        child: RaisedButton(
+                                        child: MaterialButton(
                                           child: Text("Change password",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
