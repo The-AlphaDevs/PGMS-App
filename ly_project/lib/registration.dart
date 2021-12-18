@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ly_project/profile.dart';
 import 'dart:math';
-
 import 'package:ly_project/utils/constants.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -379,18 +379,22 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(
                   height: 45,
-                  child: RaisedButton(
+                  child: MaterialButton(
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                            content:
-                                Text('Establishing Contact with the Server')));
-                        _showDialog(context);
-                        formProcessor();
-                        Navigator.pop(context, '/');
-                        Navigator.pop(context, '/RegisterPage');
-                        Navigator.pushReplacementNamed(context, '/navigation');
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProfileScreen()),
+                      );
+                      // if (_formKey.currentState.validate()) {
+                      //   Scaffold.of(context).showSnackBar(SnackBar(
+                      //       content:
+                      //           Text('Establishing Contact with the Server')));
+                      //   _showDialog(context);
+                      //   formProcessor();
+                      //   Navigator.pop(context, '/');
+                      //   Navigator.pop(context, '/RegisterPage');
+                      //   Navigator.pushReplacementNamed(context, '/navigation');
+                      // }
                     },
                     child: Text(
                       'Submit',
