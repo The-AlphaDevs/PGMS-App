@@ -1,6 +1,7 @@
 // import 'package:InstiComplaints/Compose.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ly_project/track_complaint.dart';
 // import 'st_profile.dart';
 import 'feedPage.dart';
 // import 'package:InstiComplaints/notifications.dart';
@@ -24,7 +25,7 @@ class _User1State extends State<User1> {
   Widget build(BuildContext context) {
             final List<Widget> children1 = [
               Feed(),
-              User1(),
+              TrackComplaints(),
               User1(),
               User1()
             ];

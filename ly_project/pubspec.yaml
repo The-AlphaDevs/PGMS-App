@@ -26,6 +26,7 @@ dependencies:
   curved_navigation_bar: ^0.3.3
   flutter_spinkit: ^4.1.2+1
   date_format: ^1.0.9
+  timelines: ^0.0.2+1
   # cloud_firestore: ^0.14.1+3
 
 
