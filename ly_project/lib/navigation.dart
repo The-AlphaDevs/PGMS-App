@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ly_project/track_complaint.dart';
 // import 'st_profile.dart';
+import 'detailed_complaint.dart';
 import 'feedPage.dart';
 // import 'package:InstiComplaints/notifications.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +27,8 @@ class _User1State extends State<User1> {
             final List<Widget> children1 = [
               Feed(),
               TrackComplaints(),
-              User1(),
+              // ComplaintDialog('ewefwe'),
+              DetailComplaint(),
               User1()
             ];
             final List<Widget> children2 = [
