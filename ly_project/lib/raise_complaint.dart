@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import "package:latlong/latlong.dart";
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:ly_project/utils/DashedRect.dart';
+import 'package:location/location.dart';
 
 class RaiseComplaint extends StatefulWidget {
   const RaiseComplaint({Key key}) : super(key: key);
@@ -10,14 +13,53 @@ class RaiseComplaint extends StatefulWidget {
 }
 
 class _RaiseComplaintState extends State<RaiseComplaint> {
+  double lat, long;
+  // bool gotLocation = false;
+  Future<LocationData> getLocation() async {
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return null;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return null;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    return _locationData;
+    // print(lat);
+    // print(long);
+  }
+
   final _localityController = TextEditingController();
   final _grievanceController = TextEditingController();
   // final _nController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // getLocation();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Raise a complaint"),
+        title: Text("Raise a Complaint"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -27,11 +69,47 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  color: Colors.red,
-                  child: CachedNetworkImage(
-                    imageUrl: "https://i.stack.imgur.com/RdkOb.jpg",
-                    width: MediaQuery.of(context).size.width / 1.2,
-                  )),
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: FutureBuilder<LocationData>(
+                      future: getLocation(),
+                      builder: (context, snapshot) {
+                        print(snapshot.data.latitude);
+                        if (snapshot.hasData) {
+                          return FlutterMap(
+                            options: MapOptions(
+                              center: LatLng(snapshot.data.latitude,
+                                  snapshot.data.longitude),
+                              zoom: 15.0,
+                            ),
+                            layers: [
+                              TileLayerOptions(
+                                urlTemplate:
+                                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                subdomains: ['a', 'b', 'c'],
+                                // attributionBuilder: (_) {
+                                //   return Text("© OpenStreetMap contributors");
+                                // },
+                              ),
+                              MarkerLayerOptions(
+                                markers: [
+                                  Marker(
+                                    width: 40.0,
+                                    height: 40.0,
+                                    point: LatLng(lat, long),
+                                    builder: (ctx) => Container(
+                                      child: FlutterLogo(size: 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      })),
               SizedBox(height: 40),
               TextFormField(
                 controller: _localityController,
