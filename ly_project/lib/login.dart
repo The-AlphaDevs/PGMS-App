@@ -253,12 +253,14 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
+                      
                     ),
                     labelText: 'Password',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         borderSide: BorderSide(color: Colors.black)),
                   ),
+                  obscureText: true,
                 ),
                 SizedBox(
                   height: 40,
