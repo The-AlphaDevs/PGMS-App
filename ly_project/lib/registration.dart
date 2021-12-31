@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ly_project/profile.dart';
+import 'package:ly_project/navigation.dart';
 import 'dart:math';
 import 'package:ly_project/utils/constants.dart';
 
@@ -383,7 +384,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfileScreen()),
+                        MaterialPageRoute(builder: (context) => User1()),
                       );
                       // if (_formKey.currentState.validate()) {
                       //   Scaffold.of(context).showSnackBar(SnackBar(
@@ -406,7 +407,20 @@ class _RegisterFormState extends State<RegisterForm> {
                     highlightElevation: 5,
                     color: Color(0xFF181D3D),
                   ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child:Text(
+                  'Have an account? Sign In',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(fontSize: 12),
+                ),
                 )
+                
               ],
             ),
             Column(

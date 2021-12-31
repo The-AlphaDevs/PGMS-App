@@ -20,7 +20,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoading = true;
+  bool isLoading = false;
 
   String noOfEntries = "";
   String noOfJourneys = "";
@@ -126,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget statCard(emoji, value, title) {
     return Card(
       elevation: 2,
-      color: Color(0xfffdefcc),
+      color: Color(0xFF181D3D),
       child: InkWell(
         splashColor: Colors.white30,
         onLongPress: () async {
@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 8),
             Text(
               emoji,
-              style: TextStyle(fontSize: 15, color: Colors.black87),
+              style: TextStyle(fontSize: 15, color: Colors.white),
             ),
             SizedBox(height: 3),
             isLoading
@@ -158,14 +158,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: GoogleFonts.getFont("Lora",
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87),
+                        color: Colors.white),
                   ),
             Expanded(
               child: Container(
                 child: Text(
                   title,
                   style: GoogleFonts.getFont("Merriweather",
-                      fontSize: 12, color: Colors.black87),
+                      fontSize: 12, color: Colors.white),
                   textAlign: TextAlign.center,
                   softWrap: true,
                   maxLines: 2,
@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 height: 200,
                 width: double.infinity,
-                color: Color(0xffd68598),
+                color: Color(0xFF181D3D),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -291,7 +291,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 .join(" "),
                                             style: GoogleFonts.getFont("Oxygen",
                                                 fontSize: 20,
-                                                fontWeight: FontWeight.w600),
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white),
                                             softWrap: true,
                                           ),
                                         ),
@@ -302,7 +303,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           "User since $dateJoined",
                                           style: GoogleFonts.getFont("Lato",
                                               fontSize: 14,
-                                              fontWeight: FontWeight.w400),
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white),
                                         ),
                                       ]),
                                 ]),
@@ -316,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       BorderRadius.all(Radius.circular(50.0)),
                                 ),
                                 child: FloatingActionButton(
-                                  backgroundColor: Color(0xffd68598),
+                                  backgroundColor: Color(0xFF181D3D),
                                   child: Icon(
                                     Icons.edit_outlined,
                                     size: 15,
@@ -377,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.red[500],
+                                      color: Color(0xFF181D3D),
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
@@ -405,7 +407,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.red[500],
+                                      color: Color(0xFF181D3D),
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
@@ -433,7 +435,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.red[500],
+                                      color: Color(0xFF181D3D),
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
@@ -461,7 +463,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.red[500],
+                                      color: Color(0xFF181D3D),
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
@@ -498,47 +500,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 13, vertical: 10),
-                          child: GridView.count(
-                            primary: false,
-                            childAspectRatio: (7 / 8),
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 1, vertical: 15),
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                            crossAxisCount: 4,
-                            children: <Widget>[
-                              statCard(
-                                '📒',
-                                noOfEntries,
-                                'Entries',
-                              ),
-                              statCard(
-                                '✈',
-                                noOfJourneys,
-                                'Journeys',
-                              ),
-                              statCard(
-                                '💯',
-                                noOfHabits,
-                                'Habits',
-                              ),
-                              statCard(
-                                '☑',
-                                noOfTasks,
-                                'Tasks',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    //   child: Card(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.symmetric(
+                    //           horizontal: 13, vertical: 10),
+                    //       child: GridView.count(
+                    //         primary: false,
+                    //         childAspectRatio: (7 / 8),
+                    //         shrinkWrap: true,
+                    //         padding: const EdgeInsets.symmetric(
+                    //             horizontal: 1, vertical: 15),
+                    //         crossAxisSpacing: 5,
+                    //         mainAxisSpacing: 5,
+                    //         crossAxisCount: 4,
+                    //         children: <Widget>[
+                    //           statCard(
+                    //             '📒',
+                    //             noOfEntries,
+                    //             'Complaints',
+                    //           ),
+                    //           statCard(
+                    //             '✈',
+                    //             noOfJourneys,
+                    //             'Journeys',
+                    //           ),
+                    //           statCard(
+                    //             '💯',
+                    //             noOfHabits,
+                    //             'Habits',
+                    //           ),
+                    //           statCard(
+                    //             '☑',
+                    //             noOfTasks,
+                    //             'Tasks',
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: 10),
                   ],
                 ),

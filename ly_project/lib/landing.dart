@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:ly_project/login.dart';
+import 'package:ly_project/registration.dart';
 import 'navigation.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -115,7 +116,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                    "assets/login_finalfinal.jpg"), //adding background image
+                    "assets/logo_final.jpg"), //adding background image
                 fit: BoxFit.fill,
               ),
             ),
@@ -171,9 +172,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                 bottomRight: Radius.circular(20.0))),
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
                     onPressed: () {
-                      Navigator.push( context, MaterialPageRoute(builder: (context) => LoginPage()));
-                    //   // loginStateChange();
-                    //   // _handleButtonClick();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      //   // loginStateChange();
+                      //   // _handleButtonClick();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -211,6 +213,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   onPressed: () {
                     //  registerStateChange();
                     // _handleButtonClick();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegistrationPage()));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),

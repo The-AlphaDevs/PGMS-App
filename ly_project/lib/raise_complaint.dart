@@ -73,8 +73,10 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                   child: FutureBuilder<LocationData>(
                       future: getLocation(),
                       builder: (context, snapshot) {
-                        print(snapshot.data.latitude);
-                        if (snapshot.hasData) {
+                        // snapshot.connectionState =
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        } else {
                           return FlutterMap(
                             options: MapOptions(
                               center: LatLng(snapshot.data.latitude,
@@ -105,11 +107,10 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                               ),
                             ],
                           );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
                         }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       })),
               SizedBox(height: 40),
               TextFormField(
