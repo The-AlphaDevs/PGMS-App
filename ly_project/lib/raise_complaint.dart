@@ -39,9 +39,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     }
 
     _locationData = await location.getLocation();
+    // print(_locationData.latitude);
+    // print(_locationData.longitude);
     return _locationData;
-    // print(lat);
-    // print(long);
   }
 
   final _localityController = TextEditingController();
@@ -79,7 +79,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                             options: MapOptions(
                               center: LatLng(snapshot.data.latitude,
                                   snapshot.data.longitude),
-                              zoom: 15.0,
+                              zoom: 13.0,
                             ),
                             layers: [
                               TileLayerOptions(
@@ -95,7 +95,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   Marker(
                                     width: 40.0,
                                     height: 40.0,
-                                    point: LatLng(lat, long),
+                                    point: LatLng(snapshot.data.latitude,
+                                        snapshot.data.longitude),
                                     builder: (ctx) => Container(
                                       child: FlutterLogo(size: 0),
                                     ),
