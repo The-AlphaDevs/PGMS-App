@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.1"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.4"
   characters:
     dependency: transitive
     description:
@@ -99,6 +106,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  curved_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: curved_navigation_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7"
+  date_format:
+    dependency: "direct main"
+    description:
+      name: date_format
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.9"
   fake_async:
     dependency: transitive
     description:
@@ -153,6 +174,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.0"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.2+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -525,6 +553,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  timelines:
+    dependency: "direct main"
+    description:
+      name: timelines
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2+1"
   typed_data:
     dependency: transitive
     description:
@@ -631,5 +666,5 @@ packages:
     source: hosted
     version: "4.5.1"
 sdks:
-  dart: ">=2.10.2 <2.11.0"
-  flutter: ">=1.22.2 <2.0.0"
+  dart: ">=2.10.0-110 <2.11.0"
+  flutter: ">=1.17.0 <2.0.0"
