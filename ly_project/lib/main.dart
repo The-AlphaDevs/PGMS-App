@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import "package:latlong/latlong.dart";
+// import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'registration.dart';
+// import 'registration.dart';
+
 import 'landing.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -10,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -29,7 +37,10 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyLoginPage(),
+
+      home: RegistrationPage(),
+      // home: MyHomePage(),
+
     );
   }
 }
@@ -55,6 +66,35 @@ class MyApp extends StatelessWidget {
 // class _MyHomePageState extends State<MyHomePage> {
 //   int _counter = 0;
 
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text("abc"),
+      ),
+      body: Container(child: Text("Hello")),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationPage()),
+          );
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
 //   void _incrementCounter() {
 //     setState(() {
 //       // This call to setState tells the Flutter framework that something has
