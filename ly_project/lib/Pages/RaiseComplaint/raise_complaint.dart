@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import "package:latlong/latlong.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -14,7 +14,7 @@ class RaiseComplaint extends StatefulWidget {
 
 class _RaiseComplaintState extends State<RaiseComplaint> {
   double lat, long;
-  // bool gotLocation = false;
+  bool gotLocation = false;
   Future<LocationData> getLocation() async {
     Location location = new Location();
 
@@ -76,7 +76,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                         // snapshot.connectionState =
                         if (!snapshot.hasData) {
                           return CircularProgressIndicator();
-                        } else {
+                        } else if(!snapshot.hasError) {
                           return FlutterMap(
                             options: MapOptions(
                               center: LatLng(snapshot.data.latitude,

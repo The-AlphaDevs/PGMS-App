@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-
-import 'package:ly_project/feedPage.dart';
 import 'package:ly_project/navigation.dart';
+import 'package:ly_project/Widgets/CurveClipper.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -97,8 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
             valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
           ),
           Container(
-              margin: EdgeInsets.only(left: 7),
-              child: Text("  Signing In...")),
+              margin: EdgeInsets.only(left: 7), child: Text("  Signing In...")),
         ],
       ),
     );
@@ -253,7 +252,6 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
-                      
                     ),
                     labelText: 'Password',
                     border: OutlineInputBorder(
@@ -276,7 +274,8 @@ class _RegisterFormState extends State<RegisterForm> {
                         _showDialog(context);
                         formProcessor();
                         Navigator.pop(context, '/');
-                        Navigator.push( context, MaterialPageRoute(builder: (context) => User1()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => User1()));
                         // Navigator.pop(context, '/RegisterPage');
                         // Navigator.pushReplacementNamed(context, '/navigation');
                       }
@@ -311,24 +310,3 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 }
 
-class CurveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path()
-      // set the "current point"
-      ..addArc(Rect.fromLTWH(0, 0, size.width / 2, size.width / 3), pi, -1.57)
-      ..lineTo(9 * size.width / 10, size.width / 3)
-      ..addArc(
-          Rect.fromLTWH(
-              size.width / 2, size.width / 3, size.width / 2, size.width / 3),
-          pi + 1.57,
-          1.57)
-      ..lineTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..lineTo(0, size.width / 6);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(oldCliper) => false;
-}

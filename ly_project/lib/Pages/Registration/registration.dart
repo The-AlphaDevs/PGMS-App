@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ly_project/profile.dart';
+import 'package:ly_project/auth.dart';
+// import 'package:ly_project/profile.dart';
 import 'package:ly_project/navigation.dart';
-import 'dart:math';
 import 'package:ly_project/utils/constants.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key key}) : super(key: key);
+  final BaseAuth auth;
+  // final VoidCallback onsignedIn;
+  RegistrationPage({this.auth});
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -382,20 +384,20 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 45,
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => User1()),
-                      );
-                      // if (_formKey.currentState.validate()) {
-                      //   Scaffold.of(context).showSnackBar(SnackBar(
-                      //       content:
-                      //           Text('Establishing Contact with the Server')));
-                      //   _showDialog(context);
-                      //   formProcessor();
-                      //   Navigator.pop(context, '/');
-                      //   Navigator.pop(context, '/RegisterPage');
-                      //   Navigator.pushReplacementNamed(context, '/navigation');
-                      // }
+                      if (_formKey.currentState.validate()) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text('Establishing Contact with the Server')));
+                        _showDialog(context);
+                        formProcessor();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => User1()),
+                        );
+                        // Navigator.pop(context, '/');
+                        // Navigator.pop(context, '/RegisterPage');
+                        // Navigator.pushReplacementNamed(context, '/navigation');
+                      }
                     },
                     child: Text(
                       'Submit',
@@ -412,15 +414,14 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 10,
                 ),
                 Center(
-                  child:Text(
-                  'Have an account? Sign In',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      .copyWith(fontSize: 12),
-                ),
+                  child: Text(
+                    'Have an account? Sign In',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(fontSize: 12),
+                  ),
                 )
-                
               ],
             ),
             Column(
@@ -438,26 +439,4 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
     );
   }
-}
-
-class CurveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path()
-      // set the "current point"
-      ..addArc(Rect.fromLTWH(-3, -1, size.width / 3, size.width / 3), pi, -1.37)
-      ..lineTo(9 * size.width / 10, size.width / 3)
-      ..addArc(
-          Rect.fromLTWH(
-              size.width / 2, size.width / 3, size.width / 2, size.width / 6),
-          pi + 1.57,
-          1.57)
-      ..lineTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..lineTo(0, size.width / 6);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(oldCliper) => false;
 }

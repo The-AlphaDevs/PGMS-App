@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ly_project/raise_complaint.dart';
+import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
 // import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 
@@ -590,7 +590,7 @@ class AvatarImage extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: AssetImage('assets/images/All-Done.png'),
+              image: CachedNetworkImageProvider('assets/images/All-Done.png'),
             ),
           ),
         ),

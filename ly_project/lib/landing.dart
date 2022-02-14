@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:ly_project/login.dart';
+import 'package:ly_project/auth.dart';
+import 'package:ly_project/Pages/Login/login.dart';
 import 'package:ly_project/registration.dart';
-import 'navigation.dart';
+// import 'navigation.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:connectivity/connectivity.dart';
 
 class MyLoginPage extends StatefulWidget {
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+  MyLoginPage({this.auth, this.onSignedIn});
+
   @override
   _MyLoginPageState createState() => _MyLoginPageState();
 }

@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'feedCard.dart';
-import 'loading.dart';
+// import 'loading.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'ComplaintDialog.dart';
@@ -20,7 +20,6 @@ bool isSwitched1 = true;
 bool isSwitched2 = true;
 bool isSwitched3 = true;
 bool isSwitched4 = true;
-
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
@@ -70,36 +69,36 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                         right: 20, left: 20, top: 140, bottom: 50),
                     child: Container(
                         child: ListView.builder(
-                          itemCount: 6,
-                          itemBuilder: (context, index){
-                            return Column(
-                              children: [
-                                // Flexible(
-                                //   child: ComplaintOverviewCard(
-                                            
-                                //   ),
-                                // ),
-                                // Flexible(
-                                // child: ComplaintOverviewCard(
-                                          
-                                // ),),
-                                ComplaintOverviewCard()
-                                // Flexible(
-                                // child: ComplaintOverviewCard(
-                                          
-                                // ),),
-                                // Flexible(
-                                // child: ComplaintOverviewCard(
-                                          
-                                // ),),
-                                // Flexible(
-                                // child: ComplaintOverviewCard(
-                                          
-                                // ),),
-                                // Flexible(
-                                // child: ComplaintOverviewCard(
-                                          
-                                // ),),
+                            itemCount: 6,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  // Flexible(
+                                  //   child: ComplaintOverviewCard(
+
+                                  //   ),
+                                  // ),
+                                  // Flexible(
+                                  // child: ComplaintOverviewCard(
+
+                                  // ),),
+                                  ComplaintOverviewCard()
+                                  // Flexible(
+                                  // child: ComplaintOverviewCard(
+
+                                  // ),),
+                                  // Flexible(
+                                  // child: ComplaintOverviewCard(
+
+                                  // ),),
+                                  // Flexible(
+                                  // child: ComplaintOverviewCard(
+
+                                  // ),),
+                                  // Flexible(
+                                  // child: ComplaintOverviewCard(
+
+                                  // ),),
                                   // child: StreamBuilder<QuerySnapshot>(
                                   //   stream: FirebaseFirestore.instance
                                   //       .collection('complasdsdcints')
@@ -152,28 +151,25 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                   //         )));
                                   //     return new ListView(children: feedcomplaints);
                                   //   },
+                                ],
+                              );
+                            })
+                        //   ValueListenableBuilder(
+                        // valueListenable: _filter,
+                        // builder: (BuildContext context, Map<String, bool> value,
+                        //     Widget child) {
+                        //   return
 
-                                  
-                              
-                            ],
-                          );
-                        })
-                      //   ValueListenableBuilder(
-                      // valueListenable: _filter,
-                      // builder: (BuildContext context, Map<String, bool> value,
-                      //     Widget child) {
-                      //   return 
-                        
-                      // },
-                    // )
-                  )),
+                        // },
+                        // )
+                        )),
                 Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
-                    // add contents of the bookmark page
-                    // child: Bookmarks(),
-                  ),
+                      // add contents of the bookmark page
+                      // child: Bookmarks(),
+                      ),
                 ),
               ],
             ),
@@ -362,184 +358,182 @@ class _NavDrawerState extends State<NavDrawer> {
     //   // stream: UpdateNotification().userssnap,
     //   builder: (context, snapshot) {
     //     if (snapshot.hasData) {
-          return Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: Drawer(
-              child: Expanded(
-                child: Column(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.5,
+      child: Drawer(
+        child: Expanded(
+          child: Column(
+            children: [
+              DrawerHeader(
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigator.pushNamed(context, '/third');
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 8.0,
+                          color: Colors.black54,
+                          spreadRadius: 0.9,
+                        )
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 60.0,
+                      backgroundImage:
+                          // snapshot.data.data()['profilePic'] == ""?
+                          AssetImage('assets/blankProfile.png'),
+                      // : NetworkImage(
+                      //     snapshot.data.data()['profilePic']),
+                      backgroundColor: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  color: Color(0xFF181D3D),
+                  child: ListTile(
+                    title: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          // "Hi, ${snapshot.data.data()['name']}",
+                          "Hi, Sharmaji",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: 'JosefinSans',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.all(2.0),
                   children: [
-                    DrawerHeader(
-                      child: GestureDetector(
-                        onTap: () {
-                          // Navigator.pushNamed(context, '/third');
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 8.0,
-                                color: Colors.black54,
-                                spreadRadius: 0.9,
-                              )
-                            ],
-                          ),
-                          child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundImage:
-                                // snapshot.data.data()['profilePic'] == ""? 
-                                AssetImage('assets/blankProfile.png'),
-                                    // : NetworkImage(
-                                    //     snapshot.data.data()['profilePic']),
-                            backgroundColor: Colors.black,
-                          ),
+                    ExpansionTile(
+                      leading: Icon(
+                        Icons.filter_list,
+                        color: Color(0xFF181D3D),
+                      ),
+                      title: Text(
+                        'Category',
+                        style: TextStyle(
+                          fontSize: 13.0,
                         ),
                       ),
-                    ),
-                    Center(
-                      child: Container(
-                        color: Color(0xFF181D3D),
-                        child: ListTile(
-                          title: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Text(
-                                // "Hi, ${snapshot.data.data()['name']}",
-                                "Hi, Sharmaji",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: 'JosefinSans',
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                      children: [
+                        ListTile(
+                          leading: Switch(
+                            value: isSwitched1,
+                            onChanged: (bool value) {
+                              setState(() {
+                                isSwitched1 = value;
+                                categoryComaplints["Potholes"] = isSwitched1;
+                                _filter.notifyListeners();
+                              });
+                            },
+                            activeTrackColor: Colors.grey[800],
+                            activeColor: Colors.white,
                           ),
+                          title: Text('Potholes'),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView(
-                        padding: EdgeInsets.all(2.0),
-                        children: [
-                          ExpansionTile(
-                            leading: Icon(
-                              Icons.filter_list,
-                              color: Color(0xFF181D3D),
-                            ),
-                            title: Text(
-                              'Category',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                              ),
-                            ),
-                            children: [
-                              ListTile(
-                                leading: Switch(
-                                  value: isSwitched1,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      isSwitched1 = value;
-                                      categoryComaplints["Potholes"] =
-                                          isSwitched1;
-                                      _filter.notifyListeners();
-                                    });
-                                  },
-                                  activeTrackColor: Colors.grey[800],
-                                  activeColor: Colors.white,
-                                ),
-                                title: Text('Potholes'),
-                              ),
-                              ListTile(
-                                leading: Switch(
-                                  value: isSwitched2,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSwitched2 = value;
-                                      categoryComaplints["Sewage"] =
-                                          isSwitched2;
-                                      _filter.notifyListeners();
-                                    });
-                                  },
-                                  activeTrackColor: Colors.grey[800],
-                                  activeColor: Colors.white,
-                                ),
-                                title: Text('Sewage'),
-                              ),
-                              ListTile(
-                                leading: Switch(
-                                  value: isSwitched3,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSwitched3 = value;
-                                      categoryComaplints["Electricity"] = isSwitched3;
-                                      _filter.notifyListeners();
-                                    });
-                                  },
-                                  activeTrackColor: Colors.grey[800],
-                                  activeColor: Colors.white,
-                                ),
-                                title: Text('Electricity'),
-                              ),
-                              ListTile(
-                                leading: Switch(
-                                  value: isSwitched4,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSwitched4 = value;
-                                      categoryComaplints["Garbage"] = isSwitched4;
-                                      _filter.notifyListeners();
-                                    });
-                                  },
-                                  activeTrackColor: Colors.grey[800],
-                                  activeColor: Colors.white,
-                                ),
-                                title: Text('Garbage'),
-                              ),
-                            ],
+                        ListTile(
+                          leading: Switch(
+                            value: isSwitched2,
+                            onChanged: (value) {
+                              setState(() {
+                                isSwitched2 = value;
+                                categoryComaplints["Sewage"] = isSwitched2;
+                                _filter.notifyListeners();
+                              });
+                            },
+                            activeTrackColor: Colors.grey[800],
+                            activeColor: Colors.white,
                           ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      height: 0.5,
-                      color: Color(0xFF181D3D),
-                      thickness: 0.5,
-                      indent: 15.0,
-                      endIndent: 15.0,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.person,
-                        color: Color(0xFF181D3D),
-                      ),
-                      title: Text('About'),
-                      onTap: () => {},
-                        // Navigator.pushNamed(context, '/about')
-                    ),
-                    Divider(
-                      height: 0.5,
-                      color: Color(0xFF181D3D),
-                      thickness: 0.5,
-                      indent: 15.0,
-                      endIndent: 15.0,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.reply,
-                        color: Color(0xFF181D3D),
-                      ),
-                      title: Text('Log Out'),
-                      onTap: () async {
-                        // await FirebaseAuth.instance.signOut();
-                        // await GoogleSignIn().signOut();
-                        // Navigator.pushReplacementNamed(context, '/');
-                      },
+                          title: Text('Sewage'),
+                        ),
+                        ListTile(
+                          leading: Switch(
+                            value: isSwitched3,
+                            onChanged: (value) {
+                              setState(() {
+                                isSwitched3 = value;
+                                categoryComaplints["Electricity"] = isSwitched3;
+                                _filter.notifyListeners();
+                              });
+                            },
+                            activeTrackColor: Colors.grey[800],
+                            activeColor: Colors.white,
+                          ),
+                          title: Text('Electricity'),
+                        ),
+                        ListTile(
+                          leading: Switch(
+                            value: isSwitched4,
+                            onChanged: (value) {
+                              setState(() {
+                                isSwitched4 = value;
+                                categoryComaplints["Garbage"] = isSwitched4;
+                                _filter.notifyListeners();
+                              });
+                            },
+                            activeTrackColor: Colors.grey[800],
+                            activeColor: Colors.white,
+                          ),
+                          title: Text('Garbage'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-          );
+              Divider(
+                height: 0.5,
+                color: Color(0xFF181D3D),
+                thickness: 0.5,
+                indent: 15.0,
+                endIndent: 15.0,
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.person,
+                  color: Color(0xFF181D3D),
+                ),
+                title: Text('About'),
+                onTap: () => {},
+                // Navigator.pushNamed(context, '/about')
+              ),
+              Divider(
+                height: 0.5,
+                color: Color(0xFF181D3D),
+                thickness: 0.5,
+                indent: 15.0,
+                endIndent: 15.0,
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.reply,
+                  color: Color(0xFF181D3D),
+                ),
+                title: Text('Log Out'),
+                onTap: () async {
+                  // await FirebaseAuth.instance.signOut();
+                  // await GoogleSignIn().signOut();
+                  // Navigator.pushReplacementNamed(context, '/');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 //         } else {

@@ -2,9 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:ly_project/track_complaint.dart';
-
-
+import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 
 class DetailComplaint extends StatefulWidget {
   // DetailComplaint({Key? key}) : super(key: key);
@@ -18,202 +16,185 @@ class _DetailComplaintState extends State<DetailComplaint> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.,
-        children: [
-          SizedBox(height: size.height*0.06),
-          Row(
-            children:[
-              Padding(
+        child: Column(mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisSize: MainAxisSize.,
+            children: [
+          SizedBox(height: size.height * 0.06),
+          Row(children: [
+            Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                 child: Text(
-                'Complaint#2587',
-                style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        ),
-              )
-              ),
-              SizedBox(width:220),
-              Icon(
-                    Icons.more_vert,
-                    size: 24,
-                    color: Color(0xFF36497E),
-                  )
-            ]
-          ),
-          SizedBox(height:20),
-          SizedBox(
-                  // width: widget.size,
-                  child: Flexible(
-                    child: Column(
-                      children: [
-                        CarouselSlider(
-                          items:[
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/47.jpg'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/loc.jpg'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ],
-                          options: CarouselOptions(
-                          height: 320.0,
-                          enlargeCenterPage: true,
-                          autoPlay: false,
-                          aspectRatio: 16 / 9,
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enableInfiniteScroll: false,
-                          autoPlayAnimationDuration: Duration(milliseconds: 800),
-                          viewportFraction: 0.8,
-                        ),
-                        ),
-                      ],
-                    )
+                  'Complaint#2587',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
+                )),
+            SizedBox(width: 220),
+            Icon(
+              Icons.more_vert,
+              size: 24,
+              color: Color(0xFF36497E),
+            )
+          ]),
+          SizedBox(height: 20),
+          SizedBox(
+            // width: widget.size,
+            child: Flexible(
+                child: Column(
+              children: [
+                CarouselSlider(
+                  items: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/47.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/loc.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                  options: CarouselOptions(
+                    height: 320.0,
+                    enlargeCenterPage: true,
+                    autoPlay: false,
+                    aspectRatio: 16 / 9,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enableInfiniteScroll: false,
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    viewportFraction: 0.8,
+                  ),
+                ),
+              ],
+            )),
           ),
-          SizedBox(height:10),
+          SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
             child: Row(
-              children:[
+              children: [
                 Icon(
                   Icons.insert_comment_outlined,
                   size: 30,
                   color: Colors.black,
                 ),
                 SizedBox(
-                  width:20,
+                  width: 20,
                 ),
                 Text(
-                '50 Comments',
-                style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        ),
-              
-              
-              ),
-              // ),
-              SizedBox(
-                width: size.width*0.4,
-              ),
-              Icon(
-                Icons.bookmark_border_rounded,
-                size: 30,
-                color: Colors.black,
-              ),
-            ],
-          ),
-          ),
-
-          SizedBox(
-            height:20,
-          ),
-
-          Row(
-            children: [
-          // Text(
-          //   'Location: ',
-          //   style: TextStyle(
-          //           fontSize: 15,
-          //           color: Colors.black,
-          //           fontWeight: FontWeight.bold,
-          //           ),
-          // ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                'Narasimha Chintaman Kelkar Road, Dadar West, Mumbai - 400030',
-                style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey,
-                        ),
-              ),
+                  '50 Comments',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+                // ),
+                SizedBox(
+                  width: size.width * 0.4,
+                ),
+                Icon(
+                  Icons.bookmark_border_rounded,
+                  size: 30,
+                  color: Colors.black,
+                ),
+              ],
             ),
           ),
-            ],
-          ),
-
           SizedBox(
-            height:10,
+            height: 20,
           ),
-          
           Row(
             children: [
-                // Text(
-                //   'Username: ',
-                //   style: TextStyle(
-                //           fontSize: 18,
-                //           color: Colors.black,
-                //           fontWeight: FontWeight.bold,
-                //           ),
-                // ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Text(
-                      'There were lot of potholes on road',
-                      style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              ),
+              // Text(
+              //   'Location: ',
+              //   style: TextStyle(
+              //           fontSize: 15,
+              //           color: Colors.black,
+              //           fontWeight: FontWeight.bold,
+              //           ),
+              // ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Text(
+                    'Narasimha Chintaman Kelkar Road, Dadar West, Mumbai - 400030',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
                     ),
                   ),
                 ),
+              ),
             ],
           ),
-
           SizedBox(
-            height:10,
+            height: 10,
           ),
-
           Row(
             children: [
-          // Text(
-          //   'Status: ',
-          //   style: TextStyle(
-          //           fontSize: 15,
-          //           color: Colors.black,
-          //           fontWeight: FontWeight.bold,
-          //           ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-            child: Text(
-              'In Progress',
-              style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.blue,
+              // Text(
+              //   'Username: ',
+              //   style: TextStyle(
+              //           fontSize: 18,
+              //           color: Colors.black,
+              //           fontWeight: FontWeight.bold,
+              //           ),
+              // ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Text(
+                    'There were lot of potholes on road',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-
           SizedBox(
-            height:10,
+            height: 10,
           ),
-          
-  
-
+          Row(
+            children: [
+              // Text(
+              //   'Status: ',
+              //   style: TextStyle(
+              //           fontSize: 15,
+              //           color: Colors.black,
+              //           fontWeight: FontWeight.bold,
+              //           ),
+              // ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: Text(
+                  'In Progress',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             children: [
               SizedBox(
@@ -222,73 +203,71 @@ class _DetailComplaintState extends State<DetailComplaint> {
               Text(
                 'Supervisor: ',
                 style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        ),
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Text(
                 'Supervisor Details',
                 style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        ),
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
-          
           SizedBox(
-            height:10,
+            height: 10,
           ),
           Row(
             children: [
-          // Text(
-          //   'Date: ',
-          //   style: TextStyle(
-          //           fontSize: 15,
-          //           color: Colors.black,
-          //           fontWeight: FontWeight.bold,
-          //           ),
-          // ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                '20 Dec 2021',
-                style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                        ),
+              // Text(
+              //   'Date: ',
+              //   style: TextStyle(
+              //           fontSize: 15,
+              //           color: Colors.black,
+              //           fontWeight: FontWeight.bold,
+              //           ),
+              // ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: Text(
+                  '20 Dec 2021',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
               ),
-            ),
             ],
           ),
-
-
           SizedBox(
-            height:size.height*0.05,
+            height: size.height * 0.05,
           ),
-
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(150)
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(150)),
             margin: EdgeInsets.fromLTRB(100, 0, 70, 40),
             child: Center(
               child: FlatButton(
                 minWidth: 5,
                 onPressed: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TrackComplaints()))
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TrackComplaints()))
                 },
                 color: Colors.blueAccent,
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(10, 10, 20, 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center, // Replace with a Row for horizontal icon + text
+                  crossAxisAlignment: CrossAxisAlignment
+                      .center, // Replace with a Row for horizontal icon + text
                   children: <Widget>[
                     Icon(Icons.track_changes_rounded),
                     SizedBox(
-                      width:20,
+                      width: 20,
                     ),
                     Text("Track Complaint")
                   ],
@@ -296,25 +275,13 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
           ),
-
-        ]
-      )
-    );
+        ]));
   }
 }
 
-
-
-
-
-
-
-
-
-
 // // import 'package:InstiComplain
-// 
-// 
+//
+//
 // ts/UpdateNotification.dart';
 // // import 'package:InstiComplaints/loading.dart';
 // import 'package:flutter/material.dart';
@@ -732,8 +699,4 @@ class _DetailComplaintState extends State<DetailComplaint> {
 //   }
 // }
 
-
-
 // ********
-
-

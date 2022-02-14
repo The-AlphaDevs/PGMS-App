@@ -13,7 +13,6 @@ class ComplaintOverviewCard extends StatefulWidget {
   // final filingTime;
   // final upvotes;
   // final id;
-  
 
   // const ComplaintOverviewCard(
   //     {Key key,
@@ -46,7 +45,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
           borderRadius: BorderRadius.circular(25.0),
           child: Card(
               elevation: 6,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(11)),
               // showDialog(
               //     context: context,
               //     builder: (BuildContext context) => widget.onTap);
@@ -54,8 +54,6 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 padding: EdgeInsets.fromLTRB(6, 6, 6, 6),
                 child: Row(
                   children: [
-                    
-                    
                     // Row(
                     //   children: <Widget>[
                     //     Text(
@@ -89,7 +87,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             "Potholes on Road",
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),                           
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
@@ -102,10 +101,10 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                               //   width: 5,
                               // ),
                               Text(
-                               "10/12/2021",
+                                "10/12/2021",
                                 overflow: TextOverflow.ellipsis,
-                                style:
-                                    TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -122,7 +121,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           //     )
                           //   ],
                           // ),
-                          
+
                           // Text(
                           //   ' in ',
                           //   style: TextStyle(fontSize: 13),
@@ -134,38 +133,38 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           //   style:
                           //       TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                           // ),
-                          SizedBox(height:5),
+                          SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
-                            Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(statuss,
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(statuss,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: statuss == 'Rejected'
+                                              ? Colors.red
+                                              : statuss == 'Solved'
+                                                  ? Colors.green
+                                                  : statuss == 'In Progress'
+                                                      ? Colors.blue
+                                                      : statuss == 'Passed'
+                                                          ? Colors.cyan
+                                                          : Colors.deepOrange,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    // SizedBox(
+                                    //   height: 8,
+                                    // ),
+                                    Text(
+                                      'Status',
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 16,
-                                        color: statuss == 'Rejected'
-                                            ? Colors.red
-                                            : statuss == 'Solved'
-                                                ? Colors.green
-                                                : statuss == 'In Progress'
-                                                    ? Colors.blue
-                                                    : statuss == 'Passed'
-                                                        ? Colors.cyan
-                                                        : Colors.deepOrange,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  // SizedBox(
-                                  //   height: 8,
-                                  // ),
-                                  Text(
-                                    'Status',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 13,
+                                        fontSize: 13,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -207,13 +206,13 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                               //         // }
                               //       },
                               //     ),
-                                
+
                               //     ],
                               //   )
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        // SizedBox(width: 30),
+                          // SizedBox(width: 30),
 
                           // Center(
                           //   child: Text(
@@ -230,22 +229,21 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             child: Container(
                               margin: EdgeInsets.symmetric(vertical: 1),
                               width: size.width * 0.2,
-                               child: ClipRRect(
+                              child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: FlatButton(
-                                  padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 7, horizontal: 5),
                                   color: Colors.amber,
-                                  onPressed: (){
+                                  onPressed: () {
                                     // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
                                   },
-                                  child: Text(
-                                    'Comment',
-                                    style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    )
-                                  ),
+                                  child: Text('Comment',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      )),
                                 ),
                               ),
                             ),
@@ -254,14 +252,12 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                       ),
                     ),
 
-
                     // SizedBox(width: 30),
-                    
+
                     // SizedBox(height: 7),
-                    
 
                     SizedBox(
-                      width: size.width*0.4,
+                      width: size.width * 0.4,
                       child: Flexible(
                         child: Column(
                           children: [

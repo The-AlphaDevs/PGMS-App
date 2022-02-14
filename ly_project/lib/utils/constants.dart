@@ -1,4 +1,4 @@
-final WARDS = [
+const WARDS = [
     'Ward A',
     'Ward B',
     'Ward C',
@@ -25,10 +25,10 @@ final WARDS = [
     'Ward T',
     ];
 
-final OCCUPATIONS = [
+const OCCUPATIONS = [
     "Service",
     "Student",
     "Business",
     "Other",
     "Housewife"
-];                                                                                       
+];                                                                                     

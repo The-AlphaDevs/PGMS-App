@@ -1,12 +1,13 @@
 // import 'package:InstiComplaints/Compose.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:ly_project/raise_complaint.dart';
-import 'package:ly_project/track_complaint.dart';
-import 'package:ly_project/profile.dart';
+import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
+// import 'package:ly_project/track_complaint.dart';
+import 'package:ly_project/Pages/Profile/profile.dart';
 // import 'st_profile.dart';
-import 'detailed_complaint.dart';
-import 'feedPage.dart';
+import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
+import 'package:ly_project/Pages/Feed/feedPage.dart';
+import 'auth.dart';
 // import 'package:InstiComplaints/notifications.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,9 @@ import 'feedPage.dart';
 // var user = FirebaseAuth.instance.currentUser;
 
 class User1 extends StatefulWidget {
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  User1({this.auth, this.onSignedOut});
   @override
   _User1State createState() => _User1State();
 }
