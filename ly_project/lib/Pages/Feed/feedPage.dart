@@ -5,8 +5,10 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-import 'feedCard.dart';
+import 'package:ly_project/Pages/Feed/BookmarksTab.dart';
+
+import 'package:ly_project/Pages/Feed/FeedTab.dart';
+import 'package:ly_project/Widgets/CurveClipper.dart';
 // import 'loading.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
@@ -55,128 +57,27 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldState,
       drawer: NavDrawer(),
       body: Stack(
         children: [
+          //TabBarViews
           Container(
             child: TabBarView(
               controller: _tabController,
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.only(
-                        right: 20, left: 20, top: 140, bottom: 50),
-                    child: Container(
-                        child: ListView.builder(
-                            itemCount: 6,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  // Flexible(
-                                  //   child: ComplaintOverviewCard(
-
-                                  //   ),
-                                  // ),
-                                  // Flexible(
-                                  // child: ComplaintOverviewCard(
-
-                                  // ),),
-                                  ComplaintOverviewCard()
-                                  // Flexible(
-                                  // child: ComplaintOverviewCard(
-
-                                  // ),),
-                                  // Flexible(
-                                  // child: ComplaintOverviewCard(
-
-                                  // ),),
-                                  // Flexible(
-                                  // child: ComplaintOverviewCard(
-
-                                  // ),),
-                                  // Flexible(
-                                  // child: ComplaintOverviewCard(
-
-                                  // ),),
-                                  // child: StreamBuilder<QuerySnapshot>(
-                                  //   stream: FirebaseFirestore.instance
-                                  //       .collection('complasdsdcints')
-                                  //       .orderBy('filing time', descending: true)
-                                  //       .snapshots(),
-                                  //   builder: (BuildContext context,
-                                  //       AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  //     if (snapshot.hasError) {
-                                  //       return Text('Something went wrong');
-                                  //     }
-                                  //     if (snapshot.connectionState ==
-                                  //         ConnectionState.waiting) {
-                                  //       return CircularProgressIndicator();
-                                  //     }
-                                  //     List feedcomplaints = snapshot.data.docs
-                                  //         .map((DocumentSnapshot document) {
-                                  //       if (value[document['category']] == true) {
-                                  //         return ComplaintOverviewCard(
-                                  //           title: document['title'],
-                                  //           onTap: ComplaintDialog(document.id),
-                                  //           email: document['email'],
-                                  //           filingTime: document['filing time'],
-                                  //           category: document['category'],
-                                  //           description: document['description'],
-                                  //           status: document['status'],
-                                  //           upvotes: document['upvotes'],
-                                  //           id: document.id,
-                                  //         );
-                                  //       } else
-                                  //         return Container(
-                                  //           height: 0,
-                                  //         );
-                                  //     }).toList();
-                                  //     feedcomplaints.add(Container(
-                                  //         padding: EdgeInsets.all(10),
-                                  //         child: Column(
-                                  //           children: [
-                                  //             Icon(
-                                  //               Icons.check_circle,
-                                  //               size: 40,
-                                  //               color: Color(0xFF36497E),
-                                  //             ),
-                                  //             Text(
-                                  //               "You're All Caught Up",
-                                  //               style: Theme.of(context)
-                                  //                   .textTheme
-                                  //                   .headline6,
-                                  //             )
-                                  //           ],
-                                  //         )));
-                                  //     return new ListView(children: feedcomplaints);
-                                  //   },
-                                ],
-                              );
-                            })
-                        //   ValueListenableBuilder(
-                        // valueListenable: _filter,
-                        // builder: (BuildContext context, Map<String, bool> value,
-                        //     Widget child) {
-                        //   return
-
-                        // },
-                        // )
-                        )),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: 20, left: 20, top: 150, bottom: 0),
-                  child: Container(
-                      // add contents of the bookmark page
-                      // child: Bookmarks(),
-                      ),
-                ),
+              children: [
+                FeedTab(),
+                BookmarksTab(),
               ],
             ),
           ),
+
           Container(
             child: Stack(
               children: <Widget>[
+                //Shape
                 Column(
                   children: [
                     Container(
@@ -194,53 +95,13 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     ),
                   ],
                 ),
+
                 Column(
                   children: [
-                    SizedBox(height: 25.0),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        //implementation of sidebar
-                        IconButton(
-                          icon: Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          onPressed: () {
-                            _scaffoldState.currentState.openDrawer();
-                          },
-                        ),
-                        SizedBox(
-                          width: 100.0,
-                        ),
-                        Text(
-                          'PGMS',
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            color: Colors.white,
-                            fontFamily: 'Amaranth',
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100.0,
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          onPressed: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => Search()));
-                          },
-                        ),
-                      ],
-                    ),
+                    SizedBox(height: size.height * 0.03),
+                    appBar(),
                     SizedBox(height: 10.0),
+
                     // Implementation of tabbar
                     Center(
                       child: Container(
@@ -261,8 +122,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                           tabs: [
                             Tab(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(42.0, 0, 42.0, 0),
+                                padding: EdgeInsets.fromLTRB(42.0, 0, 42.0, 0),
                                 child: Column(
                                   children: [
                                     Icon(
@@ -281,8 +141,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             ),
                             Tab(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                                padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
                                 child: Column(
                                   children: [
                                     Icon(
@@ -312,31 +171,46 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       ),
     );
   }
-}
 
-// code for the upper design of appbar
-
-class CurveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path()
-      // set the "current point"
-      ..addArc(Rect.fromLTWH(0, 0, size.width / 2, size.width / 3), pi, -1.57)
-      ..lineTo(9 * size.width / 10, size.width / 3)
-      ..addArc(
-          Rect.fromLTWH(
-              size.width / 2, size.width / 3, size.width / 2, size.width / 3),
-          pi + 1.57,
-          1.57)
-      ..lineTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..lineTo(0, size.width / 6);
-    return path;
+  Row appBar() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: Colors.white,
+            size: 30.0,
+          ),
+          onPressed: () {
+            _scaffoldState.currentState.openDrawer();
+          },
+        ),
+        Text(
+          'PGMS',
+          style: TextStyle(
+            fontSize: 25.0,
+            color: Colors.white,
+            fontFamily: 'Amaranth',
+          ),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.search,
+            color: Colors.white,
+            size: 30.0,
+          ),
+          onPressed: () {
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (context) => Search()));
+          },
+        ),
+      ],
+    );
   }
-
-  @override
-  bool shouldReclip(oldCliper) => false;
 }
+
 
 Map<String, bool> categoryComaplints = {
   "Potholes": isSwitched1,

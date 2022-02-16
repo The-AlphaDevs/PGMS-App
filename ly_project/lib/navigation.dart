@@ -55,7 +55,7 @@ class _User1State extends State<User1> {
                         backgroundColor: Colors.white,
                         color: Color(0xFF181d3d),
                         buttonBackgroundColor: Color(0xFFF49F1C),
-                        height: 60,
+                        height: 50,
                         animationDuration: Duration(
                           milliseconds: 200,
                         ),
@@ -85,7 +85,7 @@ class _User1State extends State<User1> {
                             backgroundColor: Colors.white,
                             color: Color(0xFF181d3d),
                             buttonBackgroundColor: Color(0xFFF49F1C),
-                            height: 60,
+                            height: 50,
                             animationDuration: Duration(
                               milliseconds: 200,
                             ),
@@ -119,7 +119,7 @@ class _User1State extends State<User1> {
                             backgroundColor: Colors.white,
                             color: Color(0xFF181d3d),
                             buttonBackgroundColor: Color(0xFFF49F1C),
-                            height: 60,
+                            height: 50,
                             animationDuration: Duration(
                               milliseconds: 200,
                             ),
