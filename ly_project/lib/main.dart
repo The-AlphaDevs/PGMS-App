@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-// import "package:latlong/latlong.dart";
-// import 'package:flutter/material.dart';
-// import 'package:flutter_map/flutter_map.dart';
 import 'package:ly_project/root_page.dart';
-import 'registration.dart';
-// import 'registration.dart';
-import 'auth.dart';
+import 'package:ly_project/Pages/Registration/registration.dart';
+import 'package:ly_project/Services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'landing.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 void main() async {

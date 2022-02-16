@@ -1,22 +1,11 @@
-// import 'package:InstiComplaints/Compose.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
-// import 'package:ly_project/track_complaint.dart';
 import 'package:ly_project/Pages/Profile/profile.dart';
-// import 'st_profile.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/Pages/Feed/feedPage.dart';
-import 'auth.dart';
-// import 'package:InstiComplaints/notifications.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'modifyModerators.dart';
-// import 'ad_profile.dart';
-// import 'loading.dart';
-// import 'moderator_requests.dart';
+import 'package:ly_project/Services/auth.dart';
 
-// var user = FirebaseAuth.instance.currentUser;
 
 class User1 extends StatefulWidget {
   final BaseAuth auth;

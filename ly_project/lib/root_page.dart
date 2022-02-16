@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ly_project/auth.dart';
+import 'package:ly_project/Services/auth.dart';
 import 'navigation.dart';
 import 'landing.dart';
 
