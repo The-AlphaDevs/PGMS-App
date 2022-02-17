@@ -13,11 +13,14 @@ class RaiseComplaint extends StatefulWidget {
 }
 
 class _RaiseComplaintState extends State<RaiseComplaint> {
+
   double lat, long;
   bool gotLocation = false;
+  
+
   Future<LocationData> getLocation() async {
     Location location = new Location();
-
+    
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     LocationData _locationData;
@@ -57,6 +60,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Raise a Complaint"),
@@ -75,7 +80,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                       builder: (context, snapshot) {
                         // snapshot.connectionState =
                         if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
+                          return Center(
+                            child: Container(
+                              height: screenSize.height * 0.04,
+                              child: CircularProgressIndicator(),
+                              ),
+                            );
+                              
                         } else if(!snapshot.hasError) {
                           return FlutterMap(
                             options: MapOptions(
@@ -108,9 +119,11 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                             ],
                           );
                         }
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return   Center(
+                            child: Container(
+                              height: screenSize.height * 0.02,
+                              child:
+                              CircularProgressIndicator(),),);
                       })),
               SizedBox(height: 40),
               TextFormField(

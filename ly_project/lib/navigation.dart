@@ -20,7 +20,7 @@ class _User1State extends State<User1> {
   @override
   Widget build(BuildContext context) {
             final List<Widget> children1 = [
-              Feed(),
+              Feed(auth: widget.auth, onSignedOut: widget.onSignedOut),
               DetailComplaint(),
               // ComplaintDialog('ewefwe'),
               ProfileScreen(),

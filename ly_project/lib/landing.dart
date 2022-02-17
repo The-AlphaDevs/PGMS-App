@@ -4,16 +4,16 @@ import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Pages/Login/login.dart';
 import 'package:ly_project/Pages/Registration/registration.dart';
 
-class MyLoginPage extends StatefulWidget {
+class LandingPage extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedIn;
-  MyLoginPage({this.auth, this.onSignedIn});
+  LandingPage({this.auth, this.onSignedIn});
 
   @override
-  _MyLoginPageState createState() => _MyLoginPageState();
+  _LandingPageState createState() => _LandingPageState();
 }
 
-class _MyLoginPageState extends State<MyLoginPage> {
+class _LandingPageState extends State<LandingPage> {
   bool loginChange = false;
   bool registerChange = false;
   // bool loginStateChange() {
@@ -173,8 +173,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                 bottomRight: Radius.circular(20.0))),
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                          MaterialPageRoute(builder: (context) => LoginPage(auth: widget.auth)));
                       //   // loginStateChange();
                       //   // _handleButtonClick();
                     },

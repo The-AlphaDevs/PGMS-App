@@ -29,36 +29,46 @@ class _RootPageState extends State<RootPage> {
     print("Inside init state function");
     widget.auth.currentUserEmail().then((useremail) {
       user = useremail;
-      if (user != ""){
+      if (user != "" && role==""){
+      
       FirebaseFirestore.instance
           .collection('users')
           .where('email', isEqualTo: useremail)
-          .snapshots()
-          .listen((data) {
-        setState(() {
-          role = 'citizen';
-          print('Citizen Role: $role');
-        });
-      });
+          .get()
+          .then((citizenDocSnapshot) => {
+            if(citizenDocSnapshot.docs.isNotEmpty && citizenDocSnapshot.size > 0){
+               setState(() {
+                role = 'citizen';
+                print('Citizen Role: $role');
+              })
+            }
+          });
+      
 
-      FirebaseFirestore.instance
-          .collection('supervisors')
-          .where('email', isEqualTo: useremail)
-          .snapshots()
-          .listen((data) {
-        setState(() {
-          role = 'supervisor';
-          print('Supervisor Role: $role');
-        });
-      });
-      }
+        FirebaseFirestore.instance
+            .collection('supervisors')
+            .where('email', isEqualTo: useremail)
+            .get()
+            .then((supervisorDocSnapshot) => {
+            if(supervisorDocSnapshot.docs.isNotEmpty && supervisorDocSnapshot.size > 0){
+               setState(() {
+                role = 'supervisor';
+                print('supervisor Role: $role');
+              })
+            }
+          });
+
+        
+        }
+      
       print("Inside widget.auth.currentUser function");
       print("useremail: " + useremail.toString());
       setState(() {
         authStatus =
             (useremail == "" || useremail == null) ? AuthStatus.notSignedIn : AuthStatus.signedIn;
       });
-    });
+      }
+    );
   }
 
   void _signedIn() {
@@ -82,7 +92,7 @@ class _RootPageState extends State<RootPage> {
 
       case AuthStatus.notSignedIn:
         print('Welcome Screen');
-        return MyLoginPage(
+        return LandingPage(
           auth: widget.auth,
           onSignedIn: _signedIn,
         );

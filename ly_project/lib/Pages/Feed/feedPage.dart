@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/BookmarksTab.dart';
 
 import 'package:ly_project/Pages/Feed/FeedTab.dart';
+import 'package:ly_project/root_page.dart';
+import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Widgets/CurveClipper.dart';
+
 // import 'loading.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
@@ -24,7 +27,10 @@ bool isSwitched3 = true;
 bool isSwitched4 = true;
 
 class Feed extends StatefulWidget {
-  const Feed({Key key}) : super(key: key);
+  final BaseAuth auth;
+  final VoidCallback onSignedOut; 
+  Feed({Key key, this.auth, this.onSignedOut}) : super(key: key);
+  
   @override
   _FeedState createState() => _FeedState();
 }
@@ -55,12 +61,14 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldState,
-      drawer: NavDrawer(),
+      drawer: NavDrawer(auth: widget.auth, onSignedOut: widget.onSignedOut),
       body: Stack(
         children: [
           //TabBarViews
@@ -220,11 +228,26 @@ Map<String, bool> categoryComaplints = {
 };
 
 class NavDrawer extends StatefulWidget {
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  NavDrawer({this.auth, this.onSignedOut});
   @override
   _NavDrawerState createState() => _NavDrawerState();
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+
+  void _signOut(BuildContext context) async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } 
+    catch (e) {
+      print("Error in Signout!!");
+      print(e);
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     print(categoryComaplints);
@@ -398,9 +421,10 @@ class _NavDrawerState extends State<NavDrawer> {
                 ),
                 title: Text('Log Out'),
                 onTap: () async {
-                  // await FirebaseAuth.instance.signOut();
-                  // await GoogleSignIn().signOut();
+                  // Auth auth = widget.authnew Auth();
+                  _signOut(context);
                   // Navigator.pushReplacementNamed(context, '/');
+                  
                 },
               ),
             ],

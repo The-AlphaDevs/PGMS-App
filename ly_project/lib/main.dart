@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Auth auth = new Auth();
+  // await auth.signOut();
   runApp(MyApp());
 }
 
@@ -33,22 +35,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text("abc"),
-    ),
-    body: Container(child: Text("Hello")),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RegistrationPage()),
-        );
-      },
-      tooltip: 'Increment',
-      child: Icon(Icons.add),
-    ),
-  );
-}
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     appBar: AppBar(
+//       title: Text("abc"),
+//     ),
+//     body: Container(child: Text("Hello")),
+//     floatingActionButton: FloatingActionButton(
+//       onPressed: () {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => RegistrationPage()),
+//         );
+//       },
+//       tooltip: 'Increment',
+//       child: Icon(Icons.add),
+//     ),
+//   );
+// }

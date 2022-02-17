@@ -115,74 +115,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //   setState(()=>isLoading=false);
   // }
 
-  void showSnackBar(String message, {int duration = 3}) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: duration),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
+  // void showSnackBar(String message, {int duration = 3}) {
+  //   final snackBar = SnackBar(
+  //     content: Text(message),
+  //     duration: Duration(seconds: duration),
+  //   );
+  //   _scaffoldKey.currentState.showSnackBar(snackBar);
+  // }
 
-  Widget statCard(emoji, value, title) {
-    return Card(
-      elevation: 2,
-      color: Color(0xFF181D3D),
-      child: InkWell(
-        splashColor: Colors.white30,
-        onLongPress: () async {
-          await HapticFeedback.mediumImpact();
-        },
-        onTap: () {},
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              emoji,
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
-            SizedBox(height: 3),
-            isLoading
-                ? Center(
-                    child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 6),
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        )))
-                : Text(
-                    value,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.getFont("Lora",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ),
-            Expanded(
-              child: Container(
-                child: Text(
-                  title,
-                  style: GoogleFonts.getFont("Merriweather",
-                      fontSize: 12, color: Colors.white),
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                  maxLines: 2,
-                ),
-              ),
-            ),
-            SizedBox(height: 3),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget statCard(emoji, value, title) {
+  //   return Card(
+  //     elevation: 2,
+  //     color: Color(0xFF181D3D),
+  //     child: InkWell(
+  //       splashColor: Colors.white30,
+  //       onLongPress: () async {
+  //         await HapticFeedback.mediumImpact();
+  //       },
+  //       onTap: () {},
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         mainAxisSize: MainAxisSize.max,
+  //         children: [
+  //           SizedBox(height: 8),
+  //           Text(
+  //             emoji,
+  //             style: TextStyle(fontSize: 15, color: Colors.white),
+  //           ),
+  //           SizedBox(height: 3),
+  //           isLoading
+  //               ? Center(
+  //                   child: Container(
+  //                       margin: EdgeInsets.symmetric(vertical: 6),
+  //                       height: 10,
+  //                       width: 10,
+  //                       child: CircularProgressIndicator(
+  //                         strokeWidth: 2,
+  //                       )))
+  //               : Text(
+  //                   value,
+  //                   textAlign: TextAlign.center,
+  //                   style: GoogleFonts.getFont("Lora",
+  //                       fontSize: 18,
+  //                       fontWeight: FontWeight.w600,
+  //                       color: Colors.white),
+  //                 ),
+  //           Expanded(
+  //             child: Container(
+  //               child: Text(
+  //                 title,
+  //                 style: GoogleFonts.getFont("Merriweather",
+  //                     fontSize: 12, color: Colors.white),
+  //                 textAlign: TextAlign.center,
+  //                 softWrap: true,
+  //                 maxLines: 2,
+  //               ),
+  //             ),
+  //           ),
+  //           SizedBox(height: 3),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            "My Profile",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         key: _scaffoldKey,
         body: SafeArea(
             child: SingleChildScrollView(
@@ -190,25 +201,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 200,
+                // height: 200,
                 width: double.infinity,
-                color: Color(0xFF181D3D),
+                // color: Color(0xFF181D3D),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 15, 20, 0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Icon(Icons.arrow_back),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 15, 20, 0),
+                    //   child: Row(
+                    //     children: [
+                    //       GestureDetector(
+                    //         onTap: () {
+                    //           Navigator.pop(context);
+                    //         },
+                    //         child: Icon(Icons.arrow_back),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -218,14 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            "My Profile",
-                            style: TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          
                           SizedBox(
                             height: 20,
                           ),
@@ -292,7 +296,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             style: GoogleFonts.getFont("Oxygen",
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w600,
-                                                color: Colors.white),
+                                                // color: Colors.white,
+                                                ),
                                             softWrap: true,
                                           ),
                                         ),
@@ -304,7 +309,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           style: GoogleFonts.getFont("Lato",
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
-                                              color: Colors.white),
+                                              // color: Colors.white,
+                                              ),
                                         ),
                                       ]),
                                 ]),
