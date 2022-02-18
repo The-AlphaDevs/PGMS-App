@@ -109,7 +109,7 @@ class _RootPageState extends State<RootPage> {
           );
         } else if (role == "citizen") {
           print('User1 Screen');
-          return User1(
+          return BottomNavBar(
             auth: widget.auth,
             onSignedOut: _signedOut,
           );

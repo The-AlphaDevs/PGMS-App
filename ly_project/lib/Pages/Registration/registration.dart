@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Login/login.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/navigation.dart';
+import 'package:ly_project/root_page.dart';
 import 'package:ly_project/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -79,14 +80,11 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void initState() {
-    
     // user = FirebaseAuth.instance.currentUser;
     // _nameController.text = user.displayName;
     _passwordVisible = false;
     super.initState();
   }
-
-  
 
   void _showDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
@@ -143,11 +141,11 @@ class _RegisterFormState extends State<RegisterForm> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 20,
                 ),
-                
+
                 TextFormField(
                   validator: (value) {
                     if (value.trim().isEmpty) {
@@ -178,7 +176,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 SizedBox(
                   height: 20,
                 ),
-                
+
                 TextFormField(
                   validator: (value) {
                     if (value.trim().isEmpty) {
@@ -203,7 +201,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 20,
                 ),
@@ -235,16 +233,16 @@ class _RegisterFormState extends State<RegisterForm> {
                     // ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                      // Based on passwordVisible state choose the icon
+                        // Based on passwordVisible state choose the icon
                         _passwordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: Colors.black,
                       ),
                       onPressed: () {
-                      // Update the state i.e. toogle the state of passwordVisible variable
+                        // Update the state i.e. toogle the state of passwordVisible variable
                         setState(() {
-                            _passwordVisible = !_passwordVisible;
+                          _passwordVisible = !_passwordVisible;
                         });
                       },
                     ),
@@ -256,7 +254,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   // decoration: InputDecoration(
                   //   labelStyle: TextStyle(
                   //     color: Colors.black,
-                  //   ), 
+                  //   ),
                   //   border: OutlineInputBorder(
                   //       borderRadius: BorderRadius.all(Radius.circular(20)),
                   //       borderSide: BorderSide(color: Colors.black)),
@@ -303,13 +301,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 //   ),
                 //   onSaved: (value) => _password = value,
                 // ),
-                
-             
 
                 SizedBox(
                   height: 20,
                 ),
-                
+
                 TextFormField(
                   validator: (value) {
                     if (value == "") {
@@ -335,11 +331,11 @@ class _RegisterFormState extends State<RegisterForm> {
                     labelText: 'Phone Number',
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 20,
                 ),
-                
+
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -385,7 +381,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 20,
                 ),
@@ -467,17 +463,16 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 45,
                   child: MaterialButton(
                     onPressed: () {
-                        if(validateAndSave()){
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content:
+                      if (validateAndSave()) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content:
                                 Text('Establishing Contact with the Server')));
-                            _showDialog(context);
-                            mixtureofcalls(context);
-                            loadingScreen();
-                        }
-                        else{
-                          print("Failure in saving the form");
-                        }
+                        _showDialog(context);
+                        mixtureofcalls(context);
+                        // loadingScreen();
+                      } else {
+                        print("Failure in saving the form");
+                      }
                     },
                     child: Text(
                       'Submit',
@@ -497,135 +492,130 @@ class _RegisterFormState extends State<RegisterForm> {
 
                 Center(
                   child: GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                              LoginPage(auth:widget.auth)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  LoginPage(auth: widget.auth)));
                     },
-                    child:Text(
-                    'Have an account? Sign In',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .copyWith(fontSize: 12),
-                  ),),
+                    child: Text(
+                      'Have an account? Sign In',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(fontSize: 12),
+                    ),
+                  ),
                 )
               ],
             ),
-
-            
-            
           ],
         ),
       ),
     );
   }
 
-  bool validateAndSave(){
-    final isValid = _formKey.currentState.validate(); 
-    if (isValid) { 
-      _formKey.currentState.save(); 
+  bool validateAndSave() {
+    final isValid = _formKey.currentState.validate();
+    if (isValid) {
+      _formKey.currentState.save();
       return true;
-    } 
-    else{
+    } else {
       return false;
     }
   }
 
-  Future<void> mixtureofcalls (BuildContext context) async{
+  Future<void> mixtureofcalls(BuildContext context) async {
     print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
     String useruid = await userCreation(context);
-    print("apna Userid: "+ useruid);
-    if(useruid != "Error while Registering User!!"){
+    print("apna Userid: " + useruid);
+    if (useruid != "Error while Registering User!!") {
       store();
       Navigator.pop(context);
-      Navigator.push(context,MaterialPageRoute(builder: (context) => User1()));
-    }
-    else{
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth)));
+
+      // Navigator.push(context,MaterialPageRoute(builder: (context) => BottomNavBar(auth:widget.auth)));
+    } else {
       print("Registration failed");
     }
   }
 
-  Widget loadingScreen(){
+  Widget loadingScreen() {
     Size size = MediaQuery.of(context).size;
     return Center(
-      heightFactor: MediaQuery.of(context).size.height / 64,
-      // padding: EdgeInsets.all(100),
-      child: Column(
-        children: [
-          Text('Please Wait'),
-          SizedBox(height: size.height * 0.03),
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-          ),
-        ],
-    ));
+        heightFactor: MediaQuery.of(context).size.height / 64,
+        // padding: EdgeInsets.all(100),
+        child: Column(
+          children: [
+            Text('Please Wait'),
+            SizedBox(height: size.height * 0.03),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          ],
+        ));
   }
 
-
-  Future<String> userCreation(BuildContext context) async{
+  Future<String> userCreation(BuildContext context) async {
     print("Inside user creation function");
-     try{
-        User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text)).user;
-        
-        print("Registered user => " + user.uid);
-        return user.uid;
+    try {
+      User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailController.text, password: _passwordController.text))
+          .user;
+
+      print("Registered user => " + user.uid);
+      return user.uid;
+    } catch (e) {
+      print("Error => $e");
+      if (e.toString() ==
+          "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
+        showErrorDialog(context, "Signup Error",
+            "The email address is already in use by another account.");
+      } else {
+        showErrorDialog(context, "Signup Error", e.toString());
       }
-      catch(e){
-        print("Error => $e");
-        if(e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account."){
-          showErrorDialog(context,"Signup Error","The email address is already in use by another account.");
-        }
-        else{
-          showErrorDialog(context,"Signup Error",e.toString());
-        }
-        return "Error while Registering User!!";
-      }
+      return "Error while Registering User!!";
+    }
   }
 
   Future<void> store() async {
     print("Inside store function");
-    try{
+    try {
       await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_emailController.text.toString())
-        .set(
-        {
-          'name': _nameController.text.toString(),
-          
-          'email': _emailController.text.toString(),
-          
-          'password':_passwordController.text.toString(),
-          
-          'mobile': _phoneController.text.toString(),
-          
-          'photo': "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png",
-
-          'address':_addressController.text.toString(),
-
-          'age':_ageController.text.toString(),
-
-          'ward':ward,
-
-          'date':DateTime.now().toString(), 
-          
-          'occupation': occupation
-          }
-        );
-
-    }
-    catch(e){
+          .collection('users')
+          .doc(_emailController.text.toString())
+          .set({
+        'name': _nameController.text.toString(),
+        'email': _emailController.text.toString(),
+        'password': _passwordController.text.toString(),
+        'mobile': _phoneController.text.toString(),
+        'photo':
+            "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png",
+        'address': _addressController.text.toString(),
+        'age': _ageController.text.toString(),
+        'ward': ward,
+        'date': DateTime.now().toString(),
+        'occupation': occupation
+      });
+    } catch (e) {
       print("Error: " + e.toString());
     }
-    
   }
 
-  showErrorDialog(BuildContext context,String title, String content) {
+  showErrorDialog(BuildContext context, String title, String content) {
     // set up the button
     Widget okButton = FlatButton(
-      child: Text("OK", style: TextStyle(color: Colors.blue),),
+      child: Text(
+        "OK",
+        style: TextStyle(color: Colors.blue),
+      ),
       onPressed: () {
-        Navigator.pop(context,null);
+        Navigator.pop(context, null);
       },
     );
 
@@ -646,5 +636,4 @@ class _RegisterFormState extends State<RegisterForm> {
       },
     );
   }
-
 }

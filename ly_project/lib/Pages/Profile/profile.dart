@@ -10,10 +10,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
+import 'package:ly_project/Services/auth.dart';
 // import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  ProfileScreen({this.auth, this.onSignedOut});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -33,6 +37,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String dateJoined = "2021-12-01";
   String gender = "Male";
   String userType = "User";
+
+  final List<String> menuItems = <String>[
+    'Logout',
+    // 'Add Location',
+    // 'Add to Journey',
+    // 'Discard'
+  ];
 
   @override
   void initState() {
@@ -179,12 +190,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //   );
   // }
 
+  void handleMenuClick(String value) async {
+    switch (value) {
+      case 'Logout':
+        {
+            // void _signOut(BuildContext context) async {
+            try {
+              await widget.auth.signOut();
+              widget.onSignedOut();
+            } catch (e) {
+              print("Error in Signout!!");
+              print(e);
+            }
+          // }
+          break;
+        }
+  }}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          actions: [
+            PopupMenuButton<String>(
+              onSelected: handleMenuClick,
+              itemBuilder: (BuildContext context) {
+                return menuItems.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+          ],
           title: Text(
             "My Profile",
             style: TextStyle(
@@ -506,47 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    //   child: Card(
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.symmetric(
-                    //           horizontal: 13, vertical: 10),
-                    //       child: GridView.count(
-                    //         primary: false,
-                    //         childAspectRatio: (7 / 8),
-                    //         shrinkWrap: true,
-                    //         padding: const EdgeInsets.symmetric(
-                    //             horizontal: 1, vertical: 15),
-                    //         crossAxisSpacing: 5,
-                    //         mainAxisSpacing: 5,
-                    //         crossAxisCount: 4,
-                    //         children: <Widget>[
-                    //           statCard(
-                    //             '📒',
-                    //             noOfEntries,
-                    //             'Complaints',
-                    //           ),
-                    //           statCard(
-                    //             '✈',
-                    //             noOfJourneys,
-                    //             'Journeys',
-                    //           ),
-                    //           statCard(
-                    //             '💯',
-                    //             noOfHabits,
-                    //             'Habits',
-                    //           ),
-                    //           statCard(
-                    //             '☑',
-                    //             noOfTasks,
-                    //             'Tasks',
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                   
                     SizedBox(height: 10),
                   ],
                 ),

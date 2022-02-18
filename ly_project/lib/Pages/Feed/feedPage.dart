@@ -8,34 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/BookmarksTab.dart';
 
 import 'package:ly_project/Pages/Feed/FeedTab.dart';
-import 'package:ly_project/root_page.dart';
+import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Widgets/CurveClipper.dart';
 
-// import 'loading.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-// import 'ComplaintDialog.dart';
-
-GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-ValueNotifier<Map<String, bool>> _filter =
-    ValueNotifier<Map<String, bool>>(categoryComaplints);
-// Sidebar Switches
-bool isSwitched1 = true;
-bool isSwitched2 = true;
-bool isSwitched3 = true;
-bool isSwitched4 = true;
-
 class Feed extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedOut; 
+  final VoidCallback onSignedOut;
   Feed({Key key, this.auth, this.onSignedOut}) : super(key: key);
-  
+
   @override
   _FeedState createState() => _FeedState();
 }
 
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+
   TabController _tabController;
   int selectedIndex = 0;
   void onItemTapped(int index) {
@@ -61,14 +49,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldState,
-      drawer: NavDrawer(auth: widget.auth, onSignedOut: widget.onSignedOut),
+      // drawer: NavDrawer(auth: widget.auth, onSignedOut: widget.onSignedOut),
       body: Stack(
         children: [
           //TabBarViews
@@ -172,6 +158,22 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     ),
                   ],
                 ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RaiseComplaint(),
+                        ),
+                      );
+                    },
+                    backgroundColor: Color(0xFF606fad),
+                    child: const Icon(Icons.add),
+                  ),
+                ),
               ],
             ),
           )
@@ -185,16 +187,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 30.0,
-          ),
-          onPressed: () {
-            _scaffoldState.currentState.openDrawer();
-          },
-        ),
+        SizedBox(width: 30),
         Text(
           'PGMS',
           style: TextStyle(
@@ -219,221 +212,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   }
 }
 
-
-Map<String, bool> categoryComaplints = {
-  "Potholes": isSwitched1,
-  "Sewage": isSwitched2,
-  "Electricity": isSwitched3,
-  "Garbage": isSwitched4,
-};
-
-class NavDrawer extends StatefulWidget {
-  final BaseAuth auth;
-  final VoidCallback onSignedOut;
-  NavDrawer({this.auth, this.onSignedOut});
-  @override
-  _NavDrawerState createState() => _NavDrawerState();
-}
-
-class _NavDrawerState extends State<NavDrawer> {
-
-  void _signOut(BuildContext context) async {
-    try {
-      await widget.auth.signOut();
-      widget.onSignedOut();
-    } 
-    catch (e) {
-      print("Error in Signout!!");
-      print(e);
-    }
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    print(categoryComaplints);
-    // return StreamBuilder<DocumentSnapshot>(
-    //   // stream: UpdateNotification().userssnap,
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.5,
-      child: Drawer(
-        child: Expanded(
-          child: Column(
-            children: [
-              DrawerHeader(
-                child: GestureDetector(
-                  onTap: () {
-                    // Navigator.pushNamed(context, '/third');
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 8.0,
-                          color: Colors.black54,
-                          spreadRadius: 0.9,
-                        )
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 60.0,
-                      backgroundImage:
-                          // snapshot.data.data()['profilePic'] == ""?
-                          AssetImage('assets/blankProfile.png'),
-                      // : NetworkImage(
-                      //     snapshot.data.data()['profilePic']),
-                      backgroundColor: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  color: Color(0xFF181D3D),
-                  child: ListTile(
-                    title: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          // "Hi, ${snapshot.data.data()['name']}",
-                          "Hi, Sharmaji",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: 'JosefinSans',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.all(2.0),
-                  children: [
-                    ExpansionTile(
-                      leading: Icon(
-                        Icons.filter_list,
-                        color: Color(0xFF181D3D),
-                      ),
-                      title: Text(
-                        'Category',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        ),
-                      ),
-                      children: [
-                        ListTile(
-                          leading: Switch(
-                            value: isSwitched1,
-                            onChanged: (bool value) {
-                              setState(() {
-                                isSwitched1 = value;
-                                categoryComaplints["Potholes"] = isSwitched1;
-                                _filter.notifyListeners();
-                              });
-                            },
-                            activeTrackColor: Colors.grey[800],
-                            activeColor: Colors.white,
-                          ),
-                          title: Text('Potholes'),
-                        ),
-                        ListTile(
-                          leading: Switch(
-                            value: isSwitched2,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched2 = value;
-                                categoryComaplints["Sewage"] = isSwitched2;
-                                _filter.notifyListeners();
-                              });
-                            },
-                            activeTrackColor: Colors.grey[800],
-                            activeColor: Colors.white,
-                          ),
-                          title: Text('Sewage'),
-                        ),
-                        ListTile(
-                          leading: Switch(
-                            value: isSwitched3,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched3 = value;
-                                categoryComaplints["Electricity"] = isSwitched3;
-                                _filter.notifyListeners();
-                              });
-                            },
-                            activeTrackColor: Colors.grey[800],
-                            activeColor: Colors.white,
-                          ),
-                          title: Text('Electricity'),
-                        ),
-                        ListTile(
-                          leading: Switch(
-                            value: isSwitched4,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched4 = value;
-                                categoryComaplints["Garbage"] = isSwitched4;
-                                _filter.notifyListeners();
-                              });
-                            },
-                            activeTrackColor: Colors.grey[800],
-                            activeColor: Colors.white,
-                          ),
-                          title: Text('Garbage'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                height: 0.5,
-                color: Color(0xFF181D3D),
-                thickness: 0.5,
-                indent: 15.0,
-                endIndent: 15.0,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.person,
-                  color: Color(0xFF181D3D),
-                ),
-                title: Text('About'),
-                onTap: () => {},
-                // Navigator.pushNamed(context, '/about')
-              ),
-              Divider(
-                height: 0.5,
-                color: Color(0xFF181D3D),
-                thickness: 0.5,
-                indent: 15.0,
-                endIndent: 15.0,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.reply,
-                  color: Color(0xFF181D3D),
-                ),
-                title: Text('Log Out'),
-                onTap: () async {
-                  // Auth auth = widget.authnew Auth();
-                  _signOut(context);
-                  // Navigator.pushReplacementNamed(context, '/');
-                  
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 //         } else {
 //           return Loading();
 //         }

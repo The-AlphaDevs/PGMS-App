@@ -14,13 +14,11 @@ class _DetailComplaintState extends State<DetailComplaint> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: null,
-        automaticallyImplyLeading: false,
         title: Text(
           'Complaint#2587',
           style: TextStyle(
             fontSize: 15,
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),

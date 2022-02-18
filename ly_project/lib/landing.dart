@@ -173,7 +173,7 @@ class _LandingPageState extends State<LandingPage> {
                                 bottomRight: Radius.circular(20.0))),
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
                     onPressed: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => LoginPage(auth: widget.auth)));
                       //   // loginStateChange();
@@ -218,7 +218,7 @@ class _LandingPageState extends State<LandingPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegistrationPage()));
+                            builder: (context) => RegistrationPage(auth:widget.auth)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
