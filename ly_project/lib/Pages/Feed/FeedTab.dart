@@ -20,7 +20,7 @@ class FeedTab extends StatelessWidget {
       //     return ComplaintOverviewCard();
       //   },
       // ),
-      Expanded(
+      SingleChildScrollView(
             child: StreamBuilder(
             stream: FirebaseFirestore.instance
                     .collection("complaints")
@@ -70,12 +70,15 @@ class FeedTab extends StatelessWidget {
                         
                         return ComplaintOverviewCard
                         (
+                          id: snapshot.data.docs[index]["id"],
                           complaint: snapshot.data.docs[index]["complaint"],
                           date: snapshot.data.docs[index]["dateTime"],
                           status: snapshot.data.docs[index]["status"],
                           image: snapshot.data.docs[index]["imageData"]["url"],
                           location: snapshot.data.docs[index]["imageData"]["location"],
-                          supervisor: snapshot.data.docs[index]["imageData"]["supervisorName"],
+                          supervisor: snapshot.data.docs[index]["supervisorName"],
+                          lat: snapshot.data.docs[index]["latitude"],
+                          long: snapshot.data.docs[index]["longitude"],
                         );                        
                         //// // Column(
                         //   crossAxisAlignment: CrossAxisAlignment.start,

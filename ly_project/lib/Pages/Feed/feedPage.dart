@@ -166,8 +166,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RaiseComplaint(),
-                        ),
+                          builder: (context) => RaiseComplaint(auth: widget.auth,)
+                        )
                       );
                     },
                     backgroundColor: Color(0xFF606fad),

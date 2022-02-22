@@ -27,6 +27,14 @@ const WARDS = [
     'Ward T',
     ];
 
+const LEADERBOARD_DURATIONS = [
+  "Today",
+  "This Week",
+  "This Month",
+  "This Year",
+  "All Time"
+];
+
 const OCCUPATIONS = [
     "Service",
     "Student",
@@ -34,6 +42,8 @@ const OCCUPATIONS = [
     "Other",
     "Housewife"
 ];
+
+
 
 const EMAIL_REGEX = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
 

@@ -1,20 +1,49 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:location/location.dart';
+import "package:latlong/latlong.dart";
 
 class DetailComplaint extends StatefulWidget {
-  final complaint;
-  final location;
+  final id;
   final status;
   final image;
   final date;
+  final supervisor;
+  final lat;
+  final long;
+  final complaint;
+  final location;
 
-  DetailComplaint({this.complaint, this.location, this.status,this.image, this.date});
+  DetailComplaint({this.id, this.complaint, this.location, this.status,this.image, this.date, this.supervisor, this.lat, this.long});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
 
 class _DetailComplaintState extends State<DetailComplaint> {
+  String id;
+  String status;
+  String image;
+  String date;
+  String supervisor;
+  double lat;
+  double long;
+  String complaint;
+  String location;
+  double latitude;
+  double longitude;
+
+
+  @override
+  void initState(){
+  super.initState();
+  latitude = double.parse(widget.lat);
+  longitude = double.parse(widget.long);
+  print("detail ka latitude - " + latitude.toString());
+  print("detail ka longitude - " + longitude.toString());
+  }
+  
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -22,7 +51,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Complaint#2587',
+          widget.id??"Ye null hai 1",
           style: TextStyle(
             fontSize: 15,
             color: Colors.white,
@@ -43,18 +72,48 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                       image: DecorationImage(
-                        image: AssetImage('assets/47.jpg'),
-                        fit: BoxFit.cover,
+                        image: NetworkImage(widget.image),
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.0),
-                      image: DecorationImage(
-                        image: AssetImage('assets/loc.jpg'),
-                        fit: BoxFit.cover,
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(6.0),
+                    //   image: DecorationImage(
+                    //     image: AssetImage('assets/loc.jpg'),
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
+                    child: FlutterMap(
+                      options: MapOptions(
+                        center: LatLng(latitude,
+                            longitude),
+                        zoom: 13.0,
                       ),
+                      layers: [
+                        TileLayerOptions(
+                          urlTemplate:
+                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          subdomains: ['a', 'b', 'c'],
+                          // attributionBuilder: (_) {
+                          //   return Text("© OpenStreetMap contributors");
+                          // },
+                        ),
+                        MarkerLayerOptions(
+                          markers: [
+                            Marker(
+                              width: 40.0,
+                              height: 40.0,
+                              point: LatLng(latitude,
+                                  longitude),
+                              builder: (ctx) => Container(
+                                child: FlutterLogo(size: 0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -90,7 +149,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     ),
                     Flexible(
                       child: Text(
-                        'Narasimha Chintaman Kelkar Road, Dadar West, Mumbai - 400030',
+                        widget.location??"Location null hai 1",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[700],
@@ -180,7 +239,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           children: [
             Flexible(
               child: Text(
-                'There are a lot of potholes on road',
+                widget.complaint??"Complaint null hai",
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black,
@@ -204,7 +263,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
             Text(
-              'In Progress',
+              widget.status,
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.lightGreen,
@@ -227,7 +286,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
             Text(
-              'Supervisor Details',
+              widget.supervisor??"Supervisor null hai 1",
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.black,
@@ -249,7 +308,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
             Text(
-              '20 Dec 2021',
+              widget.date,
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.grey[800],
@@ -269,7 +328,9 @@ class _DetailComplaintState extends State<DetailComplaint> {
         FlatButton(
           onPressed: () => {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TrackComplaints()))
+                MaterialPageRoute(builder: (context) => TrackComplaints(
+
+                )))
           },
           color: Colors.blue[400],
           textColor: Colors.white,

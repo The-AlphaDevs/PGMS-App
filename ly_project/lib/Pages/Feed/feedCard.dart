@@ -3,13 +3,16 @@ import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/utils/colors.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
+  final id;
   final complaint;
   final status;
   final date;
   final image;
   final location;
   final supervisor;
-  ComplaintOverviewCard({this.complaint, this.date, this.status, this.image, this.location, this.supervisor});
+  final lat;
+  final long;
+  ComplaintOverviewCard({this.id, this.complaint, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -32,10 +35,15 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
             print("Tap!");
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
+                  id: widget.id,
                   complaint: widget.complaint,
                   date: widget.date,
-                  status: widget.date,
+                  status: widget.status,
                   image: widget.image,
+                  supervisor: widget.supervisor,
+                  location: widget.location,
+                  lat: widget.lat,
+                  long: widget.long
                 ))));
           },
           child: Container(
