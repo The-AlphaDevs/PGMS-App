@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 
 class DetailComplaint extends StatefulWidget {
+  final complaint;
+  final location;
+  final status;
+  final image;
+  final date;
+
+  DetailComplaint({this.complaint, this.location, this.status,this.image, this.date});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }

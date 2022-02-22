@@ -1,3 +1,5 @@
+import 'package:ly_project/Utils/constant_strings.dart';
+
 const WARDS = [
     'Ward A',
     'Ward B',
@@ -31,4 +33,13 @@ const OCCUPATIONS = [
     "Business",
     "Other",
     "Housewife"
-];                                                                                     
+];
+
+const EMAIL_REGEX = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
+
+const Map<String, String> authExceptionMessageMap = {
+  "invalid-email": INVALID_EMAIL_ID,
+  "user-disabled": USER_DISABLED,
+  "user-not-found": USER_NOT_FOUND,
+  "wrong-password": WRONG_PASSWORD
+};

@@ -1,9 +1,16 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+// import 'dart:html';
+
+import 'dart:io';
+import 'dart:async';
 import "package:latlong/latlong.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:ly_project/utils/DashedRect.dart';
+// import 'package:ly_project/utils/DashedRect.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:location/location.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'image_storer.dart';
 
 class RaiseComplaint extends StatefulWidget {
   const RaiseComplaint({Key key}) : super(key: key);
@@ -16,7 +23,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
   double lat, long;
   bool gotLocation = false;
-  
+  // final object = ImageStorer();
+  // // final picker = ImagePicker();
+  File file;
 
   Future<LocationData> getLocation() async {
     Location location = new Location();
@@ -42,8 +51,11 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     }
 
     _locationData = await location.getLocation();
-    // print(_locationData.latitude);
-    // print(_locationData.longitude);
+    print("Apna Latitude: "+_locationData.latitude.toString());
+    print("longitude: " + _locationData.longitude.toString());
+
+    lat = _locationData.latitude;
+    long = _locationData.longitude;
     return _locationData;
   }
 
@@ -56,6 +68,39 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     // TODO: implement initState
     // getLocation();
     super.initState();
+  }
+
+  //  Future getImage() async {
+  //   // final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+  //   setState(() {
+  //     // _image = File(pickedFile.path);
+  //     // object.setImage(_image);
+  //   });
+  // }
+
+   _upload() async{
+      FilePickerResult result = await FilePicker.platform.pickFiles();
+      setState(() {
+        if(result != null) {
+          file = File(result.files.single.path);
+          print("File path from upload func: "+file.path);
+          final snackBar = SnackBar(
+            content: Text('File Uploaded!'),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          );
+
+          // Find the Scaffold in the widget tree and use
+          // it to show a SnackBar.
+         Scaffold.of(context).showSnackBar(snackBar);
+          
+        } else {
+          // User canceled the picker
+        }
+      });
   }
 
   @override
@@ -152,18 +197,20 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                 ),
               ),
               SizedBox(height: 20),
-              // TextFormField(
-              //   // controller: _nameController,
-              //   decoration: InputDecoration(
-              //     labelStyle: TextStyle(
-              //       color: Colors.black,
-              //     ),
-              //     labelText: 'Photo',
-              //     border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.all(Radius.circular(20)),
-              //         borderSide: BorderSide(color: Colors.black)),
-              //   ),
-              // ),
+          
+              MaterialButton(
+                onPressed: (){
+                  _upload();
+                  },
+                color: Colors.blue,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add, color: Colors.white),
+                      SizedBox(width: 10),
+                      Text("Add Photo",
+                          style: TextStyle(color: Colors.white))
+                    ])),
               Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
@@ -171,18 +218,33 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     height: 250,
                     width: 250,
                     color: Colors.black12,
-                    child: DashedRect(
-                      color: Colors.red,
-                      strokeWidth: 2.0,
-                      gap: 3.0,
+                    child: GestureDetector(
+                      onTap: (){
+                        _upload();
+                        },
                     ),
-                    // child: IconButton(
-                    //     icon: Icon(Icons.image),
-                    //     onPressed: () => {print("Trying to upload the image...")})
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.image),
-                      onPressed: () => {print("Trying to upload the image...")})
+                    
+                    
+              //       // DashedRect(
+              //       //   color: Colors.red,
+              //       //   strokeWidth: 2.0,
+              //       //   gap: 3.0,
+              //       // ),
+              //       // child: IconButton(
+              //       //     icon: Icon(Icons.image),
+              //       //     onPressed: () => {print("Trying to upload the image...")})
+              //     ),
+              //     Column(
+              //       children:[
+              //         IconButton(
+              //         icon: Icon(Icons.image),
+              //         onPressed: () => {print("Trying to upload the image...")}),
+              //         Text(
+              //           "Add Photo",style: TextStyle(color: Colors.white)
+              //         )
+                    // ]
+                  )
+                  
                 ],
               ),
               Padding(

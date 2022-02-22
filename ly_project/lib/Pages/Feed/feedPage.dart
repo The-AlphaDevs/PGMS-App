@@ -159,8 +159,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   ],
                 ),
                 Positioned(
-                  bottom: 10,
-                  right: 10,
+                  bottom: 30,
+                  right: 20,
                   child: FloatingActionButton(
                     onPressed: () {
                       Navigator.push(

@@ -3,13 +3,20 @@ import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/utils/colors.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
+  final complaint;
+  final status;
+  final date;
+  final image;
+  final location;
+  final supervisor;
+  ComplaintOverviewCard({this.complaint, this.date, this.status, this.image, this.location, this.supervisor});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
 
 class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   List upvoteArray;
-  final String complaintStatus = "In Progress";
+  // final String complaintStatus = "In Progress";
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,12 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
           onTap: () {
             print("Tap!");
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => (DetailComplaint())));
+                MaterialPageRoute(builder: (context) => (DetailComplaint(
+                  complaint: widget.complaint,
+                  date: widget.date,
+                  status: widget.date,
+                  image: widget.image,
+                ))));
           },
           child: Container(
             padding: EdgeInsets.symmetric(
@@ -37,7 +49,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Potholes on Road",
+                      widget.complaint,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
                       style:
@@ -57,7 +69,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           width: 5,
                         ),
                         Text(
-                          "10/12/2021",
+                          widget.date,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
@@ -75,14 +87,14 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                complaintStatus,
+                                widget.status,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: COMPLAINT_STATUS_COLOR_MAP[
-                                              complaintStatus] !=
+                                              widget.status] !=
                                           null
                                       ? COMPLAINT_STATUS_COLOR_MAP[
-                                          complaintStatus]
+                                          widget.status]
                                       : Colors.deepOrange,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -111,9 +123,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   ],
                 ),
                 Container(
-                  width: size.width * 0.42,
+                  width: size.width * 0.3,
                   child: Image(
-                    image: AssetImage('assets/47.jpg'),
+                    image: NetworkImage(widget.image),
                     fit: BoxFit.cover,
                   ),
                 )

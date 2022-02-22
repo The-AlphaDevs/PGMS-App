@@ -565,7 +565,7 @@ class _RegisterFormState extends State<RegisterForm> {
     print("Inside user creation function");
     try {
       User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text))
+              email: _emailController.text.trim().toLowerCase(), password: _passwordController.text.trim()))
           .user;
 
       print("Registered user => " + user.uid);
@@ -588,12 +588,12 @@ class _RegisterFormState extends State<RegisterForm> {
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(_emailController.text.toString())
+          .doc(_emailController.text.toString().trim().toLowerCase())
           .set({
         'name': _nameController.text.toString(),
-        'email': _emailController.text.toString(),
-        'password': _passwordController.text.toString(),
-        'mobile': _phoneController.text.toString(),
+        'email': _emailController.text.toString().trim().toLowerCase(),
+        'password': _passwordController.text.toString().trim(),
+        'mobile': _phoneController.text.toString().trim(),
         'photo':
             "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png",
         'address': _addressController.text.toString(),
