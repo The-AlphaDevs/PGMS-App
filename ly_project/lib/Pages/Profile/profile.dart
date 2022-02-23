@@ -38,157 +38,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String gender = "Male";
   String userType = "User";
 
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _genderController = new TextEditingController();
+  TextEditingController _birthdateController = new TextEditingController();
+
   final List<String> menuItems = <String>[
     'Logout',
-    // 'Add Location',
-    // 'Add to Journey',
-    // 'Discard'
+
   ];
 
   @override
   void initState() {
     super.initState();
-    // getStats();
   }
-
-  // Future<void> showPasswordResetDialog() {
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: true,
-  //     builder: (context) => AlertDialog(
-  //       title: Text("Change Password?"),
-  //       content: Text("A password reset link will be sent to your email to change the password and you will be logged out.\n\nYou can sign in again with the new password."),
-  //         actions: <Widget>[
-  //           Row(
-  //             children: [
-  //               FlatButton(
-  //                 onPressed: () async{
-  //                   try{
-  //                     await FirebaseAuth.instance.sendPasswordResetEmail(email: FirebaseAuth.instance.currentUser.email);
-  //                     Navigator.of(context).pop();
-
-  //                     //Signout
-  //                     Provider.of<EmailSignInProvider>(context, listen: false)
-  //                         .logout();
-  //                     Navigator.of(context).pushNamedAndRemoveUntil(
-  //                       '/splashScreen',
-  //                       (Route<dynamic> route) => false
-  //                     );
-  //                   }catch(e){
-  //                     Navigator.of(context).pop();
-  //                     print("Error during password change request ${e.toString()}");
-  //                     String errorMessage = DEFAULT_AUTH_ERROR;
-
-  //                     if(e is FirebaseAuthException){
-  //                       print(e);
-  //                       print(e.code);
-  //                       errorMessage = passwordChangeExceptionMessageMap[e.code] == null ? DEFAULT_AUTH_ERROR : passwordChangeExceptionMessageMap[e.code];
-  //                     }
-
-  //                     showSnackBar(errorMessage);
-  //                   }
-  //                 },
-  //                 child: Text(
-  //                   "Confirm",
-  //                   style: TextStyle(color: Colors.red, fontSize: 15),
-  //                 ),
-  //               ),
-  //               FlatButton(
-  //                 onPressed: () {
-  //                   Navigator.of(context).pop();
-  //                 },
-  //                 child: Text(
-  //                   "Cancel",
-  //                   style: TextStyle(color: Colors.green, fontSize: 15),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  // }
-
-  /// Get total number of entries, habits, tasks and journeys created by the user.
-  /// Not optimized at all, reads the data four times from the Firestore
-  // Future<void> getStats() async{
-  //   DocumentReference userDoc = await getUserDocRef();
-
-  //   await userDoc.collection('entries').get().then((snap) => noOfEntries=snap.docs.length.toString());
-
-  //   await userDoc.collection('journeys').get().then((snap) => noOfJourneys=snap.docs.length.toString());
-
-  //   await userDoc.collection('tasks').get().then((snap) => noOfTasks=snap.docs.length.toString());
-
-  //   await userDoc.collection('habits').get().then((snap) => noOfHabits=snap.docs.length.toString());
-
-  //   print("noOfEntries: $noOfEntries\nnoOfJourneys: $noOfJourneys\nnoOfTasks: $noOfTasks\nnoOfHabits: $noOfHabits");
-  //   setState(()=>isLoading=false);
-  // }
-
-  // void showSnackBar(String message, {int duration = 3}) {
-  //   final snackBar = SnackBar(
-  //     content: Text(message),
-  //     duration: Duration(seconds: duration),
-  //   );
-  //   _scaffoldKey.currentState.showSnackBar(snackBar);
-  // }
-
-  // Widget statCard(emoji, value, title) {
-  //   return Card(
-  //     elevation: 2,
-  //     color: Color(0xFF181D3D),
-  //     child: InkWell(
-  //       splashColor: Colors.white30,
-  //       onLongPress: () async {
-  //         await HapticFeedback.mediumImpact();
-  //       },
-  //       onTap: () {},
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         mainAxisSize: MainAxisSize.max,
-  //         children: [
-  //           SizedBox(height: 8),
-  //           Text(
-  //             emoji,
-  //             style: TextStyle(fontSize: 15, color: Colors.white),
-  //           ),
-  //           SizedBox(height: 3),
-  //           isLoading
-  //               ? Center(
-  //                   child: Container(
-  //                       margin: EdgeInsets.symmetric(vertical: 6),
-  //                       height: 10,
-  //                       width: 10,
-  //                       child: CircularProgressIndicator(
-  //                         strokeWidth: 2,
-  //                       )))
-  //               : Text(
-  //                   value,
-  //                   textAlign: TextAlign.center,
-  //                   style: GoogleFonts.getFont("Lora",
-  //                       fontSize: 18,
-  //                       fontWeight: FontWeight.w600,
-  //                       color: Colors.white),
-  //                 ),
-  //           Expanded(
-  //             child: Container(
-  //               child: Text(
-  //                 title,
-  //                 style: GoogleFonts.getFont("Merriweather",
-  //                     fontSize: 12, color: Colors.white),
-  //                 textAlign: TextAlign.center,
-  //                 softWrap: true,
-  //                 maxLines: 2,
-  //               ),
-  //             ),
-  //           ),
-  //           SizedBox(height: 3),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   void handleMenuClick(String value) async {
     switch (value) {
@@ -248,19 +111,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.fromLTRB(10, 15, 20, 0),
-                    //   child: Row(
-                    //     children: [
-                    //       GestureDetector(
-                    //         onTap: () {
-                    //           Navigator.pop(context);
-                    //         },
-                    //         child: Icon(Icons.arrow_back),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -295,33 +145,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // AnimatedTextKit(
-                                        //   animatedTexts: [
-                                        //     TypewriterAnimatedText(
-                                        //       name
-                                        //           .split(" ")
-                                        //           .map((str) =>
-                                        //               str[0]
-                                        //                   .toUpperCase() +
-                                        //               str.substring(
-                                        //                   1))
-                                        //           .join(" "),
-                                        //       textStyle:
-                                        //           const TextStyle(
-                                        //         fontSize: 20.0,
-                                        //         fontWeight:
-                                        //             FontWeight
-                                        //                 .bold,
-                                        //       ),
-                                        //     ),
-                                        //   ],
-                                        //   totalRepeatCount: 1,
-                                        //   pause: const Duration(
-                                        //       milliseconds: 1000),
-                                        //   displayFullTextOnTap:
-                                        //       true,
-                                        //   stopPauseOnTap: true,
-                                        // ),
                                         Container(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -401,11 +224,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Name",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              TextFormField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                  labelText:"Name",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      borderSide: BorderSide(color: Colors.black)),
+                                ),
                               ),
                               SizedBox(height: 10),
                               Container(
@@ -434,11 +261,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                "E-mail",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              TextFormField(
+                                controller: _emailController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                  labelText:"E-mail",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      borderSide: BorderSide(color: Colors.black)),
+                                ),
                               ),
                               SizedBox(height: 10),
                               Container(
@@ -462,11 +293,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                "Gender",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              TextFormField(
+                                controller: _genderController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                  labelText:"Gender",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      borderSide: BorderSide(color: Colors.black)),
+                                ),
                               ),
                               SizedBox(height: 10),
                               Container(
@@ -490,11 +325,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                "Birthdate",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              TextFormField(
+                                controller: _birthdateController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                  labelText:"BirthDate",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      borderSide: BorderSide(color: Colors.black)),
+                                ),
                               ),
                               SizedBox(height: 10),
                               Container(

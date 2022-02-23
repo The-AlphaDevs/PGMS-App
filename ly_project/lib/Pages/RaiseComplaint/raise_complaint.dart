@@ -9,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+
 
 //TODO: Upload image after users clicks add complaint button, 
 //TODO: Navigate to feed page once data uploaded
@@ -225,13 +227,46 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     color: Colors.blue,
                     clipBehavior: Clip.antiAlias,
                     child: MaterialButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (validateAndSave(_formKey)) {
                             // Scaffold.of(context).showSnackBar(SnackBar(
                             //     content: Text(
                             //         'Establishing Contact with the Server')));
                             _showDialog(context);
-                            mixtureofcalls(context);
+                            String status = await mixtureofcalls(context);
+                            print("mixture of calls ho gaya");
+                            Navigator.pop(context);
+                            print("context pop hua");
+                            if(status=='Success'){
+                              print("success k andar aaya");
+                                AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.SUCCES,
+                                    animType: AnimType.BOTTOMSLIDE,
+                                    title: 'Success',
+                                    desc: 'The Complaint has been successfully registered..',
+                                    btnCancelOnPress: () {
+                                    Navigator.pop(context);
+                                    },
+                                    btnOkOnPress: () {
+                                      Navigator.pop(context);},
+                                    )..show();
+                            }else{
+                              print("else k andar aaya");
+                              
+                                AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.ERROR,
+                                    animType: AnimType.BOTTOMSLIDE,
+                                    title: 'Error',
+                                    desc: 'Error occured while registering complaint..',
+                                    btnCancelOnPress: () {
+                                      Navigator.pop(context);},
+                                    btnOkOnPress: () {
+                                      Navigator.pop(context);
+                                      },
+                                    )..show();
+                            }
                             // loadingScreen();
                           } else {
                             print("Failure in saving the form");
@@ -255,7 +290,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     );
   }
 
-  Future<void> store(File _image) async {
+  Future<String> store(File _image) async {
 
     print("Inside store function");
     print("Upload docs wala user\n");
@@ -292,29 +327,20 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'supervisorId': null,
         'supervisorName': null
       });
+      return "Success";
     } catch (e) {
       print("Error: " + e.toString());
+      return "Error";
     }
   }
 
-  Future<void> mixtureofcalls(BuildContext context) async {
+  Future<String> mixtureofcalls(BuildContext context) async {
     print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
-    store(file);
+    String status = await store(file);
+    return status;
+    
   }
 
-  // Future<String> uploadFiles(File _image) async {
-  //   print("Upload docs wala user\n");
-  //   final user = await widget.auth.currentUser();
-  //   print(user);
-  //   String imageRef = user + '/' + _image.path.split('/').last;
-  //   print(imageRef);
-  //   imageUrl =
-  //       await (await FirebaseStorage.instance.ref(imageRef).putFile(_image))
-  //           .ref
-  //           .getDownloadURL();
-  //   print(imageUrl);
-  //   return imageUrl;
-  // }
 }
 
 bool validateAndSave(formKey) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/utils/colors.dart';
+// import 'package:intl/intl_browser.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
@@ -71,16 +73,17 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                       children: [
                         Icon(
                           Icons.calendar_today,
-                          size: 16,
+                          size: 12,
+                          color: Colors.grey,
                         ),
                         SizedBox(
                           width: 5,
                         ),
                         Text(
-                          widget.date,
+                          DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold),
+                              fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -115,26 +118,31 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                     SizedBox(height: 4),
                     Container(
                       height: size.height * 0.04,
-                      child: FlatButton(
-                        color: Colors.amber[500],
-                        onPressed: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
-                        },
-                        child: Text('Comment',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            )),
+                      
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(29),
+                        child: FlatButton(
+                          color: Colors.amber[500],
+                          onPressed: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
+                          },
+                          child: Text('Comment',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
                       ),
                     )
                   ],
                 ),
                 Container(
                   width: size.width * 0.3,
+                  height: size.height * 0.1,
                   child: Image(
                     image: NetworkImage(widget.image),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitWidth,
                   ),
                 )
               ],

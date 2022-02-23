@@ -9,19 +9,12 @@ class FeedTab extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Padding(
-      padding: EdgeInsets.only(
-          right: 20, left: 20, top: 140, bottom: 5),
-      child: 
-      // ListView.builder(
-      //   shrinkWrap: true,
-      //   itemCount: 6,
-      //   itemBuilder: (context, index) {
-      //     return ComplaintOverviewCard();
-      //   },
-      // ),
-      SingleChildScrollView(
-            child: StreamBuilder(
+    return SingleChildScrollView(
+      
+      child: Padding(
+        padding: EdgeInsets.only(
+            right: 20, left: 20, top: 140, bottom: 5),
+        child: StreamBuilder(
             stream: FirebaseFirestore.instance
                     .collection("complaints")
                     .orderBy("dateTime", descending: true)
@@ -61,7 +54,7 @@ class FeedTab extends StatelessWidget {
                     } 
                     else{
                       return ListView.builder(
-                      scrollDirection: Axis.vertical,
+                      // scrollDirection: Axis.vertical,
                       itemCount: snapshot.data.docs.length,
                       padding: EdgeInsets.only(
                           left: 10, right: 10),
@@ -281,7 +274,7 @@ class FeedTab extends StatelessWidget {
                 }
               }
             ),
-          ),
+      ),
     );
   }
 }

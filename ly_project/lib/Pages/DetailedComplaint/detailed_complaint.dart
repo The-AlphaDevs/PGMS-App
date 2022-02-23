@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
@@ -27,8 +28,6 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String image;
   String date;
   String supervisor;
-  double lat;
-  double long;
   String complaint;
   String location;
   double latitude;
@@ -149,7 +148,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     ),
                     Flexible(
                       child: Text(
-                        widget.location??"Location null hai 1",
+                        widget.location??"Location null hai",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[700],
@@ -172,7 +171,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
               complaintDetails(screenSize),
               SizedBox(
-                height: screenSize.height * 0.02,
+                height: screenSize.height * 0.04,
               ),
               trackComplaintButton(context, screenSize),
               SizedBox(
@@ -308,7 +307,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
             Text(
-              widget.date,
+              DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.grey[800],
@@ -325,26 +324,35 @@ class _DetailComplaintState extends State<DetailComplaint> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FlatButton(
-          onPressed: () => {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TrackComplaints(
-
-                )))
-          },
-          color: Colors.blue[400],
-          textColor: Colors.white,
-          padding: EdgeInsets.symmetric(
-              vertical: screenSize.height * 0.014,
-              horizontal: screenSize.width * 0.03),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.track_changes_rounded),
-              SizedBox(width: screenSize.width * 0.03),
-              Text("Track Complaint")
-            ],
+        Container(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(29),
+            child: FlatButton(
+              onPressed: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TrackComplaints(
+                      complaint: widget.complaint,
+                      date: widget.date,
+                      location: widget.location,
+                      latitude: latitude,
+                      longitude: longitude,
+                    )))
+              },
+              color: Colors.blue[400],
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.014,
+                  horizontal: screenSize.width * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.track_changes_rounded),
+                  SizedBox(width: screenSize.width * 0.03),
+                  Text("Track Complaint")
+                ],
+              ),
+            ),
           ),
         ),
       ],

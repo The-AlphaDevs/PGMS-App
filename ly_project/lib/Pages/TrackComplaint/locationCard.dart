@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
+import 'package:location/location.dart';
+import "package:latlong/latlong.dart";
 
-class ComplaintCard extends StatelessWidget {
-  final String statuss = "In Progress";
-  ComplaintCard({Key key}) : super(key: key);
+class ComplaintCard extends StatefulWidget {
+  final complaint;
+  final date;
+  final location;
+  final latitude;
+  final longitude;
 
+  ComplaintCard({this.complaint, this.date, this.location, this.latitude, this.longitude});
+
+  @override
+  State<ComplaintCard> createState() => _ComplaintCardState();
+}
+
+class _ComplaintCardState extends State<ComplaintCard> {
+  int difference;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.date.runtimeType);
+    print("track ka lat: " + widget.latitude.toString());
+    print("track ka long: " + widget.longitude.toString());
+    final date = DateTime.parse(widget.date);
+    final start_date = DateTime(date.year, date.month, date.day);
+    final date2 = DateTime.now();
+    difference = date2.difference(start_date).inDays;
+  }
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,7 +61,7 @@ class ComplaintCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Potholes on Road",
+                        widget.complaint,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -45,66 +74,29 @@ class ComplaintCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.calendar_today),
-                          // SizedBox(
-                          //   width: 5,
-                          // ),
+                          Icon(
+                            Icons.calendar_today,
+                            color: Colors.grey
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
                           Text(
-                            "10/12/2021",
+                            DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold),
+                                fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey),
                           ),
                         ],
                       ),
 
                       SizedBox(height: 10),
-                      //   Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //     crossAxisAlignment: CrossAxisAlignment.end,
-                      //     children: <Widget>[
-                      //     Center(
-                      //       child: Column(
-                      //         mainAxisAlignment: MainAxisAlignment.end,
-                      //         crossAxisAlignment: CrossAxisAlignment.center,
-                      //         children: <Widget>[
-                      //           Text(statuss,
-                      //               style: TextStyle(
-                      //                 fontSize: 16,
-                      //                 color: statuss == 'Rejected'
-                      //                     ? Colors.red
-                      //                     : statuss == 'Solved'
-                      //                         ? Colors.green
-                      //                         : statuss == 'In Progress'
-                      //                             ? Colors.blue
-                      //                             : statuss == 'Passed'
-                      //                                 ? Colors.cyan
-                      //                                 : Colors.deepOrange,
-                      //                 fontWeight: FontWeight.bold,
-                      //               )),
-                      //           // SizedBox(
-                      //           //   height: 8,
-                      //           // ),
-                      //           Text(
-                      //             'Status',
-                      //             overflow: TextOverflow.ellipsis,
-                      //             style: TextStyle(
-                      //               fontSize: 13,
-                      //               ),
-                      //               textAlign: TextAlign.center,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-
-                      //   ],
-                      // ),
-
+                      
                       Flexible(
                         flex: 10,
                         // fit: FlexFit.tight,
                         child: Text(
-                          "Narasimha Chintaman Kelkar Road, Dadar West, Mumbai - 400030",
+                          widget.location,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -117,7 +109,7 @@ class ComplaintCard extends StatelessWidget {
                       ),
 
                       Text(
-                        "Posted 5 days ago",
+                        "Posted "+ difference.toString() +" days ago",
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -126,16 +118,58 @@ class ComplaintCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Container(
+                //   width: size.width * 0.42,
+                //   child: Image(
+                //     image: AssetImage('assets/loc.jpg'),
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
                 Container(
-                  width: size.width * 0.42,
-                  child: Image(
-                    image: AssetImage('assets/loc.jpg'),
-                    fit: BoxFit.cover,
+                  height: 100,
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(6.0),
+                    //   image: DecorationImage(
+                    //     image: AssetImage('assets/loc.jpg'),
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
+                  // width: size.width * 0.42,
+                  child: FlutterMap(
+                    options: MapOptions(
+                      center: LatLng(widget.latitude,
+                          widget.longitude),
+                      zoom: 13.0,
+                    ),
+                    layers: [
+                      TileLayerOptions(
+                        urlTemplate:
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a', 'b', 'c'],
+                        // attributionBuilder: (_) {
+                        //   return Text("© OpenStreetMap contributors");
+                        // },
+                      ),
+                      MarkerLayerOptions(
+                        markers: [
+                          Marker(
+                            width: 40,
+                            height: 40.0,
+                            point: LatLng(widget.latitude,
+                            widget.longitude),
+                            builder: (ctx) => Container(
+                              child: FlutterLogo(size: 0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                )
+                ),
               ],
             ),
           )),
     );
   }
 }
+

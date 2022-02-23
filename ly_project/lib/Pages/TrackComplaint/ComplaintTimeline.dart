@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 
 class ComplaintTimeline extends StatelessWidget {
-  const ComplaintTimeline({Key key}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int itemCount = 8;
+    int itemCount = 3;
 
     bool isEdgeIndex(int index) {
       return index == 0 || index == itemCount - 2;
@@ -81,8 +81,8 @@ class ComplaintTimeline extends StatelessWidget {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.grey),
                                 ),
-                                SizedBox(height: 5),
-                                SizedBox(height: 5),
+                                SizedBox(height: size.height*0.04),
+                                // SizedBox(height: 5),
                                 Text(
                                   "Description",
                                   maxLines: 3,

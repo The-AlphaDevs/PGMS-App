@@ -4,13 +4,19 @@ import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
 
 class TrackComplaints extends StatefulWidget {
-  const TrackComplaints({Key key}) : super(key: key);
+  final complaint;
+  final date;
+  final location;
+  final latitude;
+  final longitude;
+
+  TrackComplaints({this.complaint, this.date, this.location, this.latitude, this.longitude});
   @override
   _TrackComplaintsState createState() => _TrackComplaintsState();
 }
 
-class _TrackComplaintsState extends State<TrackComplaints>
-    with SingleTickerProviderStateMixin {
+class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProviderStateMixin {
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -20,8 +26,14 @@ class _TrackComplaintsState extends State<TrackComplaints>
       ),
       body: Column(
         children: [
-          SizedBox(height: size.height * 0.02),
-          ComplaintCard(),
+          SizedBox(height: size.height * 0.05),
+          ComplaintCard(
+            complaint: widget.complaint,
+            date: widget.date,
+            location: widget.location,
+            latitude: widget.latitude,
+            longitude: widget.longitude,
+          ),
           ComplaintTimeline(),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
