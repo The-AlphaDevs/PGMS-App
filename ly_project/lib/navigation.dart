@@ -6,7 +6,8 @@ import 'package:ly_project/Pages/Profile/profile.dart';
 import 'package:ly_project/Pages/Feed/NavDrawer.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/Pages/Feed/feedPage.dart';
-import 'package:ly_project/Pages/WardInfo.dart/ward_tab.dart';
+// import 'package:ly_project/Pages/WardInfo.dart/ward_tab.dart';
+import 'package:ly_project/Pages/WardInfo/ward_tab.dart';
 import 'package:ly_project/Services/auth.dart';
 
 class BottomNavBar extends StatefulWidget {

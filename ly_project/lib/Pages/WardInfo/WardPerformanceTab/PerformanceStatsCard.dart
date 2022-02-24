@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class LeaderboardStatsCard extends StatelessWidget {
-  const LeaderboardStatsCard({
+class PerformanceStatsCard extends StatelessWidget {
+  const PerformanceStatsCard({
     Key key,
     @required this.size,
     @required this.durationDdValue,
@@ -24,39 +24,47 @@ class LeaderboardStatsCard extends StatelessWidget {
         children: [
           SizedBox(height: size.height * 0.02),
           Text(
-            "Leaderboard",
+            "Performance",
             style: TextStyle(fontSize: 20),
           ),
           SizedBox(height: size.height * 0.01),
           durationDdValue != "All Time"
-              ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(DateFormat.yMMMd().format(dateFrom)),
-                      Icon(Icons.arrow_forward, size: 16),
-                      Text(DateFormat.yMMMd().format(dateTo)),
-                    ],
-                  ),
-                )
+              ? durationDdValue == "Today"
+                  ? Center(
+                      child: Text(
+                        DateFormat.yMMMd().format(dateFrom),
+                      ),
+                    )
+                  : Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(DateFormat.yMMMd().format(dateFrom)),
+                          Icon(Icons.arrow_forward, size: 16),
+                          Text(DateFormat.yMMMd().format(dateTo)),
+                        ],
+                      ),
+                    )
               : Center(child: Text("All Time")),
           Divider(thickness: 1.25),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             color: Colors.grey[50],
             child: Container(
-                margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.015,
-                    vertical: size.height * 0.004),
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    border: Border.all(
-                      color: Colors.blueGrey[400],
-                    ),
-                    borderRadius: BorderRadius.circular(12)),
-                child: buildStatsTable()),
+              margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+              padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.015,
+                  vertical: size.height * 0.004),
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  border: Border.all(
+                    color: Colors.blueGrey[400],
+                  ),
+                  borderRadius: BorderRadius.circular(12)),
+              child: buildStatsTable(),
+            ),
           ),
         ],
       ),
