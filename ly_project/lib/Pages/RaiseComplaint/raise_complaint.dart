@@ -306,7 +306,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
     try {
       final emailid = await widget.auth.currentUserEmail();
-      await FirebaseFirestore.instance.collection('complaints').doc().set({
+      await FirebaseFirestore.instance.collection('complaints').doc(emailid).set({
         'citizenEmail': emailid,
         'complaint': _grievanceController.text.toString(),
         'dateTime': DateTime.now().toString(),

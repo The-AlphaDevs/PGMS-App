@@ -27,6 +27,7 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
       body: Column(
         children: [
           SizedBox(height: size.height * 0.05),
+
           ComplaintCard(
             complaint: widget.complaint,
             date: widget.date,
@@ -34,22 +35,29 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
             latitude: widget.latitude,
             longitude: widget.longitude,
           ),
+
+          SizedBox(height: size.height * 0.05),
+
           ComplaintTimeline(),
+
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
-            child: FlatButton(
-              minWidth: 5,
-              onPressed: () => {},
-              color: Colors.orange[900],
-              textColor: Colors.white,
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.close),
-                  SizedBox(width:15),
-                  Text("Close Complaint"),
-                ],
+            margin: EdgeInsets.symmetric(horizontal: 100, vertical: 40),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(29),
+              child: FlatButton(
+                minWidth: 5,
+                onPressed: () => {},
+                color: Colors.orange[900],
+                textColor: Colors.white,
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.close),
+                    SizedBox(width:15),
+                    Text("Close Complaint"),
+                  ],
+                ),
               ),
             ),
           ),

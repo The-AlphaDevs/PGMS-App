@@ -12,7 +12,8 @@ import 'package:ly_project/Services/auth.dart';
 class BottomNavBar extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  BottomNavBar({this.auth, this.onSignedOut});
+  final String userEmail;
+  BottomNavBar({this.auth, this.onSignedOut, this.userEmail});
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
 }
@@ -24,7 +25,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     final List<Widget> citizenTabs = [
       Feed(auth: widget.auth, onSignedOut: widget.onSignedOut),
-      ComplaintsPage(),
+      ComplaintsPage(auth: widget.auth, onSignedOut: widget.onSignedOut, userEmail:widget.userEmail),
       // DetailComplaint(),
       WardInfo(),
       ProfileScreen(auth: widget.auth, onSignedOut: widget.onSignedOut),
@@ -48,68 +49,69 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ? supervisorTabs[currentIndex]
             : citizenTabs[currentIndex],
         bottomNavigationBar: (TYPE == 'supervisor')
-            ? CurvedNavigationBar(
-                backgroundColor: Colors.white,
-                color: Color(0xFF181d3d),
-                buttonBackgroundColor: Color(0xFFF49F1C),
-                height: 50,
-                animationDuration: Duration(
-                  milliseconds: 200,
-                ),
-                animationCurve: Curves.bounceInOut,
-                items: <Widget>[
-                  Icon(
-                    Icons.home,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.person,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.view_list_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ],
-                onTap: onTapped,
-                index: currentIndex,
-              )
-            : CurvedNavigationBar(
-                backgroundColor: Colors.white,
-                color: Color(0xFF181d3d),
-                buttonBackgroundColor: Color(0xFFF49F1C),
-                height: 50,
-                animationDuration: Duration(
-                  milliseconds: 200,
-                ),
-                animationCurve: Curves.bounceInOut,
-                items: <Widget>[
-                  Icon(
-                    Icons.home,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.notifications,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.view_list_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.person,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ],
-                onTap: onTapped,
-                index: currentIndex,
-              ));
+        ? CurvedNavigationBar(
+            backgroundColor: Colors.white,
+            color: Color(0xFF181d3d),
+            buttonBackgroundColor: Color(0xFFF49F1C),
+            height: 50,
+            animationDuration: Duration(
+              milliseconds: 200,
+            ),
+            animationCurve: Curves.bounceInOut,
+            items: <Widget>[
+              Icon(
+                Icons.home,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.person,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.view_list_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
+            ],
+            onTap: onTapped,
+            index: currentIndex,
+          )
+        : CurvedNavigationBar(
+            backgroundColor: Colors.white,
+            color: Color(0xFF181d3d),
+            buttonBackgroundColor: Color(0xFFF49F1C),
+            height: 50,
+            animationDuration: Duration(
+              milliseconds: 200,
+            ),
+            animationCurve: Curves.bounceInOut,
+            items: <Widget>[
+              Icon(
+                Icons.home,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.notifications,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.view_list_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.person,
+                size: 30,
+                color: Colors.white,
+              ),
+            ],
+            onTap: onTapped,
+            index: currentIndex,
+        )
+    );
   }
 }

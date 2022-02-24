@@ -112,6 +112,7 @@ class _RootPageState extends State<RootPage> {
           return BottomNavBar(
             auth: widget.auth,
             onSignedOut: _signedOut,
+            userEmail: user,
           );
         } else {
           print('Supervisor Screen');

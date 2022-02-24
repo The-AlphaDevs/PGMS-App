@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/utils/colors.dart';
-// import 'package:intl/intl_browser.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
@@ -20,12 +19,10 @@ class ComplaintOverviewCard extends StatefulWidget {
 }
 
 class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
-  List upvoteArray;
-  // final String complaintStatus = "In Progress";
-
+  
   @override
   Widget build(BuildContext context) {
-    // upvoteArray = widget.upvotes;
+    
     Size size = MediaQuery.of(context).size;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
@@ -39,6 +36,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
                   id: widget.id,
                   complaint: widget.complaint,
+                  // name: widget.name,
                   date: widget.date,
                   status: widget.status,
                   image: widget.image,
@@ -49,14 +47,14 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 ))));
           },
           child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.03, vertical: size.height * 0.02),
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: size.height * 0.01),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       widget.complaint,
@@ -87,59 +85,95 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
+
+                    SizedBox(height: size.height*0.03),
+
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   // crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: <Widget>[
+                        
+                    //   ],
+                    // ),
+
+                    // SizedBox(height: 4),
+                    // Container(
+                    //   height: size.height * 0.04,
+                      
+                    //   child: ClipRRect(
+                    //     borderRadius: BorderRadius.circular(29),
+                    //     child: FlatButton(
+                    //       color: Colors.amber[500],
+                    //       onPressed: () {
+                    //         // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
+                    //       },
+                    //       child: Text('Comment',
+                    //           style: TextStyle(
+                    //             fontSize: 12,
+                    //             color: Colors.white,
+                    //             fontWeight: FontWeight.bold,
+                    //           )),
+                    //     ),
+                    //   ),
+                    // )
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                widget.status,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: COMPLAINT_STATUS_COLOR_MAP[
-                                              widget.status] !=
-                                          null
-                                      ? COMPLAINT_STATUS_COLOR_MAP[
-                                          widget.status]
-                                      : Colors.deepOrange,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                          Text(
+                          widget.status,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: COMPLAINT_STATUS_COLOR_MAP[
+                                        widget.status] !=
+                                    null
+                                ? COMPLAINT_STATUS_COLOR_MAP[
+                                    widget.status]
+                                : Colors.deepOrange,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        SizedBox(height: size.height*0.012),
+                        Text(
+                              "Status",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(width: size.width*0.09),
+
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap:(){
+                                print("Upvote!");
+                              },
+                              child: Icon(
+                                Icons.arrow_upward_outlined,
+                              ),
+                            ),
+                            SizedBox(height: size.height*0.01),
+                            Text(
+                              "Upvote",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
-                    Container(
-                      height: size.height * 0.04,
-                      
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(29),
-                        child: FlatButton(
-                          color: Colors.amber[500],
-                          onPressed: () {
-                            // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
-                          },
-                          child: Text('Comment',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                      ),
-                    )
                   ],
                 ),
                 Container(
-                  width: size.width * 0.3,
-                  height: size.height * 0.1,
+                  width: size.width * 0.35,
+                  height: size.height * 0.15,
                   child: Image(
                     image: NetworkImage(widget.image),
                     fit: BoxFit.fitWidth,
