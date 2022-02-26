@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:ly_project/Pages/WardInfo.dart/LeaderboardTab/AdministratorDetailsCard.dart';
-import 'package:ly_project/Pages/WardInfo.dart/LeaderboardTab/LeaderboardStatsCard.dart';
 import 'package:ly_project/utils/constants.dart';
+import 'package:ly_project/Pages/WardInfo/TopWardsCard.dart';
+import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTable.dart';
 
 class Leaderboard extends StatefulWidget {
-  Leaderboard({Key key}) : super(key: key);
-
   @override
   State<Leaderboard> createState() => _LeaderboardState();
 }
 
 class _LeaderboardState extends State<Leaderboard> {
-  String wardDdValue = WARDS[0];
   String durationDdValue = LEADERBOARD_DURATIONS[0];
   DateTime dateFrom, dateTo;
 
@@ -69,82 +65,64 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: size.height * 0.025,
-        ),
+            horizontal: size.width * 0.04, vertical: size.height * 0.025),
         child: Column(
           children: [
-            buildDropdowns(size),
+            buildDurationDropdown(),
             SizedBox(height: size.height * 0.04),
-            LeaderboardStatsCard(size: size, durationDdValue: durationDdValue, dateFrom: dateFrom, dateTo: dateTo, wardDdValue: wardDdValue),
-            AdministratorDetailsCard(size: size, wardDdValue: wardDdValue)
+            TopWardsCard(
+              size: size,
+              durationDdValue: durationDdValue,
+              dateFrom: dateFrom,
+              dateTo: dateTo,
+              firstWard: dummyPerformanceData[0]["Ward"],
+              secondWard: dummyPerformanceData[1]["Ward"],
+              thirdWard: dummyPerformanceData[2]["Ward"],
+              firstWardPoints: dummyPerformanceData[0]["Points"],
+              secondWardPoints: dummyPerformanceData[1]["Points"],
+              thirdWardPoints: dummyPerformanceData[2]["Points"],
+            ),
+            SizedBox(height: size.height * 0.04),
+            LeaderboardTable(size: size, headerTexstyle: headerTexstyle),
           ],
         ),
       ),
     );
   }
 
-
-  Row buildDropdowns(Size size) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: size.width * 0.4,
-          child: DropdownButtonFormField(
-            hint: Text("Select Ward"),
-            style: TextStyle(color: Colors.deepPurple),
-            iconSize: 16,
-            icon: Icon(Icons.arrow_downward),
-            decoration: textFormFieldDecoration("Ward", null),
-            value: wardDdValue,
-            onChanged: (String newValue) {
-              setState(() {
-                wardDdValue = newValue;
-              });
-            },
-            items: WARDS.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  softWrap: true,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        Container(
-          width: size.width * 0.45,
-          child: DropdownButtonFormField(
-            hint: Text("Select Duration"),
-            style: TextStyle(color: Colors.deepPurple),
-            iconSize: 16,
-            icon: Icon(Icons.arrow_downward),
-            decoration: textFormFieldDecoration("Duration", null),
-            value: durationDdValue,
-            onChanged: (String newValue) {
-              setState(() {
-                durationDdValue = newValue;
-                updateDuration();
-              });
-            },
-            items: LEADERBOARD_DURATIONS
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
+  Container buildDurationDropdown() {
+    return Container(
+      child: DropdownButtonFormField(
+        hint: Text("Select Duration"),
+        style: TextStyle(color: Colors.deepPurple),
+        iconSize: 16,
+        icon: Icon(Icons.arrow_downward),
+        decoration: textFormFieldDecoration("Duration", null),
+        value: durationDdValue,
+        onChanged: (String newValue) {
+          setState(() {
+            durationDdValue = newValue;
+            updateDuration();
+          });
+        },
+        items:
+            LEADERBOARD_DURATIONS.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              softWrap: true,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
+
+  TextStyle headerTexstyle = TextStyle(fontWeight: FontWeight.bold);
 
   InputDecoration textFormFieldDecoration(String lbl, IconData icon) {
     return InputDecoration(
