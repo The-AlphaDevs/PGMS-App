@@ -16,8 +16,9 @@ class DetailComplaint extends StatefulWidget {
   final long;
   final complaint;
   final location;
+  final description;
 
-  DetailComplaint({this.id, this.complaint, this.location, this.status,this.image, this.date, this.supervisor, this.lat, this.long});
+  DetailComplaint({this.id, this.complaint, this.description, this.location, this.status,this.image, this.date, this.supervisor, this.lat, this.long});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -32,6 +33,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String location;
   double latitude;
   double longitude;
+  String description;
 
 
   @override
@@ -250,6 +252,30 @@ class _DetailComplaintState extends State<DetailComplaint> {
         ),
         SizedBox(
           height: screenSize.height * 0.008,
+        ),
+        Row(
+          children: [
+            Text(
+              'Description: ',
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Flexible(
+              child: Text(
+              widget.description,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+              ),
+            ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: screenSize.height * 0.005,
         ),
         Row(
           children: [

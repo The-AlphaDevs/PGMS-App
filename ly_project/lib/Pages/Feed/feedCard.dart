@@ -13,7 +13,9 @@ class ComplaintOverviewCard extends StatefulWidget {
   final supervisor;
   final lat;
   final long;
-  ComplaintOverviewCard({this.id, this.complaint, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long});
+  final description;
+  
+  ComplaintOverviewCard({this.id, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -36,6 +38,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
                   id: widget.id,
                   complaint: widget.complaint,
+                  description: widget.description,
                   // name: widget.name,
                   date: widget.date,
                   status: widget.status,

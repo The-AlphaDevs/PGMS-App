@@ -18,6 +18,7 @@ class _FeedTabState extends State<FeedTab> {
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
                   .collection("complaints")
+                  .where("status", isEqualTo: "Pending")
                   .orderBy("dateTime", descending: true)
                   .snapshots()
                   ,
@@ -73,6 +74,7 @@ class _FeedTabState extends State<FeedTab> {
                         supervisor: snapshot.data.docs[index]["supervisorName"],
                         lat: snapshot.data.docs[index]["latitude"],
                         long: snapshot.data.docs[index]["longitude"],
+                        description: snapshot.data.docs[index]["description"],
                       );                        
                     },
                   );
