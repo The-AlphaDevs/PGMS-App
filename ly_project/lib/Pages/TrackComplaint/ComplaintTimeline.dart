@@ -38,7 +38,7 @@ class ComplaintTimeline extends StatelessWidget {
                 child: Icon(
                   Icons.check,
                   color: Colors.white,
-                  size: 10.0,
+                  size: 15.0,
                 ),
               );
             },

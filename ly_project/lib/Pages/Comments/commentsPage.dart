@@ -1,25 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ly_project/Pages/Feed/feedCard.dart';
+import 'package:ly_project/Pages/Comments/commentsCard.dart';
 
-class FeedTab extends StatefulWidget {
-
+class Comments extends StatefulWidget {
+  final String id;
+  Comments({Key key, this.id}) : super(key: key);
   @override
-  State<FeedTab> createState() => _FeedTabState();
+  State<Comments> createState() => _CommentsState();
 }
 
-class _FeedTabState extends State<FeedTab> {
+class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, size.height*0.2, 10, 20),
+      padding: EdgeInsets.only(right: size.width*0.01, left: size.width*0.01, top: size.height*0.2, bottom: size.height*0.03),
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
                   .collection("complaints")
-                  .where("status", whereIn:  ["Pending", "In Progress"])
-                  .orderBy("dateTime", descending: true)
+                  .doc(widget.id)
+                  .collection("comments")
                   .snapshots()
                   ,
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -51,7 +52,7 @@ class _FeedTabState extends State<FeedTab> {
                 print("Connection state: hasdata");
                   if(snapshot.data.docs.length == 0){
                     return Center(
-                      child: Text("No Past Feeds"),
+                      child: Text("No Comments"),
                     );
                   } 
                   else{
@@ -62,20 +63,11 @@ class _FeedTabState extends State<FeedTab> {
                         left: 10, right: 10),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      
-                      return ComplaintOverviewCard
+                      return CommentsCard
                       (
-                        id: snapshot.data.docs[index]["id"],
-                        complaint: snapshot.data.docs[index]["complaint"],
-                        date: snapshot.data.docs[index]["dateTime"],
-                        status: snapshot.data.docs[index]["status"],
-                        image: snapshot.data.docs[index]["imageData"]["url"],
-                        location: snapshot.data.docs[index]["imageData"]["location"],
-                        supervisor: snapshot.data.docs[index]["supervisorName"],
-                        lat: snapshot.data.docs[index]["latitude"],
-                        long: snapshot.data.docs[index]["longitude"],
-                        description: snapshot.data.docs[index]["description"],
-                        citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                        photo: snapshot.data.docs[index]["photo"],
+                        name: snapshot.data.docs[index]["name"],
+                        comment: snapshot.data.docs[index]["comment"],
                       );                        
                     },
                   );

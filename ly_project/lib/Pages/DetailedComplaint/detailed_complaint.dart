@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Pages/Comments/commentsPage.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
@@ -72,10 +73,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
-                      image: DecorationImage(
-                        image: NetworkImage(widget.image),
-                        fit: BoxFit.fitHeight,
-                      ),
+                      // image: DecorationImage(
+                      //   // image: NetworkImage(widget.image),
+                      //   fit: BoxFit.fitHeight,
+                      // ),
                     ),
                   ),
                   Container(
@@ -197,7 +198,11 @@ class _DetailComplaintState extends State<DetailComplaint> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Comments(id: widget.id,)));
+            },
+            child:Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(
@@ -216,6 +221,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
             ],
+          ),
           ),
           IconButton(
             splashColor: Colors.transparent,

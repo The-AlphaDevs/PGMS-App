@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
@@ -14,8 +15,9 @@ class ComplaintOverviewCard extends StatefulWidget {
   final lat;
   final long;
   final description;
+  final citizenEmail;
   
-  ComplaintOverviewCard({this.id, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long});
+  ComplaintOverviewCard({this.id, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -53,7 +55,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
             padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: size.height * 0.01),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,16 +63,43 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   children: [
                     Text(
                       widget.complaint,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
+                      // softWrap: true,
+                      // overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
+
                     SizedBox(
                       height: 5,
                     ),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.contacts,
+                          size: 12,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Posted by" + widget.citizenEmail ,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 5,
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.calendar_today,
@@ -88,6 +117,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                         ),
                       ],
                     ),
+
+                    
 
                     SizedBox(height: size.height*0.03),
 
@@ -137,7 +168,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: size.height*0.012),
+                        SizedBox(height: size.height*0.014),
                         Text(
                               "Status",
                               style: TextStyle(
@@ -148,19 +179,25 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           ],
                         ),
 
-                        SizedBox(width: size.width*0.09),
+                        SizedBox(width: size.width*0.08),
 
                         Column(
                           children: [
-                            GestureDetector(
-                              onTap:(){
-                                print("Upvote!");
-                              },
-                              child: Icon(
-                                Icons.arrow_upward_outlined,
+                            Container(
+                              width: size.width*0.08,
+                              height: size.height*0.04,
+                              child: InkWell(
+                                onTap:(){
+                                  print("Upvote!");
+                                },
+                                
+                                borderRadius: BorderRadius.circular(29),
+                                child: Icon(
+                                  Icons.arrow_upward_outlined,
+                                ),
                               ),
                             ),
-                            SizedBox(height: size.height*0.01),
+                            // SizedBox(height: size.height*0.01),
                             Text(
                               "Upvote",
                               style: TextStyle(
@@ -177,10 +214,18 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 Container(
                   width: size.width * 0.35,
                   height: size.height * 0.15,
-                  child: Image(
-                    image: NetworkImage(widget.image),
-                    fit: BoxFit.fitWidth,
-                  ),
+
+                  // child: CachedNetworkImage(
+                  //   imageUrl: widget.image,
+                  //   placeholder: (context, url) => CircularProgressIndicator(),
+                  //   errorWidget: (context, url, error) => Icon(Icons.error),
+                  //   fit: BoxFit.fitWidth,
+                  // ),
+                  // child: Image(
+                  //   image: NetworkImage(
+                  //     widget.image,
+                  //   ),
+                  // )
                 )
               ],
             ),

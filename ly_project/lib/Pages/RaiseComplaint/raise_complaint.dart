@@ -32,6 +32,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   String fileUrl;
   String imageUrl =
       "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
+  String docname = "";
 
   Future<LocationData> getLocation() async {
     Location location = new Location();
@@ -320,12 +321,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
     try {
       final emailid = await widget.auth.currentUserEmail();
-      await FirebaseFirestore.instance.collection('complaints').doc(emailid).set({
+      docname = uuid.v4();
+      await FirebaseFirestore.instance.collection('complaints').doc(docname).set({
         'citizenEmail': emailid,
         'complaint': _grievanceController.text.toString(),
         'description': _descriptionController.text.toString(),
         'dateTime': DateTime.now().toString(),
-        'id': uuid.v4(),
+        'id': docname,
         'imageData': {
           'dateTime': DateTime.now().toString(),
           'location': _localityController.text.toString(),
