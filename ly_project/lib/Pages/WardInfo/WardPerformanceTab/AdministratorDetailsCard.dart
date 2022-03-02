@@ -54,6 +54,7 @@ class AdministratorDetailsCard extends StatelessWidget {
                         height: size.height * 0.09,
                         imageUrl: "http://placebeard.it/640",
                         fit: BoxFit.fitHeight,
+                        placeholder: (context, url) => CircularProgressIndicator(),
                       ),
                     ),
                   ),

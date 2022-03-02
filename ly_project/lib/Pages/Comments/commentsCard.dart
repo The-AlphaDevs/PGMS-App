@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CommentsCard extends StatefulWidget {
   final photo;
@@ -22,7 +22,12 @@ class _CommentsCardState extends State<CommentsCard> {
       child: ListTile(
         leading: CircleAvatar(
           radius: size.width * 0.03,
-          // backgroundImage:NetworkImage(widget.photo),
+          // backgroundImage: 
+          child: CachedNetworkImage(
+                imageUrl: widget.photo,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
         ),
         title: Text(widget.name),
         subtitle: Text(

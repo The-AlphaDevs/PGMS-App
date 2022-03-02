@@ -170,7 +170,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                         )
                       );
                     },
-                    backgroundColor: Color(0xFF606fad),
+                    backgroundColor: Color(0xFF322144),
                     child: const Icon(Icons.add),
                   ),
                 ),

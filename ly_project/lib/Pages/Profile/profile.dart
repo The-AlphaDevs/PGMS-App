@@ -251,7 +251,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             radius: size.width * 0.15,
                                             backgroundImage: imageUrl == null
                                                 ? FileImage(file)
-                                                : NetworkImage(imageUrl),
+                                                : CachedNetworkImage(
+                                                      imageUrl: imageUrl,
+                                                      placeholder: (context, url) => CircularProgressIndicator(),
+                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                  ),
                                           ),
                                         ),
                                       ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,8 @@ import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
 import "package:latlong/latlong.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ly_project/Pages/Comments/commentsCard.dart';
 
 class DetailComplaint extends StatefulWidget {
   final id;
@@ -19,7 +22,17 @@ class DetailComplaint extends StatefulWidget {
   final location;
   final description;
 
-  DetailComplaint({this.id, this.complaint, this.description, this.location, this.status,this.image, this.date, this.supervisor, this.lat, this.long});
+  DetailComplaint(
+      {this.id,
+      this.complaint,
+      this.description,
+      this.location,
+      this.status,
+      this.image,
+      this.date,
+      this.supervisor,
+      this.lat,
+      this.long});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -36,16 +49,15 @@ class _DetailComplaintState extends State<DetailComplaint> {
   double longitude;
   String description;
 
-
   @override
-  void initState(){
-  super.initState();
-  latitude = double.parse(widget.lat);
-  longitude = double.parse(widget.long);
-  print("detail ka latitude - " + latitude.toString());
-  print("detail ka longitude - " + longitude.toString());
+  void initState() {
+    super.initState();
+    latitude = double.parse(widget.lat);
+    longitude = double.parse(widget.long);
+    print("detail ka latitude - " + latitude.toString());
+    print("detail ka longitude - " + longitude.toString());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -53,7 +65,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.id??"Ye null hai 1",
+          widget.id ?? "Ye null hai 1",
           style: TextStyle(
             fontSize: 15,
             color: Colors.white,
@@ -73,10 +85,13 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
-                      // image: DecorationImage(
-                      //   // image: NetworkImage(widget.image),
-                      //   fit: BoxFit.fitHeight,
-                      // ),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.image,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.fitHeight,
                     ),
                   ),
                   Container(
@@ -89,8 +104,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     // ),
                     child: FlutterMap(
                       options: MapOptions(
-                        center: LatLng(latitude,
-                            longitude),
+                        center: LatLng(latitude, longitude),
                         zoom: 13.0,
                       ),
                       layers: [
@@ -107,8 +121,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                             Marker(
                               width: 40.0,
                               height: 40.0,
-                              point: LatLng(latitude,
-                                  longitude),
+                              point: LatLng(latitude, longitude),
                               builder: (ctx) => Container(
                                 child: FlutterLogo(size: 0),
                               ),
@@ -151,7 +164,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     ),
                     Flexible(
                       child: Text(
-                        widget.location??"Location null hai",
+                        widget.location ?? "Location null hai",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[700],
@@ -180,7 +193,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               SizedBox(
                 height: screenSize.height * 0.06,
               ),
-              commentBar(screenSize),
+              commentBar(context, screenSize),
             ],
           ),
         ),
@@ -188,7 +201,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
     );
   }
 
-  Container commentBar(Size screenSize) {
+  Container commentBar(BuildContext context, Size screenSize) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.symmetric(
           vertical: screenSize.height * 0.003,
@@ -199,29 +213,111 @@ class _DetailComplaintState extends State<DetailComplaint> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Comments(id: widget.id,)));
+            onTap: () {
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => Comments(
+              //               id: widget.id,
+              //             )));
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.white,
+                //elevates modal bottom screen
+                elevation: 40,
+                // gives rounded corner to modal bottom screen
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                builder: (BuildContext context) {
+                  return Container(
+                    height: size.height*0.4,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: size.width*0.01, left: size.width*0.01, top: size.height*0.2, bottom: size.height*0.03),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                                  .collection("complaints")
+                                  .doc(widget.id)
+                                  .collection("comments")
+                                  .snapshots()
+                                  ,
+                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                            if(!snapshot.hasData){
+                              print("Connection state: has no data");            
+                              return Column(children: [
+                                  SizedBox(
+                                    height:size.height*0.2,
+                                  ),
+                                  CircularProgressIndicator(),
+                                ],
+                              );
+
+                            }
+                            else if(snapshot.connectionState == ConnectionState.waiting){
+                              print("Connection state: waiting");
+                              return Column(children: [   
+                                    SizedBox(
+                                      height:size.height*0.2,
+                                    ),
+                                    CircularProgressIndicator(),
+                                ],
+                              );
+                            }          
+                            
+                            else{
+                              // return ListView(
+                                // children: snapshot.data.docs.map((document) {
+                                print("Connection state: hasdata");
+                                  if(snapshot.data.docs.length == 0){
+                                    return Center(
+                                      child: Text("No Comments"),
+                                    );
+                                  } 
+                                  else{
+                                    return ListView.builder(
+                                    // scrollDirection: Axis.vertical,
+                                    itemCount: snapshot.data.docs.length,
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return CommentsCard
+                                      (
+                                        photo: snapshot.data.docs[index]["photo"],
+                                        name: snapshot.data.docs[index]["name"],
+                                        comment: snapshot.data.docs[index]["comment"],
+                                      );                        
+                                    },
+                                  );
+                                }
+                              }
+                            }
+                          ),
+                    ),
+                  );
             },
-            child:Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.insert_comment_outlined,
-                size: 25,
-                color: Colors.black,
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Text(
-                '50 Comments',
-                style: TextStyle(
-                  fontSize: 16,
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.insert_comment_outlined,
+                  size: 25,
                   color: Colors.black,
                 ),
-              ),
-            ],
-          ),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  '50 Comments',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
           IconButton(
             splashColor: Colors.transparent,
@@ -246,7 +342,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           children: [
             Flexible(
               child: Text(
-                widget.complaint??"Complaint null hai",
+                widget.complaint ?? "Complaint null hai",
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black,
@@ -271,12 +367,12 @@ class _DetailComplaintState extends State<DetailComplaint> {
             ),
             Flexible(
               child: Text(
-              widget.description,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.black,
+                widget.description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                ),
               ),
-            ),
             ),
           ],
         ),
@@ -317,7 +413,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
             ),
             Text(
-              widget.supervisor??"Supervisor null hai 1",
+              widget.supervisor ?? "Supervisor null hai 1",
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.black,
@@ -361,14 +457,18 @@ class _DetailComplaintState extends State<DetailComplaint> {
             borderRadius: BorderRadius.circular(29),
             child: FlatButton(
               onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TrackComplaints(
-                      complaint: widget.complaint,
-                      date: widget.date,
-                      location: widget.location,
-                      latitude: latitude,
-                      longitude: longitude,
-                    )))
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TrackComplaints(
+                              id: widget.id,
+                              complaint: widget.complaint,
+                              date: widget.date,
+                              location: widget.location,
+                              latitude: latitude,
+                              longitude: longitude,
+                              status: widget.status
+                            )))
               },
               color: Colors.blue[400],
               textColor: Colors.white,
