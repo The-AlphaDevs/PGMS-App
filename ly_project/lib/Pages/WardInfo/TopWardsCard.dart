@@ -28,9 +28,10 @@ class TopWardsCard extends StatelessWidget {
   final String secondWardPoints;
   final String thirdWardPoints;
   final BoxDecoration badgeDecoration = BoxDecoration(
-      border: Border.all(color: GOLDEN_YELLOW, width: 5),
+      // border: Border.all(color: GOLDEN_YELLOW, width: 5),
       shape: BoxShape.circle,
-      color: DARK_PURPLE);
+      // color: DARK_PURPLE
+      );
 
   bool isWardNameSimple(String name) =>
       name.replaceAll("Ward ", "").split(" ").length == 1;
@@ -85,7 +86,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.07,
-                        color: SILVER_GREY,
+                        // color: SILVER_GREY,
                         rank: "2",
                         position: -size.width * 0.029),
                     Positioned(
@@ -106,7 +107,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.08,
-                        color: GOLDEN_YELLOW,
+                        // color: GOLDEN_YELLOW,
                         rank: "1",
                         position: -size.width * 0.04),
                     Positioned(
@@ -127,7 +128,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.07,
-                        color: BRONZE_BROWN,
+                        // color: BRONZE_BROWN,
                         rank: "3",
                         position: -size.width * 0.029),
                     Positioned(
@@ -199,14 +200,14 @@ class TopWardsCard extends StatelessWidget {
         child: Center(
           child: Text(
             rank,
-            style: TextStyle(color: DARK_PURPLE, fontWeight: FontWeight.w700),
+            // style: TextStyle(color: DARK_PURPLE, fontWeight: FontWeight.w700),
           ),
         ),
-        decoration: BoxDecoration(
-          border: Border.all(color: DARK_PURPLE, width: 3),
-          shape: BoxShape.circle,
-          color: color,
-        ),
+        // decoration: BoxDecoration(
+        //   border: Border.all(color: DARK_PURPLE, width: 3),
+        //   shape: BoxShape.circle,
+        //   color: color,
+        // ),
       ),
     );
   }

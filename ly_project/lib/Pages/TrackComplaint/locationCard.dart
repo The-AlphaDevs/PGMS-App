@@ -10,6 +10,7 @@ class ComplaintCard extends StatefulWidget {
   final location;
   final latitude;
   final longitude;
+  
 
   ComplaintCard({this.complaint, this.date, this.location, this.latitude, this.longitude});
 
@@ -62,33 +63,15 @@ class _ComplaintCardState extends State<ComplaintCard> {
                     children: [
                       Text(
                         widget.complaint,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
+                        // softWrap: true,
+                        // overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+                            fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: size.height*0.02,
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            color: Colors.grey
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                      
 
                       SizedBox(height: 10),
                       
@@ -100,8 +83,33 @@ class _ComplaintCardState extends State<ComplaintCard> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold),
+                              fontSize: 13, fontWeight: FontWeight.w400),
                         ),
+                      ),
+
+                      SizedBox(
+                        height: 5,
+                      ),
+
+                      Row(
+                        
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            color: Colors.grey,
+                            size: 11,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.w400, color: Colors.grey, ),
+                          ),
+                        ],
                       ),
 
                       SizedBox(
@@ -125,45 +133,47 @@ class _ComplaintCardState extends State<ComplaintCard> {
                 //     fit: BoxFit.cover,
                 //   ),
                 // ),
-                Container(
-                  height: 100,
-                    // decoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.circular(6.0),
-                    //   image: DecorationImage(
-                    //     image: AssetImage('assets/loc.jpg'),
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
-                  // width: size.width * 0.42,
-                  child: FlutterMap(
-                    options: MapOptions(
-                      center: LatLng(widget.latitude,
-                          widget.longitude),
-                      zoom: 13.0,
-                    ),
-                    layers: [
-                      TileLayerOptions(
-                        urlTemplate:
-                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                        subdomains: ['a', 'b', 'c'],
-                        // attributionBuilder: (_) {
-                        //   return Text("© OpenStreetMap contributors");
-                        // },
-                      ),
-                      MarkerLayerOptions(
-                        markers: [
-                          Marker(
-                            width: 40,
-                            height: 40.0,
-                            point: LatLng(widget.latitude,
+                Flexible(
+                  child: Container(
+                    height: 100,
+                      // decoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.circular(6.0),
+                      //   image: DecorationImage(
+                      //     image: AssetImage('assets/loc.jpg'),
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      // ),
+                    // width: size.width * 0.42,
+                    child: FlutterMap(
+                      options: MapOptions(
+                        center: LatLng(widget.latitude,
                             widget.longitude),
-                            builder: (ctx) => Container(
-                              child: FlutterLogo(size: 0),
-                            ),
-                          ),
-                        ],
+                        zoom: 13.0,
                       ),
-                    ],
+                      layers: [
+                        TileLayerOptions(
+                          urlTemplate:
+                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          subdomains: ['a', 'b', 'c'],
+                          // attributionBuilder: (_) {
+                          //   return Text("© OpenStreetMap contributors");
+                          // },
+                        ),
+                        MarkerLayerOptions(
+                          markers: [
+                            Marker(
+                              width: 40,
+                              height: 40.0,
+                              point: LatLng(widget.latitude,
+                              widget.longitude),
+                              builder: (ctx) => Container(
+                                child: FlutterLogo(size: 0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

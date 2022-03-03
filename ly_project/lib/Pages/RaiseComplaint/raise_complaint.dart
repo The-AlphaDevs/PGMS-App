@@ -32,6 +32,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   String fileUrl;
   String imageUrl =
       "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
+  String docname = "";
 
   Future<LocationData> getLocation() async {
     Location location = new Location();
@@ -67,6 +68,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
   final _localityController = TextEditingController();
   final _grievanceController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -175,7 +177,20 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     labelStyle: TextStyle(
                       color: Colors.black,
                     ),
-                    labelText: 'Grievance',
+                    labelText: 'Complaint',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    labelText: 'Description',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         borderSide: BorderSide(color: Colors.black)),
@@ -306,11 +321,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
     try {
       final emailid = await widget.auth.currentUserEmail();
-      await FirebaseFirestore.instance.collection('complaints').doc().set({
+      docname = uuid.v4();
+      await FirebaseFirestore.instance.collection('complaints').doc(docname).set({
         'citizenEmail': emailid,
         'complaint': _grievanceController.text.toString(),
+        'description': _descriptionController.text.toString(),
         'dateTime': DateTime.now().toString(),
-        'id': uuid.v4(),
+        'id': docname,
         'imageData': {
           'dateTime': DateTime.now().toString(),
           'location': _localityController.text.toString(),

@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/utils/colors.dart';
-// import 'package:intl/intl_browser.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
@@ -14,18 +14,20 @@ class ComplaintOverviewCard extends StatefulWidget {
   final supervisor;
   final lat;
   final long;
-  ComplaintOverviewCard({this.id, this.complaint, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long});
+  final description;
+  final citizenEmail;
+  
+  ComplaintOverviewCard({this.id, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
 
 class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
-  List upvoteArray;
-  // final String complaintStatus = "In Progress";
-
+  
   @override
+  
   Widget build(BuildContext context) {
-    // upvoteArray = widget.upvotes;
+    
     Size size = MediaQuery.of(context).size;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
@@ -39,6 +41,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
                   id: widget.id,
                   complaint: widget.complaint,
+                  description: widget.description,
+                  // name: widget.name,
                   date: widget.date,
                   status: widget.status,
                   image: widget.image,
@@ -49,58 +53,117 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 ))));
           },
           child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.03, vertical: size.height * 0.02),
+            padding: EdgeInsets.fromLTRB(size.width * 0.01, size.height*0.01, size.width * 0.01, size.height*0.005),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.complaint,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 12,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Center(
-                          child: Column(
+                Container(
+                  width: size.width * 0.45,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.complaint,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+
+                      SizedBox(
+                        height: size.height*0.02,
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.contacts,
+                            size: 12,
+                            color: Colors.black,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Posted by" + widget.citizenEmail ,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+                        height: 5,
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            size: 12,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+
+                      
+
+                      SizedBox(height: size.height*0.01),
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   // crossAxisAlignment: CrossAxisAlignment.end,
+                      //   children: <Widget>[
+                          
+                      //   ],
+                      // ),
+
+                      // SizedBox(height: 4),
+                      // Container(
+                      //   height: size.height * 0.04,
+                        
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(29),
+                      //     child: FlatButton(
+                      //       color: Colors.amber[500],
+                      //       onPressed: () {
+                      //         // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
+                      //       },
+                      //       child: Text('Comment',
+                      //           style: TextStyle(
+                      //             fontSize: 12,
+                      //             color: Colors.white,
+                      //             fontWeight: FontWeight.bold,
+                      //           )),
+                      //     ),
+                      //   ),
+                      // )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                        children: [
+
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: size.height*0.005),
                               Text(
                                 widget.status,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 11,
                                   color: COMPLAINT_STATUS_COLOR_MAP[
                                               widget.status] !=
                                           null
@@ -110,38 +173,74 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(height: size.height*0.008),
+                              Text(
+                                "Status",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 10,
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4),
-                    Container(
-                      height: size.height * 0.04,
-                      
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(29),
-                        child: FlatButton(
-                          color: Colors.amber[500],
-                          onPressed: () {
-                            // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
-                          },
-                          child: Text('Comment',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
+
+                          SizedBox(width: size.width*0.05),
+
+                          Column(
+                            children: [
+                              Container(
+                                width: size.width*0.08,
+                                height: size.height*0.035,
+                                child: InkWell(
+                                  onTap:(){
+                                    print("Upvote!");
+                                  },
+                                  
+                                  borderRadius: BorderRadius.circular(29),
+                                  child: Icon(
+                                    Icons.arrow_upward_outlined,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: size.height*0.00),
+                              Text(
+                                "Upvote",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(width: size.width*0.05),
+
+                          InkWell(
+                            onTap: () {
+                              print("Bookmarked!");
+
+
+                            },
+                            borderRadius: BorderRadius.circular(20),
+                            child: Icon(
+                              Icons.bookmark_border_rounded,
+                              size: size.height*0.04,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
                 Container(
-                  width: size.width * 0.3,
-                  height: size.height * 0.1,
-                  child: Image(
-                    image: NetworkImage(widget.image),
+                  width: size.width * 0.35,
+                  height: size.height * 0.15,
+
+                  child: CachedNetworkImage(
+                    imageUrl: widget.image,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                     fit: BoxFit.fitWidth,
                   ),
                 )

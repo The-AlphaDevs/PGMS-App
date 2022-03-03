@@ -54,7 +54,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldState,
-      // drawer: NavDrawer(auth: widget.auth, onSignedOut: widget.onSignedOut),
+      
       body: Stack(
         children: [
           //TabBarViews
@@ -170,7 +170,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                         )
                       );
                     },
-                    backgroundColor: Color(0xFF606fad),
+                    backgroundColor: Color(0xFF322144),
                     child: const Icon(Icons.add),
                   ),
                 ),

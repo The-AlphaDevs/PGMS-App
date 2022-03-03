@@ -43,46 +43,46 @@ class LeaderboardTable extends StatelessWidget {
               ],
             ),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: dummyPerformanceData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: index % 2 == 0 ? Colors.white : Colors.blue[100],
-                  borderRadius: index != dummyPerformanceData.length - 1
-                      ? BorderRadius.zero
-                      : BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8),
-                        ),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                child: Row(
-                  children: [
-                    Container(
-                        padding: EdgeInsets.only(left: size.width * 0.01),
-                        width: size.width * 0.14,
-                        child: Text(dummyPerformanceData[index]["Rank"])),
-                    Container(
-                        width: size.width * 0.31,
-                        child: Text(
-                          dummyPerformanceData[index]["Ward"],
-                          softWrap: true,
-                        )),
-                    Container(
-                        width: size.width * 0.3,
-                        child: Text(dummyPerformanceData[index]["Locality"],
-                            softWrap: true)),
-                    Container(
-                        child: Text(dummyPerformanceData[index]["Points"],
-                            softWrap: true)),
-                  ],
-                ),
-              );
-            },
-          )
+          // ListView.builder(
+          //   physics: NeverScrollableScrollPhysics(),
+          //   shrinkWrap: true,
+          //   itemCount: dummyPerformanceData.length,
+          //   itemBuilder: (BuildContext context, int index) {
+          //     return Container(
+          //       decoration: BoxDecoration(
+          //         color: index % 2 == 0 ? Colors.white : Colors.blue[100],
+          //         borderRadius: index != dummyPerformanceData.length - 1
+          //             ? BorderRadius.zero
+          //             : BorderRadius.only(
+          //                 bottomLeft: Radius.circular(8),
+          //                 bottomRight: Radius.circular(8),
+          //               ),
+          //       ),
+          //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          //       child: Row(
+          //         children: [
+          //           // Container(
+          //           //     padding: EdgeInsets.only(left: size.width * 0.01),
+          //           //     width: size.width * 0.14,
+          //           //     child: Text(dummyPerformanceData[index]["Rank"])),
+          //           // Container(
+          //           //     width: size.width * 0.31,
+          //           //     child: Text(
+          //           //       dummyPerformanceData[index]["Ward"],
+          //           //       softWrap: true,
+          //           //     )),
+          //           // Container(
+          //           //     width: size.width * 0.3,
+          //           //     child: Text(dummyPerformanceData[index]["Locality"],
+          //           //         softWrap: true)),
+          //           // Container(
+          //           //     child: Text(dummyPerformanceData[index]["Points"],
+          //           //         softWrap: true)),
+          //         ],
+          //       ),
+          //     );
+          //   },
+          // )
         ],
       ),
     );

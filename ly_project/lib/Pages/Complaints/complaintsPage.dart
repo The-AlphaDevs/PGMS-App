@@ -7,7 +7,8 @@ import 'package:ly_project/Services/auth.dart';
 class ComplaintsPage extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  ComplaintsPage({Key key, this.auth, this.onSignedOut}) : super(key: key);
+  final String userEmail;
+  ComplaintsPage({Key key, this.auth, this.onSignedOut, this.userEmail});
 
   @override
   _ComplaintsPageState createState() => _ComplaintsPageState();
@@ -48,19 +49,11 @@ class _ComplaintsPageState extends State<ComplaintsPage>
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
           child: Container(
-            // color: Colors.white,
+           
             child: TabBar(
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.label,
-              // indicator: BoxDecoration(
-              //   color: Color(0xFF606fad),
-              //   borderRadius: BorderRadius.only(
-              //     topLeft: Radius.circular(15),
-              //     topRight: Radius.circular(15),
-              //     bottomRight: Radius.circular(15),
-              //     bottomLeft: Radius.circular(15),
-              //   ),
-              // ),
+              
               tabs: [
                 Tab(
                   child: Padding(
@@ -69,7 +62,6 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                       children: [
                         Icon(
                           Icons.mode_comment,
-                          // color: Colors.grey[500],
                           size: 24,
                         ),
                         Flexible(
@@ -114,8 +106,8 @@ class _ComplaintsPageState extends State<ComplaintsPage>
           TabBarView(
         controller: _tabController,
         children: [
-          CurrentComplaintsTab(),
-          ComplaintsHistoryTab(),
+          CurrentComplaintsTab(userEmail: widget.userEmail),
+          ComplaintsHistoryTab(userEmail: widget.userEmail),
         ],
       ),
       //     ),
