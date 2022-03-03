@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
+import 'package:ly_project/Utils/colors.dart';
 
 class TrackComplaints extends StatefulWidget {
   final id;
@@ -28,6 +29,7 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
     return Scaffold(
       appBar: AppBar(
         title: Text("Track Complaint"),
+        backgroundColor: DARK_BLUE,
       ),
       body: Column(
         children: [

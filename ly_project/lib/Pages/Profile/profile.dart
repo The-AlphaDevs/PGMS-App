@@ -17,6 +17,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'dart:async';
+
+import 'package:ly_project/Utils/colors.dart';
 // import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 
@@ -51,8 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _autophoneno = "";
   String fileurl;
   String userType = "User";
-  String imageUrl =
-      "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
+  String imageUrl = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
 
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phonenoController = new TextEditingController();
@@ -186,6 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          backgroundColor: DARK_BLUE,
           actions: [
             PopupMenuButton<String>(
               onSelected: handleMenuClick,
@@ -247,16 +249,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: CircleAvatar(
                                           radius: size.width * 0.16,
                                           backgroundColor: Colors.white,
-                                          child: CircleAvatar(
-                                            radius: size.width * 0.15,
-                                            backgroundImage: imageUrl == null
-                                                ? FileImage(file)
-                                                : CachedNetworkImage(
-                                                      imageUrl: imageUrl,
-                                                      placeholder: (context, url) => CircularProgressIndicator(),
-                                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                                  ),
+                                          child: 
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(200),
+                                            child: CachedNetworkImage(
+                                              fit: BoxFit.fitWidth,
+                                              imageUrl:  imageUrl,
+                                              placeholder: (context, url) => CircularProgressIndicator(),
+                                              errorWidget: (context, url, error) => Icon(Icons.error),
+                                            ),
                                           ),
+                                          // CircleAvatar(
+                                          //   radius: size.width * 0.15,
+                                          //   backgroundImage: imageUrl == null
+                                          //       ? FileImage(file)
+                                          //       : CachedNetworkImage(
+                                          //             imageUrl: imageUrl,
+                                          //             placeholder: (context, url) => CircularProgressIndicator(),
+                                          //             errorWidget: (context, url, error) => Icon(Icons.error),
+                                          //         ),
+                                          // ),
                                         ),
                                       ),
                                       onTap: () {

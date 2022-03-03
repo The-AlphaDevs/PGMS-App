@@ -86,7 +86,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.07,
-                        // color: SILVER_GREY,
+                        color: SILVER_GREY,
                         rank: "2",
                         position: -size.width * 0.029),
                     Positioned(
@@ -107,7 +107,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.08,
-                        // color: GOLDEN_YELLOW,
+                        color: GOLDEN_YELLOW,
                         rank: "1",
                         position: -size.width * 0.04),
                     Positioned(
@@ -128,7 +128,7 @@ class TopWardsCard extends StatelessWidget {
                     ),
                     buildRankBadge(
                         radius: size.width * 0.07,
-                        // color: BRONZE_BROWN,
+                        color: BRONZE_BROWN,
                         rank: "3",
                         position: -size.width * 0.029),
                     Positioned(

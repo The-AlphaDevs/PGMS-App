@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
+import 'package:ly_project/Services/auth.dart';
 
 class FeedTab extends StatefulWidget {
-
+  final BaseAuth auth;
+  FeedTab({this.auth});
+  
   @override
   State<FeedTab> createState() => _FeedTabState();
 }
@@ -66,6 +69,7 @@ class _FeedTabState extends State<FeedTab> {
                       return ComplaintOverviewCard
                       (
                         id: snapshot.data.docs[index]["id"],
+                        auth: widget.auth,
                         complaint: snapshot.data.docs[index]["complaint"],
                         date: snapshot.data.docs[index]["dateTime"],
                         status: snapshot.data.docs[index]["status"],

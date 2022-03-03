@@ -24,7 +24,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
           stream: FirebaseFirestore.instance
                   .collection("complaints")
                   .where("citizenEmail", isEqualTo: widget.userEmail)
-                  .where("status", isEqualTo: "Pending")
+                  .where("status", whereIn: ["Pending", "In Progress"])
                   // .orderBy("dateTime", descending: true)
                   .snapshots()
                   ,
@@ -81,6 +81,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                         supervisor: snapshot.data.docs[index]["supervisorName"],
                         lat: snapshot.data.docs[index]["latitude"],
                         long: snapshot.data.docs[index]["longitude"],
+                        description: snapshot.data.docs[index]["description"],
+                        citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                       );                        
                     },
                   );

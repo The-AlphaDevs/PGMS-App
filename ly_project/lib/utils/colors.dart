@@ -11,6 +11,7 @@ const DARK_PURPLE = Color(0xFF322144);
 const GOLDEN_YELLOW = Color(0xFFFFCA28);
 final SILVER_GREY = Colors.grey[300];
 final BRONZE_BROWN = Colors.orange[400];
+const DARK_BLUE = Color(0xFF181D3D);
 
 List<Color> donutChartColorList = [
   Colors.green,

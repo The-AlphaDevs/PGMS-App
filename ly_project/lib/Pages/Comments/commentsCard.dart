@@ -21,7 +21,7 @@ class _CommentsCardState extends State<CommentsCard> {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          radius: size.width * 0.03,
+          radius: size.width * 0.04,
           // backgroundImage: 
           child: CachedNetworkImage(
                 imageUrl: widget.photo,
@@ -29,11 +29,11 @@ class _CommentsCardState extends State<CommentsCard> {
                 errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
-        title: Text(widget.name),
+        title: Text(widget.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         subtitle: Text(
           widget.comment,
+          style: TextStyle(fontSize:15)
         ),
-        isThreeLine: true,
       ),
     );
   }

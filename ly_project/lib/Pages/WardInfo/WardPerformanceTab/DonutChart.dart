@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ly_project/utils/colors.dart';
+import 'package:ly_project/Utils/colors.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class DonutChart extends StatelessWidget {

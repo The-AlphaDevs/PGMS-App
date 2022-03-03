@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
+import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
+  final BaseAuth auth;
   final complaint;
   final status;
   final date;
@@ -17,7 +19,7 @@ class ComplaintOverviewCard extends StatefulWidget {
   final description;
   final citizenEmail;
   
-  ComplaintOverviewCard({this.id, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail});
+  ComplaintOverviewCard({this.id, this.auth, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -39,6 +41,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
             print("Tap!");
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
+                  auth: widget.auth,
                   id: widget.id,
                   complaint: widget.complaint,
                   description: widget.description,

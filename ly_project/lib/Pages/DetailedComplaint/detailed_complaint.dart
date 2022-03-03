@@ -2,16 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ly_project/Pages/Comments/commentsPage.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
 import "package:latlong/latlong.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ly_project/Pages/Comments/commentsCard.dart';
+import 'package:ly_project/Services/auth.dart';
+import 'package:ly_project/Utils/colors.dart';
 
 class DetailComplaint extends StatefulWidget {
   final id;
+  final BaseAuth auth;
   final status;
   final image;
   final date;
@@ -24,6 +26,7 @@ class DetailComplaint extends StatefulWidget {
 
   DetailComplaint(
       {this.id,
+      this.auth,
       this.complaint,
       this.description,
       this.location,
@@ -48,6 +51,14 @@ class _DetailComplaintState extends State<DetailComplaint> {
   double latitude;
   double longitude;
   String description;
+  String _comment="";
+  String _name ="";
+  String _photo="";
+
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  TextEditingController _commentController = new TextEditingController();
 
   @override
   void initState() {
@@ -63,6 +74,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           widget.id ?? "Ye null hai 1",
@@ -72,6 +84,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: DARK_BLUE, 
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -191,7 +204,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
               trackComplaintButton(context, screenSize),
               SizedBox(
-                height: screenSize.height * 0.06,
+                height: screenSize.height * 0.04,
               ),
               commentBar(context, screenSize),
             ],
@@ -209,7 +222,9 @@ class _DetailComplaintState extends State<DetailComplaint> {
           horizontal: screenSize.width * 0.02),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5), color: Colors.grey[200]),
-      child: Row(
+      child: Column(
+        children:[
+          Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
@@ -224,16 +239,16 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 context: context,
                 backgroundColor: Colors.white,
                 //elevates modal bottom screen
-                elevation: 40,
+                elevation: 100,
                 // gives rounded corner to modal bottom screen
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 builder: (BuildContext context) {
                   return Container(
-                    height: size.height*0.4,
+                    height: size.height*0.75,
                     child: Padding(
-                      padding: EdgeInsets.only(right: size.width*0.01, left: size.width*0.01, top: size.height*0.2, bottom: size.height*0.03),
+                      padding: EdgeInsets.only(right: size.width*0.005, left: size.width*0.005, top: size.height*0.01, bottom: size.height*0.01),                      
                       child: StreamBuilder(
                           stream: FirebaseFirestore.instance
                                   .collection("complaints")
@@ -274,20 +289,23 @@ class _DetailComplaintState extends State<DetailComplaint> {
                                     );
                                   } 
                                   else{
-                                    return ListView.builder(
-                                    // scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.docs.length,
-                                    padding: EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      return CommentsCard
-                                      (
-                                        photo: snapshot.data.docs[index]["photo"],
-                                        name: snapshot.data.docs[index]["name"],
-                                        comment: snapshot.data.docs[index]["comment"],
-                                      );                        
-                                    },
+                                    return 
+                                        
+                                        ListView.builder(
+                                        // scrollDirection: Axis.vertical,
+                                        itemCount: snapshot.data.docs.length,
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          
+                                          return CommentsCard
+                                          (
+                                            photo: snapshot.data.docs[index]["photo"],
+                                            name: snapshot.data.docs[index]["name"],
+                                            comment: snapshot.data.docs[index]["comment"],
+                                          );                        
+                                        },
                                   );
                                 }
                               }
@@ -295,7 +313,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                           ),
                     ),
                   );
-            },
+                },
               );
             },
             child: Row(
@@ -310,7 +328,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   width: 15,
                 ),
                 Text(
-                  '50 Comments',
+                  'Comments',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -332,7 +350,101 @@ class _DetailComplaintState extends State<DetailComplaint> {
           ),
         ],
       ),
+      Form(
+        key: _formKey,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children:[
+          Container(
+            width: size.width*0.635,
+            height: size.height*0.05,
+            child: TextFormField(
+              controller: _commentController,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return "Please enter some value";
+                } else {
+                  if (value.length < 3) {
+                    return "Minimum length must be 3";
+                  }
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+                labelText: "Type your Comment here",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)),
+                    borderSide: BorderSide(
+                        color: Colors.black)),
+              ),
+            ),
+          ),
+          // SizedBox(
+          //   width: size.width*0.0,
+          // ),
+          FlatButton(
+            onPressed: ()async {
+              if (validateAndSave(_formKey)) {
+                String result = await uploadcomments();
+                if(result=='Success'){
+                  const snackBar = SnackBar(
+                    content: Text('Comment Posted!'),
+                    duration: Duration(seconds: 2),
+                  );
+                  FocusScope.of(context).unfocus();
+                  _scaffoldKey.currentState.showSnackBar(snackBar);
+                  _commentController.clear();
+                  
+                }else{
+                  const snackBar = SnackBar(
+                    content: Text('Error in Posting Comment!'),
+                  );
+
+                  _scaffoldKey.currentState.showSnackBar(snackBar);
+                }
+              }
+             },
+            child: Text('Post',style:TextStyle(color: Colors.blue, fontSize: 15)),
+          )
+        ]
+      )
+      )
+        ]),
     );
+  }
+
+  bool validateAndSave(formKey) {
+    final isValid = formKey.currentState.validate();
+    if (isValid) {
+      formKey.currentState.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<String> uploadcomments() async {
+    try {
+      final emailid = await widget.auth.currentUserEmail();
+      final doc = await FirebaseFirestore.instance.collection('users').doc(emailid).get(); 
+      _name = doc.data()['name'];
+      _photo = doc.data()['photo'];
+      print("Photo: "+_photo.toString());
+      await FirebaseFirestore.instance.collection('complaints').doc(widget.id).collection('comments').doc().set({
+        'name': _name,
+        'comment': _commentController.text.toString(),
+        'photo': _photo
+      });
+      print("Dusra Photo: "+_photo.toString());
+      return "Success";
+    } catch (e) {
+      print("Error: " + e.toString());
+      return "Error";
+    }
   }
 
   Column complaintDetails(Size screenSize) {
@@ -470,7 +582,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                               status: widget.status
                             )))
               },
-              color: Colors.blue[400],
+              color: DARK_BLUE,
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
                   vertical: screenSize.height * 0.014,

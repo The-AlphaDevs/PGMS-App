@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Complaints/current_complaints_tab.dart';
 import 'package:ly_project/Pages/Complaints/history_tab.dart';
 import 'package:ly_project/Services/auth.dart';
+import 'package:ly_project/Utils/colors.dart';
 
 class ComplaintsPage extends StatefulWidget {
   final BaseAuth auth;
@@ -45,7 +46,9 @@ class _ComplaintsPageState extends State<ComplaintsPage>
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
-        title: Text('Your Complaints'),
+        title: Text('Your Complaints', ),
+        backgroundColor: DARK_BLUE,
+        
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
           child: Container(
@@ -53,7 +56,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
             child: TabBar(
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.label,
-              
+              indicatorColor: Colors.white,
               tabs: [
                 Tab(
                   child: Padding(
@@ -67,7 +70,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                         Flexible(
                           child: Text(
                             'Ongoing Complaints ',
-                            style: TextStyle(fontSize: 12, color: Colors.black),
+                            style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ),
                       ],
@@ -86,7 +89,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                         ),
                         Text(
                           'Past Complaints',
-                          style: TextStyle(fontSize: 12, color: Colors.black),
+                          style: TextStyle(fontSize: 12, color: Colors.white),
                         ),
                       ],
                     ),

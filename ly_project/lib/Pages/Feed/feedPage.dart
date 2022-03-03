@@ -10,6 +10,7 @@ import 'package:ly_project/Pages/Feed/BookmarksTab.dart';
 import 'package:ly_project/Pages/Feed/FeedTab.dart';
 import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
+import 'package:ly_project/Utils/colors.dart';
 import 'package:ly_project/Widgets/CurveClipper.dart';
 
 class Feed extends StatefulWidget {
@@ -62,7 +63,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                FeedTab(),
+                FeedTab(auth: widget.auth,),
                 BookmarksTab(),
               ],
             ),
@@ -170,7 +171,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                         )
                       );
                     },
-                    backgroundColor: Color(0xFF322144),
+                    backgroundColor: DARK_BLUE,
                     child: const Icon(Icons.add),
                   ),
                 ),
