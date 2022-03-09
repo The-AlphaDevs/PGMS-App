@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ly_project/Utils/colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -92,11 +93,12 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Raise a Complaint"),
+        backgroundColor: DARK_BLUE,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -114,7 +116,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                           if (!snapshot.hasData) {
                             return Center(
                               child: Container(
-                                height: screenSize.height * 0.04,
+                                height: size.height * 0.04,
                                 child: CircularProgressIndicator(),
                               ),
                             );
@@ -152,7 +154,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                           }
                           return Center(
                             child: Container(
-                              height: screenSize.height * 0.02,
+                              height: size.height * 0.02,
                               child: CircularProgressIndicator(),
                             ),
                           );
@@ -196,28 +198,35 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
+
                 SizedBox(height: 20),
-                MaterialButton(
-                    onPressed: () async{
-                     await  _upload();
-                    },
-                    color: Colors.blue,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text("Add Photo",
-                              style: TextStyle(color: Colors.white))
-                        ])),        
-                        file != null?
-                        Image.file(
-                          File(file.path),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        )
-                        :
-                        SizedBox(),
+
+                Padding(
+                  padding: EdgeInsets.fromLTRB(80.0, size.height*0.01, 70.0, size.height*0.01),
+                  child: MaterialButton(
+                      onPressed: () async{
+                       await  _upload();
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(22.0)),
+                      color: Colors.blue,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.photo, color: Colors.white),
+                            SizedBox(width: 10),
+                            Text("Add Photo",
+                                style: TextStyle(color: Colors.white))
+                          ])),
+                ),        
+                file != null?
+                Image.file(
+                  File(file.path),
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                )
+                :
+                SizedBox(),
                 // Stack(
                 //   alignment: AlignmentDirectional.center,
                 //   children: [
@@ -234,14 +243,15 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                 //   ],
                 // ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(35.0, 20.0, 35.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(80.0, 20.0, 70.0, 10.0),
                   child: Material(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(22.0)),
                     elevation: 5.0,
-                    color: Colors.blue,
+                    color: DARK_BLUE,
                     clipBehavior: Clip.antiAlias,
                     child: MaterialButton(
+                        color: DARK_BLUE,
                         onPressed: () async {
                           if (validateAndSave(_formKey)) {
                             // Scaffold.of(context).showSnackBar(SnackBar(
@@ -320,7 +330,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     print(imageUrl);
 
     try {
-      final emailid = await widget.auth.currentUserEmail();
+      final emailid = widget.auth.currentUserEmail();
       docname = uuid.v4();
       await FirebaseFirestore.instance.collection('complaints').doc(docname).set({
         'citizenEmail': emailid,
@@ -342,7 +352,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'status': 'Pending',
         'supervisorEmail': null,
         'supervisorId': null,
-        'supervisorName': null
+        'supervisorName': null,
+        'upvoteCount':0
       });
       return "Success";
     } catch (e) {

@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
+import 'package:ly_project/Services/auth.dart';
 
 
 class CurrentComplaintsTab extends StatefulWidget {
   
   final String userEmail;
-  CurrentComplaintsTab({this.userEmail});
+  final BaseAuth auth;
+  CurrentComplaintsTab({this.userEmail, this.auth});
   
   @override
   State<CurrentComplaintsTab> createState() => _CurrentComplaintsTabState();
@@ -72,6 +74,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                       
                       return ComplaintOverviewCard
                       (
+                        auth: widget.auth,
                         id: snapshot.data.docs[index]["id"],
                         complaint: snapshot.data.docs[index]["complaint"],
                         date: snapshot.data.docs[index]["dateTime"],
@@ -83,6 +86,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                         long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                        upvoteCount: snapshot.data.docs[index]["upvoteCount"],
                       );                        
                     },
                   );

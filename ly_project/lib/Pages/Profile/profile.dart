@@ -109,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> autofill() async {
     try {
-      final user = await widget.auth.currentUserEmail();
+      final user = widget.auth.currentUserEmail();
       print(user);
       FirebaseFirestore.instance
           .collection('users')
@@ -189,17 +189,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: DARK_BLUE,
           actions: [
-            PopupMenuButton<String>(
-              onSelected: handleMenuClick,
-              itemBuilder: (BuildContext context) {
-                return menuItems.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
+            // PopupMenuButton<String>(
+            //   onSelected: handleMenuClick,
+            //   itemBuilder: (BuildContext context) {
+            //     return menuItems.map((String choice) {
+            //       return PopupMenuItem<String>(
+            //         value: choice,
+            //         child: Text(choice),
+            //       );
+            //     }).toList();
+            //   },
+            // ),
+            IconButton(icon: Icon(Icons.logout), onPressed:() => handleMenuClick("Logout"))
           ],
           title: Text(
             "My Profile",
@@ -646,7 +647,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(imageUrl);
 
     try {
-      final emailid = await widget.auth.currentUserEmail();
+      final emailid = widget.auth.currentUserEmail();
       await FirebaseFirestore.instance.collection('users').doc(emailid).update({
         'name': _name,
         'email': _email,

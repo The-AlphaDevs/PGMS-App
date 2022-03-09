@@ -95,12 +95,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 color: Colors.white,
               ),
               Icon(
-                Icons.notifications,
+                Icons.notes,
                 size: 30,
                 color: Colors.white,
               ),
               Icon(
-                Icons.view_list_rounded,
+                Icons.star_rate_outlined,
                 size: 30,
                 color: Colors.white,
               ),

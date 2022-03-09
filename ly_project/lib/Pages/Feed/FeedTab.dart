@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
 import 'package:ly_project/Services/auth.dart';
+import 'package:uuid/uuid.dart';
 
 class FeedTab extends StatefulWidget {
   final BaseAuth auth;
@@ -12,6 +13,7 @@ class FeedTab extends StatefulWidget {
 }
 
 class _FeedTabState extends State<FeedTab> {
+  var uuid = Uuid();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,7 +24,7 @@ class _FeedTabState extends State<FeedTab> {
           stream: FirebaseFirestore.instance
                   .collection("complaints")
                   .where("status", whereIn:  ["Pending", "In Progress"])
-                  .orderBy("dateTime", descending: true)
+                  .orderBy("upvoteCount", descending: true)
                   .snapshots()
                   ,
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -58,16 +60,20 @@ class _FeedTabState extends State<FeedTab> {
                     );
                   } 
                   else{
+                    print("List built !!");
                     return ListView.builder(
                     // scrollDirection: Axis.vertical,
                     itemCount: snapshot.data.docs.length,
                     padding: EdgeInsets.only(
                         left: 10, right: 10),
                     shrinkWrap: true,
+                    key: new Key(uuid.v4()),
                     itemBuilder: (context, index) {
                       
                       return ComplaintOverviewCard
-                      (
+                      (// 
+                        
+                        docId: snapshot.data.docs[index].id,
                         id: snapshot.data.docs[index]["id"],
                         auth: widget.auth,
                         complaint: snapshot.data.docs[index]["complaint"],
@@ -80,6 +86,7 @@ class _FeedTabState extends State<FeedTab> {
                         long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                        upvoteCount: snapshot.data.docs[index]["upvoteCount"],
                       );                        
                     },
                   );

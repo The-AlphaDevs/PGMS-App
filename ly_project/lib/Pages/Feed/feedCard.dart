@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
@@ -18,18 +20,106 @@ class ComplaintOverviewCard extends StatefulWidget {
   final long;
   final description;
   final citizenEmail;
+  final docId;
+  final upvoteCount;
   
-  ComplaintOverviewCard({this.id, this.auth, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail});
+  ComplaintOverviewCard({this.id, this.docId, this.auth, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail,
+  this.upvoteCount
+  });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
 
 class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
-  
-  @override
-  
-  Widget build(BuildContext context) {
+  bool isUpvoted = false;
+  String complaintId;
+  String userEmail;
+  int upvoteCount;
+
+  Future<void> updateUpvoteCount(DocumentReference upvoteDoc, DocumentReference complaintDoc, int updateValue) async{
+    try{
+      await FirebaseFirestore.instance.runTransaction((transaction) async{
+        //Get upvote count from the complaint doc
+        DocumentSnapshot snapshot = await transaction.get(complaintDoc);
+        int newUpvoteCount = snapshot.data()['upvoteCount']  + updateValue; 
+
+         //Update the upvote count as newUpvoteCount in the complaint doc
+        transaction.update(complaintDoc, {"upvoteCount":(newUpvoteCount)});
+
+        //Update upvoteCount on screen
+        setState(()=>upvoteCount=newUpvoteCount);
+      });
+    }catch(e){
+      print("Failed to update upvote counter!");
+    }
+  }
+
+  /// Returns true if complaint is upvoted successfully
+  Future<bool> markAsUpvoted({bool init=false}) async{
+    try{
+
+      setState(()=>isUpvoted=true);
+      if(init)
+        return true;
     
+      var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
+      var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+      await upvoteDoc.set({
+        "upvotedAt": DateTime.now().toString(),
+        "upvotedBy": userEmail
+      });
+      await updateUpvoteCount(upvoteDoc, complaintDoc, 1);
+      return true;
+  }catch(e){
+      print("Failed to upvote");
+      setState(()=>isUpvoted=false);
+      return false;
+    }
+  }
+
+  /// Returns true if the upvote is removed successfully
+  Future<bool> removeUpvote() async {
+    try{
+      setState(()=>isUpvoted=false);
+      var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
+      var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+      await upvoteDoc.delete();
+      await updateUpvoteCount(upvoteDoc, complaintDoc, -1);
+
+      return true;
+    }catch(e){
+      print("Failed to remove upvote!");
+      setState(()=>isUpvoted=true);
+      return false;
+    }
+  } 
+
+  Future<bool> checkIfUpvoted() async{
+    try {
+    // Get reference to Firestore collection
+    var collectionRef = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes");
+    var upvoteDoc = await collectionRef.doc(userEmail).get();
+    if(upvoteDoc.exists) 
+      markAsUpvoted(init:true);
+
+    return upvoteDoc.exists;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    userEmail = widget.auth.currentUserEmail();
+    complaintId = widget.docId;
+    upvoteCount = widget.upvoteCount;
+    checkIfUpvoted();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+     print("upvoteCount :- " + upvoteCount.toString());
     Size size = MediaQuery.of(context).size;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
@@ -53,7 +143,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   location: widget.location,
                   lat: widget.lat,
                   long: widget.long
-                ))));
+                )),),);
           },
           child: Container(
             padding: EdgeInsets.fromLTRB(size.width * 0.01, size.height*0.01, size.width * 0.01, size.height*0.005),
@@ -195,19 +285,33 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                                 width: size.width*0.08,
                                 height: size.height*0.035,
                                 child: InkWell(
-                                  onTap:(){
-                                    print("Upvote!");
+                                  onTap:()async {
+
+                                  //Check if upvoted already
+                                  if(isUpvoted){
+                                    //Remove upvote
+                                    await removeUpvote();
+                                    print("Upvote Removed!");
+                                    
+                                  }
+                                  else{
+                                    //Add upvote 
+                                    await markAsUpvoted();
+                                    await HapticFeedback.vibrate();
+                                    print("Upvoted!");
+                                  }
                                   },
                                   
                                   borderRadius: BorderRadius.circular(29),
                                   child: Icon(
                                     Icons.arrow_upward_outlined,
+                                    color: isUpvoted?Colors.orange:Colors.grey, 
                                   ),
                                 ),
                               ),
                               SizedBox(height: size.height*0.00),
                               Text(
-                                "Upvote",
+                                "Upvote $upvoteCount",
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 10,
@@ -242,7 +346,13 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
 
                   child: CachedNetworkImage(
                     imageUrl: widget.image,
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) => Center(
+                      child:Container(
+                        height: 25,
+                        width: 25,
+                        child:CircularProgressIndicator(strokeWidth: 2.0),
+                        ),
+                      ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                     fit: BoxFit.fitWidth,
                   ),

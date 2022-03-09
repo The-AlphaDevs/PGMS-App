@@ -27,48 +27,45 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     print("Inside init state function");
-    widget.auth.currentUserEmail().then((useremail) {
-      user = useremail;
-      if (user != "" && role==""){
-      
+    String useremail = widget.auth.currentUserEmail();
+    user = useremail;
+    if (user != "" && role==""){
       FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: useremail)
-          .get()
-          .then((citizenDocSnapshot) => {
-            if(citizenDocSnapshot.docs.isNotEmpty && citizenDocSnapshot.size > 0){
-               setState(() {
+        .collection('users')
+        .where('email', isEqualTo: useremail)
+        .get()
+        .then((citizenDocSnapshot) => {
+          if(citizenDocSnapshot.docs.isNotEmpty && citizenDocSnapshot.size > 0){
+              setState(() {
                 role = 'citizen';
                 print('Citizen Role: $role');
               })
             }
-          });
-      
-
-        FirebaseFirestore.instance
-            .collection('supervisors')
-            .where('email', isEqualTo: useremail)
-            .get()
-            .then((supervisorDocSnapshot) => {
-            if(supervisorDocSnapshot.docs.isNotEmpty && supervisorDocSnapshot.size > 0){
-               setState(() {
-                role = 'supervisor';
-                print('supervisor Role: $role');
-              })
-            }
-          });
-
-        
+          }
+        );
+      FirebaseFirestore.instance
+          .collection('supervisors')
+          .where('email', isEqualTo: useremail)
+          .get()
+          .then((supervisorDocSnapshot) => {
+          if(supervisorDocSnapshot.docs.isNotEmpty && supervisorDocSnapshot.size > 0){
+              setState(() {
+              role = 'supervisor';
+              print('supervisor Role: $role');
+            })
+          }
         }
+      );
+    }
+    
+    print("Inside widget.auth.currentUser function");
+    print("useremail: " + useremail.toString());
+    setState(() {
+      authStatus =
+          (useremail == "" || useremail == null) ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+    });
       
-      print("Inside widget.auth.currentUser function");
-      print("useremail: " + useremail.toString());
-      setState(() {
-        authStatus =
-            (useremail == "" || useremail == null) ? AuthStatus.notSignedIn : AuthStatus.signedIn;
-      });
-      }
-    );
+    
   }
 
   void _signedIn() {

@@ -109,8 +109,8 @@ class _ComplaintsPageState extends State<ComplaintsPage>
           TabBarView(
         controller: _tabController,
         children: [
-          CurrentComplaintsTab(userEmail: widget.userEmail),
-          ComplaintsHistoryTab(userEmail: widget.userEmail),
+          CurrentComplaintsTab(userEmail: widget.userEmail, auth: widget.auth),
+          ComplaintsHistoryTab(userEmail: widget.userEmail, auth: widget.auth),
         ],
       ),
       //     ),

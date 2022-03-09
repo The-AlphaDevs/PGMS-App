@@ -429,7 +429,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
 
   Future<String> uploadcomments() async {
     try {
-      final emailid = await widget.auth.currentUserEmail();
+      final emailid = widget.auth.currentUserEmail();
       final doc = await FirebaseFirestore.instance.collection('users').doc(emailid).get(); 
       _name = doc.data()['name'];
       _photo = doc.data()['photo'];

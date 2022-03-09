@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
+import 'package:ly_project/Services/auth.dart';
 
 class ComplaintsHistoryTab extends StatefulWidget {
   final userEmail;
-  ComplaintsHistoryTab({this.userEmail});
+  final BaseAuth auth;
+  ComplaintsHistoryTab({this.userEmail, this.auth});
 
   @override
   State<ComplaintsHistoryTab> createState() => _ComplaintsHistoryTabState();
@@ -23,7 +25,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
           stream: FirebaseFirestore.instance
                   .collection("complaints")
                   .where("citizenEmail", isEqualTo: widget.userEmail)
-                  .where("status", isEqualTo: "Resolved")
+                  .where("status", whereIn: ["Resolved", "Closed"])
                   // .orderBy("dateTime", descending: true)
                   .snapshots()
                   ,
@@ -70,6 +72,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                       
                       return ComplaintOverviewCard
                       (
+                        auth: widget.auth,
                         id: snapshot.data.docs[index]["id"],
                         complaint: snapshot.data.docs[index]["complaint"],
                         date: snapshot.data.docs[index]["dateTime"],
