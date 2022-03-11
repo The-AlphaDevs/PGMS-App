@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:ly_project/utils/constants.dart';
 
 class LeaderboardTable extends StatelessWidget {
   const LeaderboardTable({
     Key key,
     @required this.size,
     @required this.headerTexstyle,
+    @required this.performanceData,
   }) : super(key: key);
 
   final Size size;
   final TextStyle headerTexstyle;
+  final List<Map<String, String>> performanceData;
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +47,12 @@ class LeaderboardTable extends StatelessWidget {
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: dummyPerformanceData.length,
+            itemCount: performanceData.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 decoration: BoxDecoration(
                   color: index % 2 == 0 ? Colors.white : Colors.blue[100],
-                  borderRadius: index != dummyPerformanceData.length - 1
+                  borderRadius: index != performanceData.length - 1
                       ? BorderRadius.zero
                       : BorderRadius.only(
                           bottomLeft: Radius.circular(8),
@@ -64,19 +65,19 @@ class LeaderboardTable extends StatelessWidget {
                     Container(
                         padding: EdgeInsets.only(left: size.width * 0.01),
                         width: size.width * 0.14,
-                        child: Text(dummyPerformanceData[index]["Rank"])),
+                        child: Text(performanceData[index]["Rank"])),
                     Container(
                         width: size.width * 0.31,
                         child: Text(
-                          dummyPerformanceData[index]["Ward"],
+                          performanceData[index]["Ward"],
                           softWrap: true,
                         )),
                     Container(
                         width: size.width * 0.3,
-                        child: Text(dummyPerformanceData[index]["Locality"],
+                        child: Text(performanceData[index]["Locality"],
                             softWrap: true)),
                     Container(
-                        child: Text(dummyPerformanceData[index]["Points"],
+                        child: Text(performanceData[index]["Points"],
                             softWrap: true)),
                   ],
                 ),

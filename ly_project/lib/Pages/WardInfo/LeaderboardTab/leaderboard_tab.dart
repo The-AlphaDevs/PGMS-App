@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ly_project/Services/LeaderboardServices.dart';
 import 'package:ly_project/utils/constants.dart';
 import 'package:ly_project/Pages/WardInfo/TopWardsCard.dart';
 import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTable.dart';
@@ -8,7 +10,8 @@ class Leaderboard extends StatefulWidget {
   State<Leaderboard> createState() => _LeaderboardState();
 }
 
-class _LeaderboardState extends State<Leaderboard> {
+class _LeaderboardState extends State<Leaderboard>
+    with AutomaticKeepAliveClientMixin<Leaderboard> {
   String durationDdValue = LEADERBOARD_DURATIONS[0];
   DateTime dateFrom, dateTo;
 
@@ -64,31 +67,62 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: size.width * 0.04, vertical: size.height * 0.025),
-        child: Column(
-          children: [
-            buildDurationDropdown(),
-            SizedBox(height: size.height * 0.04),
-            TopWardsCard(
-              size: size,
-              durationDdValue: durationDdValue,
-              dateFrom: dateFrom,
-              dateTo: dateTo,
-              firstWard: dummyPerformanceData[0]["Ward"],
-              secondWard: dummyPerformanceData[1]["Ward"],
-              thirdWard: dummyPerformanceData[2]["Ward"],
-              firstWardPoints: dummyPerformanceData[0]["Points"],
-              secondWardPoints: dummyPerformanceData[1]["Points"],
-              thirdWardPoints: dummyPerformanceData[2]["Points"],
-            ),
-            SizedBox(height: size.height * 0.04),
-            LeaderboardTable(size: size, headerTexstyle: headerTexstyle),
-          ],
-        ),
+        child: Column(children: [
+          buildDurationDropdown(),
+          SizedBox(height: size.height * 0.04),
+          StreamBuilder(
+              stream:
+                  LeaderboardServices.getWardScores(duration: durationDdValue),
+              builder: (ctxt, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                      child: Container(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2.0)));
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Something went wrong!"),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  List<Map<String, String>> performanceData =
+                      LeaderboardServices.formatScores(
+                          duration: durationDdValue,
+                          wardList: snapshot.data.docs);
+                  return Column(children: [
+                    TopWardsCard(
+                      size: size,
+                      durationDdValue: durationDdValue,
+                      dateFrom: dateFrom,
+                      dateTo: dateTo,
+                      firstWard: performanceData[0]["Ward"],
+                      secondWard: performanceData[1]["Ward"],
+                      thirdWard: performanceData[2]["Ward"],
+                      firstWardPoints: performanceData[0]["Points"],
+                      secondWardPoints: performanceData[1]["Points"],
+                      thirdWardPoints: performanceData[2]["Points"],
+                    ),
+                    SizedBox(height: size.height * 0.04),
+                    LeaderboardTable(
+                        size: size,
+                        headerTexstyle: headerTexstyle,
+                        performanceData: performanceData),
+                  ]);
+                }
+                return Container(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2.0));
+              }),
+        ]),
       ),
     );
   }
@@ -136,4 +170,7 @@ class _LeaderboardState extends State<Leaderboard> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

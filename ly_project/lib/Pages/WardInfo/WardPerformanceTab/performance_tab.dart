@@ -10,7 +10,7 @@ class WardPerformance extends StatefulWidget {
   State<WardPerformance> createState() => _WardPerformanceState();
 }
 
-class _WardPerformanceState extends State<WardPerformance> {
+class _WardPerformanceState extends State<WardPerformance> with AutomaticKeepAliveClientMixin<WardPerformance> {
   String wardDdValue = WARDS[0];
   String durationDdValue = LEADERBOARD_DURATIONS[0];
   DateTime dateFrom, dateTo;
@@ -67,6 +67,7 @@ class _WardPerformanceState extends State<WardPerformance> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -157,4 +158,7 @@ class _WardPerformanceState extends State<WardPerformance> {
       ),
     );
   }
+
+  @override
+bool get wantKeepAlive => true;
 }
