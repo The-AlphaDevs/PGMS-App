@@ -35,6 +35,14 @@ const LEADERBOARD_DURATIONS = [
   "All Time"
 ];
 
+const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
+  "Today": "realtimeScore",
+  "This Week": "weeklyScore",
+  "This Month": "monthlyScore",
+  "This Year": "yearlyScore",
+  "All Time": "lifetimeScore"
+  };
+
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
 const EMAIL_REGEX =
