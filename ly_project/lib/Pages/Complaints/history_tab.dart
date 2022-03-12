@@ -19,8 +19,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
 
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.only(
-          right: 20, left: 20, top: 0, bottom: 0),
+      padding: EdgeInsets.only(right: size.width*0.01, left: size.width*0.01, top: size.height*0.02, bottom: size.height*0.03),
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
                   .collection("complaints")
