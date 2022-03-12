@@ -13,8 +13,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
 
-//TODO: Upload image after users clicks add complaint button, 
-//TODO: Navigate to feed page once data uploaded
 
 class RaiseComplaint extends StatefulWidget {
   final BaseAuth auth;
@@ -73,7 +71,6 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
   @override
   void initState() {
-    // TODO: implement initState
     // getLocation();
     super.initState();
   }

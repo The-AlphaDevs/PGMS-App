@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
+import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Utils/colors.dart';
 
 class TrackComplaints extends StatefulWidget {
@@ -14,9 +15,9 @@ class TrackComplaints extends StatefulWidget {
   final latitude;
   final longitude;
   final status;
-  
+  final BaseAuth auth;
 
-  TrackComplaints({this.id, this.complaint, this.date, this.location, this.latitude, this.longitude, this.status});
+  TrackComplaints({this.auth, this.id, this.complaint, this.date, this.location, this.latitude, this.longitude, this.status});
   @override
   _TrackComplaintsState createState() => _TrackComplaintsState();
 }
@@ -58,16 +59,27 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
                     context: context,
                     dialogType: DialogType.WARNING,
                     animType: AnimType.BOTTOMSLIDE,
-                    title: 'Close Complaint',
+                    title: 'Close Complaint', 
                     desc: 'Do you want to really close this complaint?',
                     btnCancelOnPress: () {
                       // Navigator.pop(context);
                     },
                     btnOkOnPress: () async{
                       String result = await closeComplaint();
+                      print("result:"+result);
                       if(result=="Status Updated"){
                         Navigator.pop(context);
                         Navigator.pop(context);
+                      }else if(result=="Status not resolved"){
+                        print("andar aya");
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.ERROR,
+                          title: 'Cannot close Complaint',
+                          desc: 'Cannot close this Complaint since it is not resolved yet!',
+                          btnCancelOnPress: (){},
+                          btnOkOnPress: (){}
+                        )..show();
                       }
                     },
                   )..show();
@@ -93,14 +105,20 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
   }
 
   Future<String> closeComplaint() async{
+    final user = widget.auth.currentUserEmail();
     try{
-      await FirebaseFirestore.instance
-      .collection("complaints")
-      .doc(widget.id)
-      .update({
-        "status": "Closed",
-      });
-      return "Status Updated";
+      if(widget.status=='Resolved'){
+        await FirebaseFirestore.instance
+          .collection("complaints")
+          .doc(widget.id)
+          .update({
+            "status": "Closed",
+          });
+        await FirebaseFirestore.instance.collection('users').doc(user).collection('notifications').doc(widget.id).delete();
+        return "Status Updated";
+      }else{
+        return "Status not resolved";
+      }
     }
     catch(e){
       return "Failed to update status: $e";

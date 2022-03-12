@@ -23,7 +23,6 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print(widget.date.runtimeType);
     print("track ka lat: " + widget.latitude.toString());

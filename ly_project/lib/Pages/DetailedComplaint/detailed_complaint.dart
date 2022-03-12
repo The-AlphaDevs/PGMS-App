@@ -9,7 +9,8 @@ import "package:latlong/latlong.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ly_project/Pages/Comments/commentsCard.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/Utils/colors.dart';
+// import 'package:ly_project/Utils/colors.dart';
+import 'package:ly_project/utils/colors.dart';
 
 class DetailComplaint extends StatefulWidget {
   final id;
@@ -23,6 +24,7 @@ class DetailComplaint extends StatefulWidget {
   final complaint;
   final location;
   final description;
+  final citizenEmail;
 
   DetailComplaint(
       {this.id,
@@ -35,7 +37,8 @@ class DetailComplaint extends StatefulWidget {
       this.date,
       this.supervisor,
       this.lat,
-      this.long});
+      this.long,
+      this.citizenEmail});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -201,6 +204,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
               complaintDetails(screenSize),
               SizedBox(
                 height: screenSize.height * 0.04,
+              ),
+              sendNotifButton(context, screenSize),
+              SizedBox(
+                height: screenSize.height * 0.02,
               ),
               trackComplaintButton(context, screenSize),
               SizedBox(
@@ -573,6 +580,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TrackComplaints(
+                               auth: widget.auth,
                               id: widget.id,
                               complaint: widget.complaint,
                               date: widget.date,
@@ -594,6 +602,54 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   Icon(Icons.track_changes_rounded),
                   SizedBox(width: screenSize.width * 0.03),
                   Text("Track Complaint")
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+   Row sendNotifButton(BuildContext context, Size screenSize) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(29),
+            child: FlatButton(
+              onPressed: () async{
+                // change status to resolve
+                await FirebaseFirestore.instance.collection('complaints').doc(widget.id).update({
+                  'status': 'Resolved',
+                });
+
+                // set complaint in notif collection of user
+                await FirebaseFirestore.instance.collection('users').doc(widget.citizenEmail).collection('notifications').doc(widget.id).set({
+                  'id': widget.id,
+                  'complaint': widget.complaint,
+                  'location': widget.location,
+                  'latitude': widget.lat.toString(),
+                  'longitude': widget.long.toString(),
+                  'date': widget.date.toString(),
+                  'status': 'Resolved',
+                });
+                print("Status changed to resolved and complaint added to notif collection!");
+              },
+              color: GOLDEN_YELLOW,
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.014,
+                  horizontal: screenSize.width * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.notifications_active),
+                  SizedBox(width: screenSize.width * 0.03),
+                  Text("Close Complaint")
                 ],
               ),
             ),

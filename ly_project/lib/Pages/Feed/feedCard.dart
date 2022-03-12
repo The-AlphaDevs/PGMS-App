@@ -142,7 +142,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   supervisor: widget.supervisor,
                   location: widget.location,
                   lat: widget.lat,
-                  long: widget.long
+                  long: widget.long,
+                  citizenEmail: widget.citizenEmail,
                 )),),);
           },
           child: Container(
