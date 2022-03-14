@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTableShimmer.dart';
+import 'package:ly_project/Pages/WardInfo/LeaderboardTab/TopWardsCardShimmer.dart';
+import 'package:ly_project/Pages/WardInfo/LeaderboardTab/TopWardsCard.dart';
 import 'package:ly_project/Services/LeaderboardServices.dart';
 import 'package:ly_project/utils/constants.dart';
-import 'package:ly_project/Pages/WardInfo/TopWardsCard.dart';
 import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTable.dart';
 
 class Leaderboard extends StatefulWidget {
@@ -67,8 +69,8 @@ class _LeaderboardState extends State<Leaderboard>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     Size size = MediaQuery.of(context).size;
+    super.build(context);
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -81,11 +83,7 @@ class _LeaderboardState extends State<Leaderboard>
                   LeaderboardServices.getWardScores(duration: durationDdValue),
               builder: (ctxt, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child: Container(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2.0)));
+                  return shimmerBuilder(size);
                 }
                 if (snapshot.hasError) {
                   return Center(
@@ -173,4 +171,19 @@ class _LeaderboardState extends State<Leaderboard>
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget shimmerBuilder(Size size) {
+    return Column(
+      children: [
+        TopWardsCardShimmer(
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          durationDdValue: durationDdValue,
+          size: size,
+        ),
+        SizedBox(height: size.height * 0.04),
+        LeaderboardTableShimmer(size: size, headerTexstyle: headerTexstyle)
+      ],
+    );
+  }
 }

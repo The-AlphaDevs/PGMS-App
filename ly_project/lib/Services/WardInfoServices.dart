@@ -18,6 +18,15 @@ class WardInfoServices {
         .where("dateTime", isLessThanOrEqualTo: dateTo)
         .orderBy("dateTime", descending: true)
         .get();
+  }  
+  
+  static Future<QuerySnapshot> getCouncillor({
+    @required String ward,
+  }) {
+    return FirebaseFirestore.instance
+        .collection("wards")
+        .where("ward", isEqualTo: ward)
+        .get();
   }
 
 

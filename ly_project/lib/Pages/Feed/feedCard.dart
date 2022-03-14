@@ -185,7 +185,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             width: 5,
                           ),
                           Text(
-                            "Posted by" + widget.citizenEmail ,
+                            "Posted by " + widget.citizenEmail ,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
