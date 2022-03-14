@@ -58,12 +58,17 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   Future<bool> markAsUpvoted({bool init=false}) async{
     try{
 
-      setState(()=>isUpvoted=true);
-      if(init)
+      if(init){
+        /// It is an error to call [setState] unless [mounted] is true.
+        if(this.mounted)
+          setState(()=>isUpvoted=true);
         return true;
+        }
     
       var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
       var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+      setState(()=>isUpvoted=true);
+      
       await upvoteDoc.set({
         "upvotedAt": DateTime.now().toString(),
         "upvotedBy": userEmail
@@ -133,6 +138,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 MaterialPageRoute(builder: (context) => (DetailComplaint(
                   auth: widget.auth,
                   id: widget.id,
+                  docId: widget.docId,
                   complaint: widget.complaint,
                   description: widget.description,
                   // name: widget.name,

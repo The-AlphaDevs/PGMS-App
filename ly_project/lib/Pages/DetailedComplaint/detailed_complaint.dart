@@ -25,6 +25,7 @@ class DetailComplaint extends StatefulWidget {
   final location;
   final description;
   final citizenEmail;
+  final docId;
 
   DetailComplaint(
       {this.id,
@@ -38,7 +39,10 @@ class DetailComplaint extends StatefulWidget {
       this.supervisor,
       this.lat,
       this.long,
-      this.citizenEmail});
+      this.citizenEmail,
+  this.docId
+      
+      });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -57,7 +61,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String _comment="";
   String _name ="";
   String _photo="";
-
+  String appBarTitle="";
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -68,6 +72,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
     super.initState();
     latitude = double.parse(widget.lat);
     longitude = double.parse(widget.long);
+    String complaint = widget.complaint.toString();
+    appBarTitle = "${complaint.substring(0, complaint.length>20 ? 25 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
     print("detail ka latitude - " + latitude.toString());
     print("detail ka longitude - " + longitude.toString());
   }
@@ -80,7 +86,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          widget.id ?? "Ye null hai 1",
+          appBarTitle ?? "Ye null hai 1",
           style: TextStyle(
             fontSize: 15,
             color: Colors.white,
@@ -259,7 +265,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                       child: StreamBuilder(
                           stream: FirebaseFirestore.instance
                                   .collection("complaints")
-                                  .doc(widget.id)
+                                  .doc(widget.docId)
                                   .collection("comments")
                                   .snapshots()
                                   ,
@@ -363,7 +369,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children:[
           Container(
-            width: size.width*0.635,
+            width: size.width*0.625,
             height: size.height*0.05,
             child: TextFormField(
               controller: _commentController,
@@ -444,7 +450,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
       await FirebaseFirestore.instance.collection('complaints').doc(widget.id).collection('comments').doc().set({
         'name': _name,
         'comment': _commentController.text.toString(),
-        'photo': _photo
+        'photo': _photo,
+        'timestamp':DateTime.now().toString(),
       });
       print("Dusra Photo: "+_photo.toString());
       return "Success";
