@@ -118,3 +118,90 @@ const List<Map<String, String>> dummyPerformanceData = [
     "Points": "459"
   },
 ];
+
+const RESOLUTION_POINTS = 5;
+const COMPLETION_POINTS = 10;
+const OVERDUE_POINTS = -10;
+
+const Map<String, dynamic> SUPERVISOR_LEVELS = {
+  "levelsCount": 11,
+  "levels": {
+    "1": {
+      "scores": [
+        -100000,
+        0
+      ],
+      "levelName": "Overduer"
+    },
+    "2": {
+      "scores": [
+        1,
+        49
+      ],
+      "levelName": "Newbie"
+    },
+    "3": {
+      "scores": [
+        50,
+        99
+      ],
+      "levelName": "Fresher"
+    },
+    "4": {
+      "scores": [
+        100,
+        149
+      ],
+      "levelName": "Persistant"
+    },
+    "5": {
+      "scores": [
+        150,
+        224
+      ],
+      "levelName": "Performer"
+    },
+    "6": {
+      "scores": [
+        225,
+        299
+      ],
+      "levelName": ""
+    },
+    "7": {
+      "scores": [
+        300,
+        399
+      ],
+      "levelName": "Magnificent"
+    },
+    "8": {
+      "scores": [
+        400,
+        549
+      ],
+      "levelName": "Super"
+    },
+    "9": {
+      "scores": [
+        550,
+        749
+      ],
+      "levelName": "Epic"
+    },
+    "10": {
+      "scores": [
+        750,
+        999
+      ],
+      "levelName": "Ultimate"
+    },
+    "11": {
+      "scores": [
+        1000,
+        999999
+      ],
+      "levelName": "Godlevel"
+    }
+  }
+};

@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ly_project/Pages/WardInfo/LeaderboardTab/leaderboard_tab.dart';
-import 'package:ly_project/Pages/WardInfo/WardPerformanceTab/performance_tab.dart';
+import 'package:ly_project/Pages/Performance/LeaderboardTab/leaderboard_tab.dart';
+import 'package:ly_project/Pages/Performance/PerformanceTab/personal_performance_tab.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Utils/colors.dart';
 
-class WardInfo extends StatefulWidget {
+class Performance extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  WardInfo({Key key, this.auth, this.onSignedOut}) : super(key: key);
+  Performance({Key key, this.auth, this.onSignedOut}) : super(key: key);
 
   @override
-  _WardInfoState createState() => _WardInfoState();
+  _PerformanceState createState() => _PerformanceState();
 }
 
-class _WardInfoState extends State<WardInfo>
+class _PerformanceState extends State<Performance>
     with SingleTickerProviderStateMixin {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -40,12 +40,10 @@ class _WardInfoState extends State<WardInfo>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
-        title: Text('Ward Information'),
+        title: Text('Performance'),
         backgroundColor: DARK_BLUE,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
@@ -60,15 +58,11 @@ class _WardInfoState extends State<WardInfo>
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.mode_comment,
-                          size: 24,
-                        ),
+                        Icon(Icons.person, size: 24),
                         Flexible(
-                          child: Text(
-                            'Ward Performance ',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
-                          ),
+                          child: Text('My Performance',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white)),
                         ),
                       ],
                     ),
@@ -79,14 +73,10 @@ class _WardInfoState extends State<WardInfo>
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.bookmark,
-                          size: 24,
-                        ),
-                        Text(
-                          'LeaderBoard',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                        ),
+                        Icon(Icons.bookmark, size: 24),
+                        Text('LeaderBoard',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.white)),
                       ],
                     ),
                   ),
@@ -98,10 +88,7 @@ class _WardInfoState extends State<WardInfo>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          WardPerformance(),
-          Leaderboard(),
-        ],
+        children: [PersonalPerformance(), Leaderboard()],
       ),
     );
   }

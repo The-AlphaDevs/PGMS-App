@@ -1,25 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/utils/constants.dart';
 
 /// Contains helper methods for processing the ward performance data
-class WardInfoServices {
+class PerformanceServices {
 
   /// Get the complaints of a particular [`ward`] submitted between [`dateFrom`] and [`dateTo`], both inclusive.
-  static Future<QuerySnapshot> getWardPrformance({
-    @required String ward,
-    @required String dateFrom,
-    @required String dateTo,
+  static Future<DocumentSnapshot> getPersonalPerformance({
+    @required String email,
   }) {
     return FirebaseFirestore.instance
-        .collection("complaints")
-        .where("ward", isEqualTo: ward)
-        .where("dateTime", isGreaterThanOrEqualTo: dateFrom)
-        .where("dateTime", isLessThanOrEqualTo: dateTo)
-        .orderBy("dateTime", descending: true)
+        .collection("supervisors").
+        doc(email)
         .get();
   }  
   
+  static Map<String, String> getLevelInfo(int score){
+    String level="0", levelName="Level";
+    for(String s in SUPERVISOR_LEVELS["levels"].keys){
+      List<int> scoreRange = SUPERVISOR_LEVELS["levels"][s]["scores"];
+      int minScore = scoreRange[0], maxScore= scoreRange[1];
+      if(minScore <= score && score <= maxScore ){
+        level = s;
+        levelName = SUPERVISOR_LEVELS["levels"][s]["levelName"];
+        break;
+      }
+    }
+    return {"level":level, "levelName":levelName};
+  }
+
   static Future<QuerySnapshot> getCouncillor({
     @required String ward,
   }) {

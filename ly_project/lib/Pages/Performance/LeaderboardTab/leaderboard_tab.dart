@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTableShimmer.dart';
-import 'package:ly_project/Pages/WardInfo/LeaderboardTab/TopWardsCardShimmer.dart';
-import 'package:ly_project/Pages/WardInfo/LeaderboardTab/TopWardsCard.dart';
+import 'package:ly_project/Pages/Performance/LeaderboardTab/LeaderboardTableShimmer.dart';
+import 'package:ly_project/Pages/Performance/LeaderboardTab/TopWardsCardShimmer.dart';
+import 'package:ly_project/Pages/Performance/LeaderboardTab/TopWardsCard.dart';
 import 'package:ly_project/Services/LeaderboardServices.dart';
 import 'package:ly_project/utils/constants.dart';
-import 'package:ly_project/Pages/WardInfo/LeaderboardTab/LeaderboardTable.dart';
+import 'package:ly_project/Pages/Performance/LeaderboardTab/LeaderboardTable.dart';
 
 class Leaderboard extends StatefulWidget {
   @override
