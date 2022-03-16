@@ -47,6 +47,8 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   firebase_storage: ^7.0.0
   firebase_auth: ^0.20.1
+  tflite: ^1.0.6
+
   top_modal_sheet: ^1.0.0
   # firebase_messaging: ^5.0.2
   # firebase_core : ^0.7.0

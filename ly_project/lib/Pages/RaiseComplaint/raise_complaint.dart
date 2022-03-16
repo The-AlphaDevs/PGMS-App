@@ -1,18 +1,16 @@
 import 'dart:io';
 import 'dart:async';
-import "package:latlong/latlong.dart";
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ly_project/Widgets/Map.dart';
+import 'package:ly_project/Services/PredictionServices.dart';
 import 'package:ly_project/Utils/colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-
-
 
 class RaiseComplaint extends StatefulWidget {
   final BaseAuth auth;
@@ -68,15 +66,27 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   final _localityController = TextEditingController();
   final _grievanceController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String result = "";
+  bool isModelLoaded = false;
 
   @override
   void initState() {
-    // getLocation();
     super.initState();
+    //Load the prediction model
+    PredictionServices.loadModel()
+        .then((value) => setState(() => isModelLoaded = true));
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await PredictionServices.disposeModel();
   }
 
   _upload() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ["jpg", "jpeg", "png", "heif", "bmp"]);
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ["jpg", "jpeg", "png", "heif", "bmp"]);
     file = File(result.files.single.path);
     print("File path from upload func: " + file.path);
     // fileUrl = await uploadFiles(file);
@@ -106,56 +116,33 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: FutureBuilder<LocationData>(
-                        future: getLocation(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: Container(
-                                height: size.height * 0.04,
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          } else if (!snapshot.hasError) {
-                            return FlutterMap(
-                              options: MapOptions(
-                                center: LatLng(snapshot.data.latitude,
-                                    snapshot.data.longitude),
-                                zoom: 13.0,
-                              ),
-                              layers: [
-                                TileLayerOptions(
-                                  urlTemplate:
-                                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                  subdomains: ['a', 'b', 'c'],
-                                  // attributionBuilder: (_) {
-                                  //   return Text("© OpenStreetMap contributors");
-                                  // },
-                                ),
-                                MarkerLayerOptions(
-                                  markers: [
-                                    Marker(
-                                      width: 40.0,
-                                      height: 40.0,
-                                      point: LatLng(snapshot.data.latitude,
-                                          snapshot.data.longitude),
-                                      builder: (ctx) => Container(
-                                        child: FlutterLogo(size: 0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }
-                          return Center(
-                            child: Container(
-                              height: size.height * 0.02,
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        })),
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: FutureBuilder<LocationData>(
+                    future: getLocation(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: Container(
+                            height: size.height * 0.04,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else if (!snapshot.hasError) {
+                        double longitude, latitude;
+                        longitude = snapshot.data.longitude;
+                        latitude = snapshot.data.latitude;
+                        return ComplaintMap(
+                            latitude: latitude, longitude: longitude);
+                      }
+                      return Center(
+                        child: Container(
+                          height: size.height * 0.02,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 SizedBox(height: 40),
                 TextFormField(
                   controller: _localityController,
@@ -195,50 +182,44 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-
                 SizedBox(height: 20),
-
                 Padding(
-                  padding: EdgeInsets.fromLTRB(80.0, size.height*0.01, 70.0, size.height*0.01),
+                  padding: EdgeInsets.fromLTRB(
+                      80.0, size.height * 0.01, 70.0, size.height * 0.01),
                   child: MaterialButton(
-                      onPressed: () async{
-                       await  _upload();
-                      },
-                      shape: RoundedRectangleBorder(
+                    onPressed: () async {
+                      await _upload();
+                    },
+                    shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(22.0)),
-                      color: Colors.blue,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.photo, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text("Add Photo",
-                                style: TextStyle(color: Colors.white))
-                          ])),
-                ),        
-                file != null?
-                Image.file(
-                  File(file.path),
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                )
-                :
-                SizedBox(),
-                // Stack(
-                //   alignment: AlignmentDirectional.center,
-                //   children: [
-                //     Container(
-                //       height: 250,
-                //       width: 250,
-                //       color: Colors.black12,
-                //       child: GestureDetector(
-                //         onTap: () {
-                //           _upload();
-                //         },
-                //       ),
-                //     )
-                //   ],
+                    color: Colors.blue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.photo, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text("Add Photo", style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  ),
+                ),
+                // RaisedButton(
+                //   child: Text("Predict"),
+                //   onPressed: () async {
+                //     if (isModelLoaded && file != null) {
+                //       final output =
+                //           await PredictionServices.classifyImage(file);
+                //       print(output.toString());
+                //     }
+                //   },
                 // ),
+                file != null
+                    ? Image.file(
+                        File(file.path),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      )
+                    : SizedBox(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(80.0, 20.0, 70.0, 10.0),
                   child: Material(
@@ -248,60 +229,64 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     color: DARK_BLUE,
                     clipBehavior: Clip.antiAlias,
                     child: MaterialButton(
-                        color: DARK_BLUE,
-                        onPressed: () async {
-                          if (validateAndSave(_formKey)) {
-                            // Scaffold.of(context).showSnackBar(SnackBar(
-                            //     content: Text(
-                            //         'Establishing Contact with the Server')));
-                            _showDialog(context);
-                            String status = await mixtureofcalls(context);
-                            print("mixture of calls ho gaya");
-                            Navigator.pop(context);
-                            print("context pop hua");
-                            if(status=='Success'){
-                              print("success k andar aaya");
-                                AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.SUCCES,
-                                    animType: AnimType.BOTTOMSLIDE,
-                                    title: 'Success',
-                                    desc: 'The Complaint has been successfully registered..',
-                                    btnCancelOnPress: () {
-                                    Navigator.pop(context);
-                                    },
-                                    btnOkOnPress: () {
-                                      Navigator.pop(context);},
-                                    )..show();
-                            }else{
-                              print("else k andar aaya");
-                              
-                                AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.ERROR,
-                                    animType: AnimType.BOTTOMSLIDE,
-                                    title: 'Error',
-                                    desc: 'Error occured while registering complaint..',
-                                    btnCancelOnPress: () {
-                                      Navigator.pop(context);},
-                                    btnOkOnPress: () {
-                                      Navigator.pop(context);
-                                      },
-                                    )..show();
-                            }
-                            // loadingScreen();
+                      color: DARK_BLUE,
+                      onPressed: () async {
+                        if (validateAndSave(_formKey)) {
+                          // Scaffold.of(context).showSnackBar(SnackBar(
+                          //     content: Text(
+                          //         'Establishing Contact with the Server')));
+                          _showDialog(context);
+
+                          String status = await mixtureofcalls(context);
+                          Navigator.pop(context);
+                          if (status == 'Success') {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.SUCCES,
+                              animType: AnimType.BOTTOMSLIDE,
+                              title: 'Success',
+                              desc:
+                                  'The Complaint has been successfully registered..',
+                              btnCancelOnPress: () {
+                                Navigator.pop(context);
+                              },
+                              btnOkOnPress: () {
+                                Navigator.pop(context);
+                              },
+                            )..show();
                           } else {
-                            print("Failure in saving the form");
+                            print("else k andar aaya");
+
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.BOTTOMSLIDE,
+                              title: 'Error',
+                              desc:
+                                  'Error occured while registering complaint..',
+                              btnCancelOnPress: () {
+                                Navigator.pop(context);
+                              },
+                              btnOkOnPress: () {
+                                Navigator.pop(context);
+                              },
+                            )..show();
                           }
-                        },
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            Icon(Icons.add, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text("Add Complaint",
-                                style: TextStyle(color: Colors.white))
-                          ])),
+                          // loadingScreen();
+                        } else {
+                          print("Failure in saving the form");
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: Colors.white),
+                          SizedBox(width: 10),
+                          Text("Add Complaint",
+                              style: TextStyle(color: Colors.white))
+                        ],
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -313,7 +298,6 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   }
 
   Future<String> store(File _image) async {
-
     print("Inside store function");
     print("Upload docs wala user\n");
     final user = await widget.auth.currentUser();
@@ -329,7 +313,10 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     try {
       final emailid = widget.auth.currentUserEmail();
       docname = uuid.v4();
-      await FirebaseFirestore.instance.collection('complaints').doc(docname).set({
+      await FirebaseFirestore.instance
+          .collection('complaints')
+          .doc(docname)
+          .set({
         'citizenEmail': emailid,
         'complaint': _grievanceController.text.toString(),
         'description': _descriptionController.text.toString(),
@@ -350,7 +337,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'supervisorEmail': null,
         'supervisorId': null,
         'supervisorName': null,
-        'upvoteCount':0
+        'upvoteCount': 0
       });
       return "Success";
     } catch (e) {
@@ -363,9 +350,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
     String status = await store(file);
     return status;
-    
   }
-
 }
 
 bool validateAndSave(formKey) {
