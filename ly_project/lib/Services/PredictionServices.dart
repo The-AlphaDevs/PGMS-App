@@ -5,7 +5,7 @@ import 'package:tflite/tflite.dart';
 class PredictionServices {
   static Future<String> loadModel() async {
     String result = await Tflite.loadModel(
-      model: "assets/model.tflite",
+      model: "assets/BinaryClassifierModel.tflite",
       labels: "assets/labels.txt",
       useGpuDelegate: true,
       numThreads: 1,

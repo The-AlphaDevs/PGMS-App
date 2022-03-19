@@ -68,6 +68,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   final _descriptionController = TextEditingController();
   String result = "";
   bool isModelLoaded = false;
+  bool isProcessingImage = false;
+  bool isSubmittingComplaint = false;
 
   @override
   void initState() {
@@ -103,10 +105,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Raise a Complaint"),
-        backgroundColor: DARK_BLUE,
-      ),
+      appBar:
+          AppBar(title: Text("Raise a Complaint"), backgroundColor: DARK_BLUE),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -187,9 +187,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                   padding: EdgeInsets.fromLTRB(
                       80.0, size.height * 0.01, 70.0, size.height * 0.01),
                   child: MaterialButton(
-                    onPressed: () async {
-                      await _upload();
-                    },
+                    onPressed: () async => await _upload(),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(22.0)),
                     color: Colors.blue,
@@ -203,16 +201,6 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     ),
                   ),
                 ),
-                // RaisedButton(
-                //   child: Text("Predict"),
-                //   onPressed: () async {
-                //     if (isModelLoaded && file != null) {
-                //       final output =
-                //           await PredictionServices.classifyImage(file);
-                //       print(output.toString());
-                //     }
-                //   },
-                // ),
                 file != null
                     ? Image.file(
                         File(file.path),
@@ -222,73 +210,77 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                     : SizedBox(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(80.0, 20.0, 70.0, 10.0),
-                  child: Material(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22.0)),
-                    elevation: 5.0,
-                    color: DARK_BLUE,
-                    clipBehavior: Clip.antiAlias,
-                    child: MaterialButton(
-                      color: DARK_BLUE,
-                      onPressed: () async {
-                        if (validateAndSave(_formKey)) {
-                          // Scaffold.of(context).showSnackBar(SnackBar(
-                          //     content: Text(
-                          //         'Establishing Contact with the Server')));
-                          _showDialog(context);
+                  child: (!isProcessingImage && !isSubmittingComplaint)
+                      ? Material(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(22.0)),
+                          elevation: 5.0,
+                          color: DARK_BLUE,
+                          clipBehavior: Clip.antiAlias,
+                          child: MaterialButton(
+                            color: DARK_BLUE,
+                            onPressed: () async {
+                              if (validateAndSave(_formKey)) {
+                                setState(() => isProcessingImage = true);
+                                bool isPotholeDetected =
+                                    await checkForPotholes();
+                                setState(() => isProcessingImage = false);
 
-                          String status = await mixtureofcalls(context);
-                          Navigator.pop(context);
-                          if (status == 'Success') {
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.SUCCES,
-                              animType: AnimType.BOTTOMSLIDE,
-                              title: 'Success',
-                              desc:
-                                  'The Complaint has been successfully registered..',
-                              btnCancelOnPress: () {
-                                Navigator.pop(context);
-                              },
-                              btnOkOnPress: () {
-                                Navigator.pop(context);
-                              },
-                            )..show();
-                          } else {
-                            print("else k andar aaya");
+                                if (!isPotholeDetected) {
+                                  await _showErrorDialog(context, "Error",
+                                      "Cannot register complaint since no pothole is detected in the image.");
+                                  return;
+                                }
 
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.ERROR,
-                              animType: AnimType.BOTTOMSLIDE,
-                              title: 'Error',
-                              desc:
-                                  'Error occured while registering complaint..',
-                              btnCancelOnPress: () {
+                                _showDialog(context);
+
+                                setState(() => isSubmittingComplaint = true);
+                                String status = await mixtureofcalls(context);
+                                setState(() => isSubmittingComplaint = true);
+
                                 Navigator.pop(context);
-                              },
-                              btnOkOnPress: () {
-                                Navigator.pop(context);
-                              },
-                            )..show();
-                          }
-                          // loadingScreen();
-                        } else {
-                          print("Failure in saving the form");
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text("Add Complaint",
-                              style: TextStyle(color: Colors.white))
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                                if (status == 'Success') {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.SUCCES,
+                                    animType: AnimType.BOTTOMSLIDE,
+                                    title: 'Success',
+                                    desc:
+                                        'The Complaint has been successfully registered..',
+                                    btnCancelOnPress: () =>
+                                        Navigator.pop(context),
+                                    btnOkOnPress: () => Navigator.pop(context),
+                                  )..show();
+                                } else {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.ERROR,
+                                    animType: AnimType.BOTTOMSLIDE,
+                                    title: 'Error',
+                                    desc:
+                                        'Error occured while registering complaint..',
+                                    btnCancelOnPress: () =>
+                                        Navigator.pop(context),
+                                    btnOkOnPress: () => Navigator.pop(context),
+                                  )..show();
+                                }
+                              } else {
+                                print("Failure in saving the form");
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add, color: Colors.white),
+                                SizedBox(width: 10),
+                                Text("Add Complaint",
+                                    style: TextStyle(color: Colors.white))
+                              ],
+                            ),
+                          ),
+                        )
+                      : CircularProgressIndicator(),
+                ),
               ],
             ),
           ),
@@ -311,7 +303,18 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     print(imageUrl);
 
     try {
+
+      ///TODO: Get ward Name and Id
+      String ward = "Ward A";
+      String wardId = "WardA#50ad3f7a-dea5-49aa-b27c-59b72aa0b1c2";
       final emailid = widget.auth.currentUserEmail();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("supervisors").where("ward", isEqualTo: "Ward A").get();
+      QueryDocumentSnapshot supervisorDoc = snapshot.docs.first; 
+      String supervisorName = supervisorDoc["name"];
+      String supervisorEmail = supervisorDoc["email"];
+      String supervisorId = supervisorDoc["id"];
+      DocumentReference supervisorDocRef = FirebaseFirestore.instance.collection("supervisors").doc(supervisorDoc.id);
+
       docname = uuid.v4();
       await FirebaseFirestore.instance
           .collection('complaints')
@@ -334,10 +337,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'location': _localityController.text.toString(),
         'resolutionDateTime': null,
         'status': 'Pending',
-        'supervisorEmail': null,
-        'supervisorId': null,
-        'supervisorName': null,
-        'upvoteCount': 0
+        'supervisorId': supervisorId,
+        'supervisorEmail': supervisorEmail,
+        'supervisorName': supervisorName,
+        'supervisorDocRef': supervisorDocRef,
+        'upvoteCount': 0,
+        "ward":ward,
+        "wardId":wardId,
       });
       return "Success";
     } catch (e) {
@@ -351,6 +357,54 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     String status = await store(file);
     return status;
   }
+
+  Future<bool> checkForPotholes() async {
+    if (isModelLoaded && file != null) {
+      final output = await PredictionServices.classifyImage(file);
+      print(output.toString());
+      return !output.isEmpty;
+    }
+    return false;
+  }
+
+  void _showDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Text("Registering Complaint...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            return;
+          },
+          child: alert,
+        );
+      },
+    );
+  }
+}
+
+Future<void> _showErrorDialog(
+    BuildContext context, String title, String message) async {
+  AwesomeDialog alert = AwesomeDialog(
+    btnOkOnPress: () {},
+    desc: message,
+    dialogType: DialogType.ERROR,
+    title: title,
+    context: context,
+  );
+  await alert.show();
 }
 
 bool validateAndSave(formKey) {
@@ -358,34 +412,6 @@ bool validateAndSave(formKey) {
   if (isValid) {
     formKey.currentState.save();
     return true;
-  } else {
-    return false;
   }
-}
-
-void _showDialog(BuildContext context) {
-  AlertDialog alert = AlertDialog(
-    content: new Row(
-      children: [
-        CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
-        ),
-        Container(
-            margin: EdgeInsets.only(left: 7),
-            child: Text("Registering Complaint...")),
-      ],
-    ),
-  );
-  showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-      // Doesn't allow the dialog box to pop
-      return WillPopScope(
-          onWillPop: () {
-            return;
-          },
-          child: alert);
-    },
-  );
+  return false;
 }
