@@ -72,12 +72,12 @@ class WardInfoServices {
         case "Closed":
           closed++;
 
-          //If the complaint is closed / resolved, its resolution time can be compared with 
+          //If the complaint is closed / resolved, its resolution time can be compared with
           // complaint registration time to get the complaint resolution duration.
-          complaintDate = DateTime.parse(doc["dateTime"]);
-          resolutionDate = DateTime.parse(doc["resolutionDateTime"]);
 
-          if (resolutionDate != null && complaintDate != null) {
+          if (doc["resolutionDateTime"] != null && doc["dateTime"] != null) {
+            resolutionDate = DateTime.parse(doc["resolutionDateTime"]);
+            complaintDate = DateTime.parse(doc["dateTime"]);
 
             // difference is the difference between complaintDate & resolutionDate
             // in Duration(minutes).
