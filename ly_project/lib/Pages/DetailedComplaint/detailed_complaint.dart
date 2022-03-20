@@ -69,7 +69,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     longitude = double.parse(widget.long);
     String complaint = widget.complaint.toString();
     appBarTitle =
-        "${complaint.substring(0, complaint.length > 20 ? 25 : complaint.length)} ${complaint.length > 20 ? '...' : ''}";
+        "${complaint.substring(0, complaint.length > 20 ? 20 : complaint.length)} ${complaint.length > 20 ? '...' : ''}";
     print("detail ka latitude - " + latitude.toString());
     print("detail ka longitude - " + longitude.toString());
   }
