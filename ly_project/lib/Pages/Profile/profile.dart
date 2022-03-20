@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/services.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -53,7 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _autophoneno = "";
   String fileurl;
   String userType = "User";
-  String imageUrl = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
+  String imageUrl =
+      "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
 
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phonenoController = new TextEditingController();
@@ -65,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _joiningdateController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File file;
-
+  
   final List<String> menuItems = <String>[
     'Logout',
   ];
@@ -188,16 +189,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: DARK_BLUE,
-          actions: [           
+          actions: [
             Container(
-              alignment:Alignment.center,
+              alignment: Alignment.center,
               child: GestureDetector(
-                child: Text("SAVE",style: TextStyle(color: Colors.white, fontSize: size.height*0.03, fontWeight: FontWeight.bold)),
-                onTap: () async{
+                child: Text("SAVE",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: size.height * 0.02,
+                        fontWeight: FontWeight.bold)),
+                onTap: () async {
                   if (validateAndSave(_formKey)) {
                     _showDialog(context);
-                    String status =
-                        await mixtureofcalls(file);
+                    String status = await mixtureofcalls(file);
                     print("mixture of calls ho gaya");
                     Navigator.pop(context);
                     print("context pop hua");
@@ -208,11 +212,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         dialogType: DialogType.SUCCES,
                         animType: AnimType.BOTTOMSLIDE,
                         title: 'Success',
-                        desc:
-                            'The data has been updated successfully..',
+                        desc: 'The data has been updated successfully..',
                         btnCancelOnPress: () {},
-                        btnOkOnPress: () {
-                        },
+                        btnOkOnPress: () {},
                       )..show();
                     } else {
                       print("else k andar aaya");
@@ -222,8 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         dialogType: DialogType.ERROR,
                         animType: AnimType.BOTTOMSLIDE,
                         title: 'Error',
-                        desc:
-                            'Error occured while updating data..',
+                        desc: 'Error occured while updating data..',
                         btnCancelOnPress: () {},
                         btnOkOnPress: () {},
                       )..show();
@@ -234,8 +235,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
             ),
-            SizedBox(width:size.width*0.05),
-            IconButton(icon: Icon(Icons.logout), onPressed:() => handleMenuClick("Logout"))
+            SizedBox(width: size.width * 0.05),
+            IconButton(
+                icon: Icon(
+                  Icons.logout,
+                  size: size.height * 0.025,
+                ),
+                onPressed: () => handleMenuClick("Logout"))
           ],
           title: Text(
             "My Profile",
@@ -269,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SizedBox(
-                            height: size.height*0.03,
+                            height: size.height * 0.03,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,14 +291,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: CircleAvatar(
                                           radius: size.width * 0.11,
                                           backgroundColor: Colors.white,
-                                          child: 
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(200),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(200),
                                             child: CachedNetworkImage(
                                               fit: BoxFit.fitWidth,
-                                              imageUrl:  imageUrl,
-                                              placeholder: (context, url) => CircularProgressIndicator(),
-                                              errorWidget: (context, url, error) => Icon(Icons.error),
+                                              imageUrl: imageUrl,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                           ),
                                           // CircleAvatar(
@@ -458,7 +467,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _name = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         readOnly: true,
@@ -477,7 +486,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _email = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         controller: _phonenoController,
@@ -513,7 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _phoneno = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         controller: _ageController,
@@ -542,7 +551,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _age = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         controller: _occupationController,
@@ -566,7 +575,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _occupation = value,
                                       ),
 
-                                      SizedBox(height: size.height*0.03),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         readOnly: true,
                                         controller: _addressController,
@@ -584,7 +593,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _address = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         readOnly: true,
@@ -603,7 +612,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) => _ward = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       TextFormField(
                                         readOnly: true,
@@ -623,7 +632,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             _joiningdate = value,
                                       ),
                                       SizedBox(
-                                        height: size.height*0.03,
+                                        height: size.height * 0.03,
                                       ),
                                       // userType == "email"
                                       //     ? Padding(

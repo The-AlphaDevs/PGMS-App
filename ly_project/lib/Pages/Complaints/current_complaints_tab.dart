@@ -84,6 +84,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                       location: snapshot.data.docs[index]["imageData"]
                           ["location"],
                       supervisor: snapshot.data.docs[index]["supervisorName"],
+                      supervisorDocRef: snapshot.data.docs[index]["supervisorDocRef"],
+                      
                       lat: snapshot.data.docs[index]["latitude"],
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],

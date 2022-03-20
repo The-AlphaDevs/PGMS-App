@@ -83,6 +83,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                       image: snapshot.data.docs[index]["imageData"]["url"],
                       location: snapshot.data.docs[index]["imageData"]
                           ["location"],
+                      supervisorDocRef: snapshot.data.docs[index]["supervisorDocRef"],
                       supervisor: snapshot.data.docs[index]["supervisorName"],
                       lat: snapshot.data.docs[index]["latitude"],
                       long: snapshot.data.docs[index]["longitude"],

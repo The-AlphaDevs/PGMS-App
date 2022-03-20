@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Pages/SupervisorScorecard/SupervisorScorecard.dart';
 import 'package:ly_project/Widgets/Map.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +24,7 @@ class DetailComplaint extends StatefulWidget {
   final description;
   final citizenEmail;
   final docId;
+  final supervisorDocRef;
 
   DetailComplaint(
       {this.id,
@@ -37,7 +39,8 @@ class DetailComplaint extends StatefulWidget {
       this.lat,
       this.long,
       this.citizenEmail,
-      this.docId});
+      this.docId,
+      this.supervisorDocRef});
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -70,8 +73,6 @@ class _DetailComplaintState extends State<DetailComplaint> {
     String complaint = widget.complaint.toString();
     appBarTitle =
         "${complaint.substring(0, complaint.length > 20 ? 20 : complaint.length)} ${complaint.length > 20 ? '...' : ''}";
-    print("detail ka latitude - " + latitude.toString());
-    print("detail ka longitude - " + longitude.toString());
   }
 
   @override
@@ -469,9 +470,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
             ),
           ],
         ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
+        SizedBox(height: screenSize.height * 0.005),
         Row(
           children: [
             Text(
@@ -482,11 +481,27 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              widget.supervisor ?? "Supervisor null hai 1",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
+            InkWell(
+              onTap: () => widget.supervisor != null ? showScorecard() : {},
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: 1), //Space between text and underline
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: DARK_PURPLE,
+                      width: 0.8,
+                    ),
+                  ),
+                ), //width of the underline
+                child: Row(
+                  children: [
+                    Text(widget.supervisor ?? "Supervisor Name",
+                        style: TextStyle(fontSize: 15, color: Colors.black)),
+                    SizedBox(width: 3),
+                    Icon(Icons.open_in_new, size: 16)
+                  ],
+                ),
               ),
             ),
           ],
@@ -496,20 +511,14 @@ class _DetailComplaintState extends State<DetailComplaint> {
         ),
         Row(
           children: [
-            Text(
-              'Date: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text('Date: ',
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
             Text(
               DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey[800],
-              ),
+              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
             ),
           ],
         ),
@@ -559,6 +568,12 @@ class _DetailComplaintState extends State<DetailComplaint> {
         ),
       ],
     );
+  }
+
+  showScorecard() async {
+    Dialog scorecard = Dialog(
+        child: SupervisorScorecard(supervisorDocRef: widget.supervisorDocRef));
+    await showDialog(context: context, builder: (_) => scorecard);
   }
 
   Row sendNotifButton(BuildContext context, Size screenSize) {

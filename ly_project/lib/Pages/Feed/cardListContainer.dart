@@ -8,7 +8,8 @@ class CardListContainer extends StatefulWidget {
   final BaseAuth auth;
   final AsyncSnapshot<QuerySnapshot> snapshot;
 
-  CardListContainer({Key key, @required this.snapshot, @required this.auth}) : super(key: key);
+  CardListContainer({Key key, @required this.snapshot, @required this.auth})
+      : super(key: key);
 
   @override
   _CardListContainerState createState() => _CardListContainerState();
@@ -26,7 +27,6 @@ class _CardListContainerState extends State<CardListContainer> {
       // cacheExtent: 5,
       key: new Key(uuid.v4()),
       itemBuilder: (context, index) {
-        
         return ComplaintOverviewCard(
           docId: widget.snapshot.data.docs[index].id,
           id: widget.snapshot.data.docs[index]["id"],
@@ -37,6 +37,8 @@ class _CardListContainerState extends State<CardListContainer> {
           image: widget.snapshot.data.docs[index]["imageData"]["url"],
           location: widget.snapshot.data.docs[index]["imageData"]["location"],
           supervisor: widget.snapshot.data.docs[index]["supervisorName"],
+          supervisorDocRef: widget.snapshot.data.docs[index]
+              ["supervisorDocRef"],
           lat: widget.snapshot.data.docs[index]["latitude"],
           long: widget.snapshot.data.docs[index]["longitude"],
           description: widget.snapshot.data.docs[index]["description"],

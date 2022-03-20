@@ -22,6 +22,7 @@ class ComplaintOverviewCard extends StatefulWidget {
   final citizenEmail;
   final docId;
   final upvoteCount;
+  final supervisorDocRef;
 
   ComplaintOverviewCard(
       {this.id,
@@ -37,7 +38,8 @@ class ComplaintOverviewCard extends StatefulWidget {
       this.lat,
       this.long,
       this.citizenEmail,
-      this.upvoteCount});
+      this.upvoteCount, 
+      this.supervisorDocRef});
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -168,6 +170,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   status: widget.status,
                   image: widget.image,
                   supervisor: widget.supervisor,
+                  supervisorDocRef: widget.supervisorDocRef,
                   location: widget.location,
                   lat: widget.lat,
                   long: widget.long,
