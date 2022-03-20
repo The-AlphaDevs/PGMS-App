@@ -5,6 +5,8 @@ import 'package:ly_project/Pages/Complaints/history_tab.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Utils/colors.dart';
 
+import 'overdue_complaints.dart';
+
 class ComplaintsPage extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -30,7 +32,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 2);
+    _tabController = new TabController(vsync: this, length: 3);
   }
 
   @override
@@ -69,7 +71,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                         ),
                         Flexible(
                           child: Text(
-                            'Ongoing Complaints ',
+                            'Ongoing',
                             style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ),
@@ -88,7 +90,25 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                           size: 24,
                         ),
                         Text(
-                          'Past Complaints',
+                          'Past',
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.bookmark,
+                          // color: Colors.grey[600],
+                          size: 24,
+                        ),
+                        Text(
+                          'Overdue',
                           style: TextStyle(fontSize: 12, color: Colors.white),
                         ),
                       ],
@@ -111,6 +131,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
         children: [
           CurrentComplaintsTab(userEmail: widget.userEmail, auth: widget.auth),
           ComplaintsHistoryTab(userEmail: widget.userEmail, auth: widget.auth),
+          OverdueComplaintsTab(userEmail: widget.userEmail, auth: widget.auth),
         ],
       ),
       //     ),
