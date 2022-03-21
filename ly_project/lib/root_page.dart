@@ -113,12 +113,10 @@ class _RootPageState extends State<RootPage> {
           );
         } else {
           print('Supervisor Screen');
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-            ),
+          return BottomNavBar(
+            auth: widget.auth,
+            onSignedOut: _signedOut,
+            userEmail: user,
           );
         }
 
