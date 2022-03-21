@@ -1,10 +1,3 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:daybook/Provider/email_sign_in.dart';
-// import 'package:daybook/Services/user_services.dart';
-// import 'package:daybook/Utils/constantStrings.dart';
-// import 'package:daybook/Utils/constants.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +12,10 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:ly_project/Utils/colors.dart';
-// import 'package:intl/intl.dart';
-// import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
-  ProfileScreen({this.auth, this.onSignedOut});
+  ProfileScreen({@required this.auth});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -66,10 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _joiningdateController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File file;
-  
-  final List<String> menuItems = <String>[
-    'Logout',
-  ];
+
+  final List<String> menuItems = <String>['Logout'];
 
   @override
   void initState() {
@@ -90,19 +78,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  AlertDialog logOutAlert() {
+    Widget okButton = OutlinedButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+      ),
+      child: Text("Yes", style: TextStyle(color: Colors.grey[700])),
+      onPressed: () async {
+        try {
+          Navigator.pop(context, null);
+          await widget.auth.signOut();
+        } catch (e) {
+          print("Error in Signout!!");
+          print(e);
+        }
+      },
+    );
+    Widget cancelButton = OutlinedButton(
+      autofocus: true,
+      style: ButtonStyle(
+        side: MaterialStateProperty.all(BorderSide(color: Colors.green)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+      ),
+      child: Text("No", style: TextStyle(color: Colors.green[900])),
+      onPressed: () => Navigator.pop(context, null),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Wait!"),
+      content: Text("Do you want to log out?"),
+      actions: [okButton, cancelButton],
+      titlePadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+      contentPadding: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 8.0),
+      actionsPadding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+    );
+    return alert;
+  }
+
   void handleMenuClick(String value) async {
     switch (value) {
       case 'Logout':
         {
-          // void _signOut(BuildContext context) async {
-          try {
-            await widget.auth.signOut();
-            widget.onSignedOut();
-          } catch (e) {
-            print("Error in Signout!!");
-            print(e);
-          }
-          // }
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => logOutAlert(),
+          );
+
           break;
         }
     }
@@ -185,155 +210,121 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: DARK_BLUE,
-          actions: [
-            Container(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                child: Text("SAVE",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: size.height * 0.02,
-                        fontWeight: FontWeight.bold)),
-                onTap: () async {
-                  if (validateAndSave(_formKey)) {
-                    _showDialog(context);
-                    String status = await mixtureofcalls(file);
-                    print("mixture of calls ho gaya");
-                    Navigator.pop(context);
-                    print("context pop hua");
-                    if (status == 'Success') {
-                      print("success k andar aaya");
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.SUCCES,
-                        animType: AnimType.BOTTOMSLIDE,
-                        title: 'Success',
-                        desc: 'The data has been updated successfully..',
-                        btnCancelOnPress: () {},
-                        btnOkOnPress: () {},
-                      )..show();
-                    } else {
-                      print("else k andar aaya");
-
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.ERROR,
-                        animType: AnimType.BOTTOMSLIDE,
-                        title: 'Error',
-                        desc: 'Error occured while updating data..',
-                        btnCancelOnPress: () {},
-                        btnOkOnPress: () {},
-                      )..show();
-                    }
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: DARK_BLUE,
+        actions: [
+          Container(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              child: Text("SAVE",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: size.height * 0.02,
+                    fontWeight: FontWeight.bold,
+                  )),
+              onTap: () async {
+                if (validateAndSave(_formKey)) {
+                  _showDialog(context);
+                  String status = await mixtureofcalls(file);
+                  print("mixture of calls ho gaya");
+                  Navigator.pop(context);
+                  print("context pop hua");
+                  if (status == 'Success') {
+                    print("success k andar aaya");
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.SUCCES,
+                      animType: AnimType.BOTTOMSLIDE,
+                      title: 'Success',
+                      desc: 'The data has been updated successfully..',
+                      btnCancelOnPress: () {},
+                      btnOkOnPress: () {},
+                    )..show();
                   } else {
-                    print("Failure in saving the form");
+                    print("else k andar aaya");
+
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.ERROR,
+                      animType: AnimType.BOTTOMSLIDE,
+                      title: 'Error',
+                      desc: 'Error occured while updating data..',
+                      btnCancelOnPress: () {},
+                      btnOkOnPress: () {},
+                    )..show();
                   }
-                },
-              ),
-            ),
-            SizedBox(width: size.width * 0.05),
-            IconButton(
-                icon: Icon(
-                  Icons.logout,
-                  size: size.height * 0.025,
-                ),
-                onPressed: () => handleMenuClick("Logout"))
-          ],
-          title: Text(
-            "My Profile",
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+                } else {
+                  print("Failure in saving the form");
+                }
+              },
             ),
           ),
+          SizedBox(width: size.width * 0.05),
+          IconButton(
+              icon: Icon(Icons.logout, size: size.height * 0.025),
+              onPressed: () => handleMenuClick("Logout"))
+        ],
+        title: Text(
+          "My Profile",
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        key: _scaffoldKey,
-        body: SafeArea(
-            child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+      ),
+      key: _scaffoldKey,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Container(
-                // height: 200,
                 width: double.infinity,
-                // color: Color(0xFF181D3D),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 35),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SizedBox(
-                            height: size.height * 0.03,
-                          ),
+                          SizedBox(height: size.height * 0.03),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                child: Row(children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: GestureDetector(
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.black,
-                                        radius: size.width * 0.12,
+                                child: Row(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
                                         child: CircleAvatar(
-                                          radius: size.width * 0.11,
-                                          backgroundColor: Colors.white,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(200),
-                                            child: CachedNetworkImage(
-                                              fit: BoxFit.fitWidth,
-                                              imageUrl: imageUrl,
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
+                                          backgroundColor: Colors.black,
+                                          radius: size.width * 0.12,
+                                          child: CircleAvatar(
+                                            radius: size.width * 0.11,
+                                            backgroundColor: Colors.white,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(200),
+                                              child: CachedNetworkImage(
+                                                fit: BoxFit.fitWidth,
+                                                imageUrl: imageUrl,
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
                                             ),
                                           ),
-                                          // CircleAvatar(
-                                          //   radius: size.width * 0.15,
-                                          //   backgroundImage: imageUrl == null
-                                          //       ? FileImage(file)
-                                          //       : CachedNetworkImage(
-                                          //             imageUrl: imageUrl,
-                                          //             placeholder: (context, url) => CircularProgressIndicator(),
-                                          //             errorWidget: (context, url, error) => Icon(Icons.error),
-                                          //         ),
-                                          // ),
                                         ),
+                                        onTap: () => _upload(),
                                       ),
-                                      onTap: () {
-                                        _upload();
-                                      },
                                     ),
-                                  ),
-                                  // ClipRRect(
-                                  //   borderRadius: BorderRadius.circular(60),
-                                  //   child: CachedNetworkImage(
-                                  //     height: 70,
-                                  //     width: 70,
-                                  //     fit: BoxFit.cover,
-                                  //     imageUrl: "https://picsum.photos/200/300",
-                                  //   ),
-                                  // ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
+                                    SizedBox(width: 10),
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -344,81 +335,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               0.53,
                                           child: Text(
                                             _nameController.text,
-                                            style: GoogleFonts.getFont(
-                                              "Oxygen",
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                              // color: Colors.white,
-                                            ),
+                                            style: GoogleFonts.getFont("Oxygen",
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600),
                                             softWrap: true,
                                           ),
                                         ),
-                                      ]),
-                                ]),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              // Container(
-                              //   height: 45,
-                              //   width: 45,
-                              //   decoration: BoxDecoration(
-                              //     border: Border.all(color: Colors.white),
-                              //     borderRadius:
-                              //         BorderRadius.all(Radius.circular(50.0)),
-                              //   ),
-                              //   child: FloatingActionButton(
-                              //     backgroundColor: Color(0xFF181D3D),
-                              //     child: Icon(
-                              //       Icons.save,
-                              //       size: 20,
-                              //     ),
-                              //     onPressed: () async {
-                              //       if (validateAndSave(_formKey)) {
-                              //         _showDialog(context);
-                              //         String status =
-                              //             await mixtureofcalls(file);
-                              //         print("mixture of calls ho gaya");
-                              //         Navigator.pop(context);
-                              //         print("context pop hua");
-                              //         if (status == 'Success') {
-                              //           print("success k andar aaya");
-                              //           AwesomeDialog(
-                              //             context: context,
-                              //             dialogType: DialogType.SUCCES,
-                              //             animType: AnimType.BOTTOMSLIDE,
-                              //             title: 'Success',
-                              //             desc:
-                              //                 'The data has been updated successfully..',
-                              //             btnCancelOnPress: () {},
-                              //             btnOkOnPress: () {
-                              //               // Navigator.push(
-                              //               //     context,
-                              //               //     MaterialPageRoute(
-                              //               //         builder: (context) =>
-                              //               //             ProfileScreen(
-                              //               //                 auth: widget.auth,
-                              //               //                 onSignedOut: widget
-                              //               //                     .onSignedOut)));
-                              //             },
-                              //           )..show();
-                              //         } else {
-                              //           print("else k andar aaya");
-
-                              //           AwesomeDialog(
-                              //             context: context,
-                              //             dialogType: DialogType.ERROR,
-                              //             animType: AnimType.BOTTOMSLIDE,
-                              //             title: 'Error',
-                              //             desc:
-                              //                 'Error occured while updating data..',
-                              //             btnCancelOnPress: () {},
-                              //             btnOkOnPress: () {},
-                              //           )..show();
-                              //         }
-                              //       } else {
-                              //         print("Failure in saving the form");
-                              //       }
-                              //     },
-                              //   ),
-                              // ),
                             ],
                           ),
                         ],
@@ -466,9 +393,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         onSaved: (value) => _name = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         readOnly: true,
                                         controller: _emailController,
@@ -485,9 +410,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         onSaved: (value) => _email = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         controller: _phonenoController,
                                         validator: (value) {
@@ -521,9 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         onSaved: (value) => _phoneno = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         controller: _ageController,
                                         validator: (value) {
@@ -550,15 +471,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         onSaved: (value) => _age = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         controller: _occupationController,
                                         validator: (value) {
-                                          if (value.isEmpty) {
+                                          if (value.isEmpty)
                                             return "Please enter some value";
-                                          }
                                           return null;
                                         },
                                         decoration: InputDecoration(
@@ -567,14 +485,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               fontWeight: FontWeight.bold),
                                           labelText: "Occupation",
                                           border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20)),
-                                              borderSide: BorderSide(
-                                                  color: Colors.black)),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20)),
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
                                         ),
                                         onSaved: (value) => _occupation = value,
                                       ),
-
                                       SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         readOnly: true,
@@ -586,15 +504,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           labelText: "Address",
                                           border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(20)),
+                                                Radius.circular(20),
+                                              ),
                                               borderSide: BorderSide(
                                                   color: Colors.black)),
                                         ),
                                         onSaved: (value) => _address = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         readOnly: true,
                                         controller: _wardController,
@@ -611,9 +528,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         onSaved: (value) => _ward = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                      SizedBox(height: size.height * 0.03),
                                       TextFormField(
                                         readOnly: true,
                                         controller: _joiningdateController,
@@ -631,35 +546,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         onSaved: (value) =>
                                             _joiningdate = value,
                                       ),
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
-                                      // userType == "email"
-                                      //     ? Padding(
-                                      //         padding: const EdgeInsets.symmetric(
-                                      //             vertical: 8.0),
-                                      //         child: Center(
-                                      //           child: MaterialButton(
-                                      //             child: Text("Change password",
-                                      //                 style: TextStyle(
-                                      //                   fontWeight: FontWeight.bold,
-                                      //                   fontSize: 20,
-                                      //                   color: Color(0xff5685bf),
-                                      //                 )),
-                                      //             padding: EdgeInsets.symmetric(
-                                      //                 horizontal: 40, vertical: 10),
-                                      //             shape: StadiumBorder(),
-                                      //             color: Color(0xff8ebbf2),
-                                      //             onPressed: () async {
-                                      //               print(
-                                      //                   "Navigate to change password screen...");
-                                      //               // await showPasswordResetDialog();
-                                      //               print("Email sent!!");
-                                      //             },
-                                      //           ),
-                                      //         ),
-                                      //       )
-                                      //     : SizedBox(),
+                                      SizedBox(height: size.height * 0.03),
                                     ],
                                   ),
                                 ),
@@ -673,7 +560,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               )
-            ]))));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<String> mixtureofcalls(File _image) async {
@@ -720,15 +611,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {});
   }
 
-//   Future<String> uploadFiles(File _image) async {
-//     print("Upload docs wala user\n");
-//     final user = await widget.auth.currentUser();
-//     print(user);
-//     String imageRef = user + '/' + _image.path.split('/').last;
-//     print(imageRef);
-//     imageUrl = await (await FirebaseStorage.instance.ref(imageRef).putFile(_image)).ref.getDownloadURL();
-//     print(imageUrl);
-//     return imageUrl;
-  //
 
 }

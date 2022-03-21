@@ -7,9 +7,8 @@ import 'package:ly_project/Utils/colors.dart';
 
 class ComplaintsPage extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
   final String userEmail;
-  ComplaintsPage({Key key, this.auth, this.onSignedOut, this.userEmail});
+  ComplaintsPage({Key key, this.auth, this.userEmail});
 
   @override
   _ComplaintsPageState createState() => _ComplaintsPageState();
@@ -41,18 +40,14 @@ class _ComplaintsPageState extends State<ComplaintsPage>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
-        title: Text('Your Complaints', ),
+        title: Text('Your Complaints'),
         backgroundColor: DARK_BLUE,
-        
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
           child: Container(
-           
             child: TabBar(
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.label,
@@ -63,10 +58,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.mode_comment,
-                          size: 24,
-                        ),
+                        Icon(Icons.mode_comment, size: 24),
                         Flexible(
                           child: Text(
                             'Ongoing Complaints ',
@@ -82,11 +74,7 @@ class _ComplaintsPageState extends State<ComplaintsPage>
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.bookmark,
-                          // color: Colors.grey[600],
-                          size: 24,
-                        ),
+                        Icon(Icons.bookmark, size: 24),
                         Text(
                           'Past Complaints',
                           style: TextStyle(fontSize: 12, color: Colors.white),
@@ -100,39 +88,13 @@ class _ComplaintsPageState extends State<ComplaintsPage>
           ),
         ),
       ),
-      body:
-          // Stack(
-          //   alignment: Alignment.topCenter,
-          //   children: [
-          //     Container(
-          //       child:
-          TabBarView(
+      body: TabBarView(
         controller: _tabController,
         children: [
           CurrentComplaintsTab(userEmail: widget.userEmail, auth: widget.auth),
           ComplaintsHistoryTab(userEmail: widget.userEmail, auth: widget.auth),
         ],
       ),
-      //     ),
-      //     Container(
-      //       child: Column(
-      //         children: [
-      //           SizedBox(height: size.height * 0.03),
-      //           // appBar(),
-      //           SizedBox(height: 10.0),
-
-      //           // Implementation of tabbar
-      //           // Center(
-      //           //   child: Container(
-      //           //     width: 300.0,
-      //           //     height: 60,
-      //           //     child: ),
-      //           // ),
-      //         ],
-      //       ),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

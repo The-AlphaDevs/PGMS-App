@@ -1,15 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Login/login.dart';
+import 'package:ly_project/Services/AuthServices.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/navigation.dart';
-import 'package:ly_project/root_page.dart';
 import 'package:ly_project/utils/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class RegistrationPage extends StatefulWidget {
   final BaseAuth auth;
-  // final VoidCallback onsignedIn;
   RegistrationPage({this.auth});
 
   @override
@@ -23,34 +19,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
       color: Color(0xFF181D3D),
       child: SafeArea(
         child: Scaffold(
-            body: Container(
-                child: ListView(children: [
-          Container(
-              decoration: BoxDecoration(
-                  color: Color(0xFF181D3D),
-                  border: Border.all(
-                    color: Color(0xFF181D3D),
-                  ),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15))),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 8,
-              child: Center(
-                child: Text(
-                  "Sign Up",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .apply(color: Colors.white),
-                  textAlign: TextAlign.center,
+          body: Container(
+            child: ListView(
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF181D3D),
+                      border: Border.all(color: Color(0xFF181D3D)),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 8,
+                    child: Center(
+                      child: Text(
+                        "Sign Up",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .apply(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height / 20),
+                  child: RegisterForm(auth: widget.auth),
                 ),
-              )),
-          Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 20),
-              child: RegisterForm(auth: widget.auth))
-        ]))),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -75,13 +76,14 @@ class _RegisterFormState extends State<RegisterForm> {
   final _passwordController = TextEditingController();
 
   bool _passwordVisible;
-
+  bool isRegistering = false;
   final _formKey = GlobalKey<FormState>();
+
+  startRegisterBtnLoading() => setState(() => isRegistering = true);
+  stopRegisterBtnLoading() => setState(() => isRegistering = false);
 
   @override
   void initState() {
-    // user = FirebaseAuth.instance.currentUser;
-    // _nameController.text = user.displayName;
     _passwordVisible = false;
     super.initState();
   }
@@ -91,11 +93,11 @@ class _RegisterFormState extends State<RegisterForm> {
       content: new Row(
         children: [
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
-          ),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D))),
           Container(
-              margin: EdgeInsets.only(left: 7),
-              child: Text("  Registering...")),
+            margin: EdgeInsets.only(left: 7),
+            child: Text("  Registering..."),
+          ),
         ],
       ),
     );
@@ -105,10 +107,11 @@ class _RegisterFormState extends State<RegisterForm> {
       builder: (BuildContext context) {
         // Doesn't allow the dialog box to pop
         return WillPopScope(
-            onWillPop: () {
-              return;
-            },
-            child: alert);
+          onWillPop: () {
+            return;
+          },
+          child: alert,
+        );
       },
     );
   }
@@ -141,11 +144,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 TextFormField(
                   validator: (value) {
                     if (value.trim().isEmpty) {
@@ -172,19 +171,13 @@ class _RegisterFormState extends State<RegisterForm> {
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 TextFormField(
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return 'Email cannot be left Empty';
                     }
-                    String p =
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                    RegExp regExp = new RegExp(p);
+                    RegExp regExp = new RegExp(EMAIL_REGEX);
                     if (!regExp.hasMatch(value)) {
                       return 'Enter a valid email';
                     }
@@ -192,20 +185,15 @@ class _RegisterFormState extends State<RegisterForm> {
                   },
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
+                    labelStyle: TextStyle(color: Colors.black),
                     labelText: 'Email',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        borderSide: BorderSide(color: Colors.black)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 TextFormField(
                   validator: (value) {
                     if (value == "") {
@@ -220,92 +208,32 @@ class _RegisterFormState extends State<RegisterForm> {
                     return null;
                   },
                   obscureText: !_passwordVisible,
-                  // cursorColor: Colors.blue,
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
+                    labelStyle: TextStyle(color: Colors.black),
                     labelText: 'Password',
-                    // icon: Icon(
-                    //   Icons.lock,
-                    //   color: Colors.blue,
-                    // ),
                     suffixIcon: IconButton(
+                      tooltip:
+                          _passwordVisible ? "Hide Password" : "Show password",
                       icon: Icon(
-                        // Based on passwordVisible state choose the icon
+                        // Choose the [Icon] according to the functionality of the [IconButton]
                         _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: Colors.black,
                       ),
-                      onPressed: () {
-                        // Update the state i.e. toogle the state of passwordVisible variable
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
+                      // Update the state i.e. toogle the state of [passwordVisible] variable
+                      onPressed: () =>
+                          setState(() => _passwordVisible = !_passwordVisible),
                     ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        borderSide: BorderSide(color: Colors.black)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
-                  keyboardType: TextInputType.number,
-                  // decoration: InputDecoration(
-                  //   labelStyle: TextStyle(
-                  //     color: Colors.black,
-                  //   ),
-                  //   border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.all(Radius.circular(20)),
-                  //       borderSide: BorderSide(color: Colors.black)),
-                  //   labelText: 'Password',
-                  // ),
+                  keyboardType: TextInputType.visiblePassword,
                 ),
-
-                // TextFormField(
-                // validator: (value){
-                //   if(value.isEmpty){
-                //     return "Please enter some value";
-                //   }
-                //   else{
-                //     if(value.length < 6){
-                //       return "Minimum 6 characters atleast";
-                //     }
-                //   }
-                //   return null;
-                // },
-                // obscureText: !_passwordVisible,
-                // cursorColor: kPrimaryColor,
-                // decoration: InputDecoration(
-                //   hintText: "Password",
-                //   icon: Icon(
-                //     Icons.lock,
-                //     color: kPrimaryColor,
-                //   ),
-                //   suffixIcon: IconButton(
-                //     icon: Icon(
-                //     // Based on passwordVisible state choose the icon
-                //       _passwordVisible
-                //       ? Icons.visibility
-                //       : Icons.visibility_off,
-                //       color: kPrimaryColor,
-                //     ),
-                //     onPressed: () {
-                //     // Update the state i.e. toogle the state of passwordVisible variable
-                //       setState(() {
-                //           _passwordVisible = !_passwordVisible;
-                //       });
-                //     },
-                //   ),
-                //   border: InputBorder.none,
-                //   ),
-                //   onSaved: (value) => _password = value,
-                // ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 TextFormField(
                   validator: (value) {
                     if (value == "") {
@@ -320,7 +248,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     return null;
                   },
                   controller: _phoneController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
@@ -331,11 +259,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     labelText: 'Phone Number',
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -355,37 +279,31 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                       ),
                       value: occupation,
-                      onChanged: (String occ) {
-                        setState(() {
-                          occupation = occ;
-                        });
-                      },
+                      onChanged: (String occ) =>
+                          setState(() => occupation = occ),
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyText1,
-                      items: OCCUPATIONS
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 11),
-                            child: Text(
-                              value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2
-                                  .copyWith(fontSize: 16),
+                      items: OCCUPATIONS.map<DropdownMenuItem<String>>(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 11),
+                              child: Text(
+                                value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    .copyWith(fontSize: 16),
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        },
+                      ).toList(),
                     ),
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -405,37 +323,31 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                       ),
                       value: ward,
-                      onChanged: (String selectedWard) {
-                        setState(() {
-                          ward = selectedWard;
-                        });
-                      },
+                      onChanged: (String selectedWard) =>
+                          setState(() => ward = selectedWard),
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyText1,
-                      items:
-                          WARDS.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 11),
-                            child: Text(
-                              value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2
-                                  .copyWith(fontSize: 16),
+                      items: WARDS.map<DropdownMenuItem<String>>(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 11),
+                              child: Text(
+                                value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    .copyWith(fontSize: 16),
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        },
+                      ).toList(),
                     ),
                   ),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
@@ -445,60 +357,66 @@ class _RegisterFormState extends State<RegisterForm> {
                   },
                   controller: _addressController,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
+                    labelStyle: TextStyle(color: Colors.black),
                     labelText: 'Address',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        borderSide: BorderSide(color: Colors.black)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
                 ),
-
-                SizedBox(
-                  height: 40,
-                ),
-
+                SizedBox(height: 40),
                 SizedBox(
                   height: 45,
-                  child: MaterialButton(
-                    onPressed: () {
-                      if (validateAndSave()) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                            content:
-                                Text('Establishing Contact with the Server')));
-                        _showDialog(context);
-                        mixtureofcalls(context);
-                        // loadingScreen();
-                      } else {
-                        print("Failure in saving the form");
-                      }
-                    },
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    highlightElevation: 5,
-                    color: Color(0xFF181D3D),
-                  ),
-                ),
+                  child: isRegistering
+                      ? CircularProgressIndicator()
+                      : MaterialButton(
+                          onPressed: () async {
+                            if (validateAndSave()) {
+                              FocusScope.of(context).unfocus();
+                              startRegisterBtnLoading();
 
-                SizedBox(
-                  height: 10,
+                              _showDialog(context);
+                              await AuthServices.registerUser(
+                                email: _emailController.text.toString().trim().toLowerCase(),
+                                password: _passwordController.text.trim(),
+                                name: _nameController.text.toString(),
+                                phone: _phoneController.text.toString().trim(),
+                                address: _addressController.text.toString(),
+                                ward: ward,
+                                occupation: occupation,
+                                age: _ageController.text.toString(),
+                                successCallback: registrationSuccessCallback,
+                                errorCallback: registrationErrorCallback,
+                              );
+                            } else {
+                              FocusScope.of(context).unfocus();
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Can't register as the form has some errors!"),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text('Submit',
+                              style: TextStyle(color: Colors.white, fontSize: 14)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
+                          highlightElevation: 5,
+                          color: Color(0xFF181D3D),
+                        ),
                 ),
-
+                SizedBox(height: 10),
                 Center(
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginPage(auth: widget.auth)));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(auth: widget.auth),
+                        ),
+                      );
                     },
                     child: Text(
                       'Have an account? Sign In',
@@ -522,118 +440,31 @@ class _RegisterFormState extends State<RegisterForm> {
     if (isValid) {
       _formKey.currentState.save();
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
-  Future<void> mixtureofcalls(BuildContext context) async {
-    print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
-    String useruid = await userCreation(context);
-    print("apna Userid: " + useruid);
-    if (useruid != "Error while Registering User!!") {
-      store();
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => RootPage(auth: widget.auth)));
-
-      // Navigator.push(context,MaterialPageRoute(builder: (context) => BottomNavBar(auth:widget.auth)));
-    } else {
-      print("Registration failed");
-    }
+  void registrationSuccessCallback() {
+    stopRegisterBtnLoading();
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
-  Widget loadingScreen() {
-    Size size = MediaQuery.of(context).size;
-    return Center(
-        heightFactor: MediaQuery.of(context).size.height / 64,
-        // padding: EdgeInsets.all(100),
-        child: Column(
-          children: [
-            Text('Please Wait'),
-            SizedBox(height: size.height * 0.03),
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            ),
-          ],
-        ));
-  }
-
-  Future<String> userCreation(BuildContext context) async {
-    print("Inside user creation function");
-    try {
-      User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: _emailController.text.trim().toLowerCase(), password: _passwordController.text.trim()))
-          .user;
-
-      print("Registered user => " + user.uid);
-      return user.uid;
-    } catch (e) {
-      print("Error => $e");
-      if (e.toString() ==
-          "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
-        showErrorDialog(context, "Signup Error",
-            "The email address is already in use by another account.");
-      } else {
-        showErrorDialog(context, "Signup Error", e.toString());
-      }
-      return "Error while Registering User!!";
-    }
-  }
-
-  Future<void> store() async {
-    print("Inside store function");
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_emailController.text.toString().trim().toLowerCase())
-          .set({
-        'name': _nameController.text.toString(),
-        'email': _emailController.text.toString().trim().toLowerCase(),
-        'password': _passwordController.text.toString().trim(),
-        'mobile': _phoneController.text.toString().trim(),
-        'photo':
-            "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png",
-        'address': _addressController.text.toString(),
-        'age': _ageController.text.toString(),
-        'ward': ward,
-        'date': DateTime.now().toString(),
-        'occupation': occupation
-      });
-    } catch (e) {
-      print("Error: " + e.toString());
-    }
+  void registrationErrorCallback(String errorMessage) {
+    stopRegisterBtnLoading();
+    Navigator.pop(context);
+    showErrorDialog(context, "Signup Error", errorMessage);
   }
 
   showErrorDialog(BuildContext context, String title, String content) {
-    // set up the button
     Widget okButton = FlatButton(
-      child: Text(
-        "OK",
-        style: TextStyle(color: Colors.blue),
-      ),
-      onPressed: () {
-        Navigator.pop(context, null);
-      },
+      child: Text("OK", style: TextStyle(color: Colors.blue)),
+      onPressed: () => Navigator.pop(context, null),
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        okButton,
-      ],
-    );
+        title: Text(title), content: Text(content), actions: [okButton]);
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }
