@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart";
+import 'package:cached_network_image/cached_network_image.dart';
+
+class CachedTileProvider extends TileProvider {
+  const CachedTileProvider();
+  @override
+  ImageProvider getImage(Coords<num> coords, TileLayerOptions options) {
+    //Now you can set options that determine how the image gets cached via whichever plugin you use.
+    return CachedNetworkImageProvider(getTileUrl(coords, options));
+  }
+}
 
 class ComplaintMap extends StatelessWidget {
   double _longitude = 0, _latitude = 0;
   LatLng centerPosition;
   double zoomLevel = 14.0;
-  MapController _mapController = new MapController();
+  MapController _mapController;
 
   ComplaintMap({Key key, double longitude, double latitude}) {
     _longitude = longitude;
     _latitude = latitude;
+    _mapController = new MapController();
     centerPosition = LatLng(latitude, longitude);
   }
 
@@ -25,7 +36,8 @@ class ComplaintMap extends StatelessWidget {
             TileLayerOptions(
                 urlTemplate:
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c']),
+                subdomains: ['a', 'b', 'c'],
+                tileProvider: const CachedTileProvider()),
             MarkerLayerOptions(
               markers: [
                 Marker(
