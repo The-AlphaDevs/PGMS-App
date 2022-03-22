@@ -14,7 +14,7 @@ class CurrentComplaintsTab extends StatefulWidget {
   State<CurrentComplaintsTab> createState() => _CurrentComplaintsTabState();
 }
 
-class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
+class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> with AutomaticKeepAliveClientMixin<CurrentComplaintsTab>{
   var uuid = Uuid();
 
   @override
@@ -30,7 +30,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("supervisorEmail", isEqualTo: widget.userEmail)
-              .where("status", whereIn: ["In Progress", "Resolved"])
+              .where("status", whereIn: ["In Progress"])
+              .orderBy("upvoteCount", descending: true)
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:
@@ -81,14 +82,14 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                       date: snapshot.data.docs[index]["dateTime"],
                       status: snapshot.data.docs[index]["status"],
                       image: snapshot.data.docs[index]["imageData"]["url"],
-                      location: snapshot.data.docs[index]["imageData"]
-                          ["location"],
+                      location: snapshot.data.docs[index]["imageData"]["location"],
                       supervisor: snapshot.data.docs[index]["supervisorName"],
                       lat: snapshot.data.docs[index]["latitude"],
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                       upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                      overdue: snapshot.data.docs[index]["overdue"],
                     );
                   },
                 );
@@ -97,4 +98,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
           }),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -105,7 +105,7 @@ class _RootPageState extends State<RootPage> {
         //     ),
         //   );
         // } else 
-        // if (role == "citizen") {
+        if (role == "citizen") {
           print('User1 Screen');
           return BottomNavBar(
             auth: widget.auth,

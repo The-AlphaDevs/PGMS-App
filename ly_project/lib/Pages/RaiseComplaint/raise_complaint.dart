@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ly_project/Services/PredictonServices.dart';
 import 'package:ly_project/Utils/colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -32,6 +33,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   String imageUrl =
       "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
   String docname = "";
+  bool isModelLoaded = false;
+  bool isProcessingImage = false;
+  bool isSubmittingComplaint = false;
 
   Future<LocationData> getLocation() async {
     Location location = new Location();
@@ -254,6 +258,10 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                             // Scaffold.of(context).showSnackBar(SnackBar(
                             //     content: Text(
                             //         'Establishing Contact with the Server')));
+                            
+                            
+
+
                             _showDialog(context);
                             String status = await mixtureofcalls(context);
                             print("mixture of calls ho gaya");
@@ -311,6 +319,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
       ),
     );
   }
+
+  
 
   Future<String> store(File _image) async {
 

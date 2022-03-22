@@ -72,12 +72,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData){
               print("Connection state: has no data");            
-              return getScreen(context,size);
+              // return getScreen(context,size);
 
             }
             else if(snapshot.connectionState == ConnectionState.waiting){
               print("Connection state: waiting");
-              return getScreen(context,size);
+              // return getScreen(context,size);
             }          
             
             else{
@@ -265,152 +265,152 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   }
 
 
-  Widget getScreen(BuildContext context, Size size) {
+//   Widget getScreen(BuildContext context, Size size) {
   
-  return Scaffold(
-      key: _scaffoldState,
-      body: Stack(
-        children: [
-          //TabBarViews
-          Container(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                FeedTab(auth: widget.auth, ),
-                BookmarksTab(),
-              ],
-            ),
-          ),
+//   return Scaffold(
+//       key: _scaffoldState,
+//       body: Stack(
+//         children: [
+//           //TabBarViews
+//           Container(
+//             child: TabBarView(
+//               controller: _tabController,
+//               children: [
+//                 FeedTab(auth: widget.auth, ),
+//                 BookmarksTab(),
+//               ],
+//             ),
+//           ),
 
-          Container(
-            child: Stack(
-              children: <Widget>[
-                //Shape
-                Column(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.035,
-                      color: Color(0xFF181D3D),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      child: ClipPath(
-                          clipper: CurveClipper(),
-                          child: Container(
-                            color: Color(0xFF181D3D),
-                          )),
-                    ),
-                  ],
-                ),
+//           Container(
+//             child: Stack(
+//               children: <Widget>[
+//                 //Shape
+//                 Column(
+//                   children: [
+//                     Container(
+//                       height: MediaQuery.of(context).size.height * 0.035,
+//                       color: Color(0xFF181D3D),
+//                     ),
+//                     Container(
+//                       width: MediaQuery.of(context).size.width,
+//                       height: MediaQuery.of(context).size.height * 0.8,
+//                       child: ClipPath(
+//                           clipper: CurveClipper(),
+//                           child: Container(
+//                             color: Color(0xFF181D3D),
+//                           )),
+//                     ),
+//                   ],
+//                 ),
 
-                Column(
-                  children: [
-                    SizedBox(height: size.height * 0.03),
-                    Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(width: 30),
-                          Text(
-                            'PGMS',
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              color: Colors.white,
-                              fontFamily: 'Amaranth',
-                            ),
-                          ),
-                        CircularProgressIndicator(),
-                        ],
-                      ),
-                    SizedBox(height: 10.0),
+//                 Column(
+//                   children: [
+//                     SizedBox(height: size.height * 0.03),
+//                     Row(
+//                         mainAxisSize: MainAxisSize.max,
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           SizedBox(width: 30),
+//                           Text(
+//                             'PGMS',
+//                             style: TextStyle(
+//                               fontSize: 25.0,
+//                               color: Colors.white,
+//                               fontFamily: 'Amaranth',
+//                             ),
+//                           ),
+//                         CircularProgressIndicator(),
+//                         ],
+//                       ),
+//                     SizedBox(height: 10.0),
 
-                    // Implementation of tabbar
-                    Center(
-                      child: Container(
-                        width: 300.0,
-                        height: 60,
-                        child: TabBar(
-                          controller: _tabController,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          indicator: BoxDecoration(
-                            color: Color(0xFF606fad),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15),
-                            ),
-                          ),
-                          tabs: [
-                            Tab(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(42.0, 0, 42.0, 0),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.mode_comment,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                    Text(
-                                      'Feed',
-                                      style: TextStyle(
-                                          fontSize: 11, color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Tab(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.bookmark,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                    Text(
-                                      'Bookmarks',
-                                      style: TextStyle(
-                                          fontSize: 11, color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  bottom: 30,
-                  right: 20,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RaiseComplaint(auth: widget.auth,)
-                        )
-                      );
-                    },
-                    backgroundColor: DARK_BLUE,
-                    child: const Icon(Icons.add),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+//                     // Implementation of tabbar
+//                     Center(
+//                       child: Container(
+//                         width: 300.0,
+//                         height: 60,
+//                         child: TabBar(
+//                           controller: _tabController,
+//                           indicatorSize: TabBarIndicatorSize.label,
+//                           indicator: BoxDecoration(
+//                             color: Color(0xFF606fad),
+//                             borderRadius: BorderRadius.only(
+//                               topLeft: Radius.circular(15),
+//                               topRight: Radius.circular(15),
+//                               bottomRight: Radius.circular(15),
+//                               bottomLeft: Radius.circular(15),
+//                             ),
+//                           ),
+//                           tabs: [
+//                             Tab(
+//                               child: Padding(
+//                                 padding: EdgeInsets.fromLTRB(42.0, 0, 42.0, 0),
+//                                 child: Column(
+//                                   children: [
+//                                     Icon(
+//                                       Icons.mode_comment,
+//                                       color: Colors.white,
+//                                       size: 24,
+//                                     ),
+//                                     Text(
+//                                       'Feed',
+//                                       style: TextStyle(
+//                                           fontSize: 11, color: Colors.white),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                             Tab(
+//                               child: Padding(
+//                                 padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+//                                 child: Column(
+//                                   children: [
+//                                     Icon(
+//                                       Icons.bookmark,
+//                                       color: Colors.white,
+//                                       size: 24,
+//                                     ),
+//                                     Text(
+//                                       'Bookmarks',
+//                                       style: TextStyle(
+//                                           fontSize: 11, color: Colors.white),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 Positioned(
+//                   bottom: 30,
+//                   right: 20,
+//                   child: FloatingActionButton(
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => RaiseComplaint(auth: widget.auth,)
+//                         )
+//                       );
+//                     },
+//                     backgroundColor: DARK_BLUE,
+//                     child: const Icon(Icons.add),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           )
+//         ],
+//       ),
+//     );
 
-}
+// }
 
 
 }

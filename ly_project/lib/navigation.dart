@@ -15,13 +15,13 @@ class BottomNavBar extends StatefulWidget {
   _BottomNavBarState createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<BottomNavBar> with AutomaticKeepAliveClientMixin<BottomNavBar>{
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> citizenTabs = [
-      Feed(auth: widget.auth, onSignedOut: widget.onSignedOut),
+      // Feed(auth: widget.auth, onSignedOut: widget.onSignedOut),
       ComplaintsPage(auth: widget.auth, onSignedOut: widget.onSignedOut, userEmail:widget.userEmail),
       // DetailComplaint(),
       Performance(),
@@ -54,13 +54,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ),
             animationCurve: Curves.bounceInOut,
             items: <Widget>[
+              // Icon(
+              //   Icons.home,
+              //   size: 30,
+              //   color: Colors.white,
+              // ),
               Icon(
                 Icons.home,
-                size: 30,
-                color: Colors.white,
-              ),
-              Icon(
-                Icons.notes,
                 size: 30,
                 color: Colors.white,
               ),
@@ -80,4 +80,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         )
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

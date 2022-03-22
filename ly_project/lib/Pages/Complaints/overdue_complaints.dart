@@ -14,7 +14,7 @@ class OverdueComplaintsTab extends StatefulWidget {
   State<OverdueComplaintsTab> createState() => _OverdueComplaintsTabState();
 }
 
-class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> {
+class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> with AutomaticKeepAliveClientMixin<OverdueComplaintsTab>{
   var uuid = Uuid();
 
   @override
@@ -30,6 +30,7 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("supervisorEmail", isEqualTo: widget.userEmail)
+              .where("status", isEqualTo: "In Progress")
               .where("overdue", isEqualTo: "true")
               // .orderBy("dateTime", descending: true)
               .snapshots(),
@@ -88,6 +89,8 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> {
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                      upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                      overdue: snapshot.data.docs[index]["overdue"],
                     );
                   },
                 );
@@ -96,4 +99,8 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> {
           }),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

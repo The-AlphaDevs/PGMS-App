@@ -48,6 +48,8 @@ dependencies:
   firebase_storage: ^7.0.0
   firebase_auth: ^0.20.1
   top_modal_sheet: ^1.0.0
+
+  tflite: ^1.0.6
   # firebase_messaging: ^5.0.2
   # firebase_core : ^0.7.0
   # firebase_analytics: ^7.0.1

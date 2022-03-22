@@ -134,7 +134,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        color: widget.overdue == "true" ? Colors.red[100] : Colors.white,
+        // color: widget.overdue == "true" ? Colors.red[100] : Colors.white,
         child: InkWell(
           onTap: () {
             print("Tap!");

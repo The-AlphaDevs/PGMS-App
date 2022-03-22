@@ -14,7 +14,7 @@ class ComplaintsHistoryTab extends StatefulWidget {
   State<ComplaintsHistoryTab> createState() => _ComplaintsHistoryTabState();
 }
 
-class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
+class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> with AutomaticKeepAliveClientMixin<ComplaintsHistoryTab>{
   var uuid = Uuid();
 
   @override
@@ -30,7 +30,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("supervisorEmail", isEqualTo: widget.userEmail)
-              .where("status", isEqualTo: "Closed")
+              .where("status", whereIn: ["Resolved", "Closed"])
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:
@@ -88,6 +88,8 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                      upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                      overdue: snapshot.data.docs[index]["overdue"],
                     );
                   },
                 );
@@ -96,4 +98,8 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
           }),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
