@@ -25,6 +25,7 @@ class _FeedTabState extends State<FeedTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("status", whereIn: ["Pending", "In Progress"])
+              .where("supervisorEmail", isEqualTo: widget.auth.currentUserEmail())
               .orderBy("upvoteCount", descending: true)
               .snapshots(),
           builder:
@@ -78,14 +79,14 @@ class _FeedTabState extends State<FeedTab> {
                       date: snapshot.data.docs[index]["dateTime"],
                       status: snapshot.data.docs[index]["status"],
                       image: snapshot.data.docs[index]["imageData"]["url"],
-                      location: snapshot.data.docs[index]["imageData"]
-                          ["location"],
+                      location: snapshot.data.docs[index]["imageData"]["location"],
                       supervisor: snapshot.data.docs[index]["supervisorName"],
                       lat: snapshot.data.docs[index]["latitude"],
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                       upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                      overdue: snapshot.data.docs[index]["overdue"],
                     );
                   },
                 );

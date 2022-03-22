@@ -27,12 +27,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Performance(),
       ProfileScreen(auth: widget.auth, onSignedOut: widget.onSignedOut),
     ];
-    final List<Widget> supervisorTabs = [
-      Feed(),
-      ComplaintsPage(),
-      BottomNavBar(),
-      BottomNavBar()
-    ];
+    // final List<Widget> supervisorTabs = [
+    //   Feed(),
+    //   ComplaintsPage(),
+    //   BottomNavBar(),
+    //   BottomNavBar()
+    // ];
 
     void onTapped(int index) {
       setState(() {
@@ -40,42 +40,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       });
     }
 
-    const TYPE = 'citizen';
+    // const TYPE = 'citizen';
     return Scaffold(
-        body: (TYPE == 'supervisor')
-            ? supervisorTabs[currentIndex]
-            : citizenTabs[currentIndex],
-        bottomNavigationBar: (TYPE == 'supervisor')
-        ? CurvedNavigationBar(
-            backgroundColor: Colors.white,
-            color: Color(0xFF181d3d),
-            buttonBackgroundColor: Color(0xFFF49F1C),
-            height: 50,
-            animationDuration: Duration(
-              milliseconds: 200,
-            ),
-            animationCurve: Curves.bounceInOut,
-            items: <Widget>[
-              Icon(
-                Icons.home,
-                size: 30,
-                color: Colors.white,
-              ),
-              Icon(
-                Icons.person,
-                size: 30,
-                color: Colors.white,
-              ),
-              Icon(
-                Icons.view_list_rounded,
-                size: 30,
-                color: Colors.white,
-              ),
-            ],
-            onTap: onTapped,
-            index: currentIndex,
-          )
-        : CurvedNavigationBar(
+        body: citizenTabs[currentIndex],
+        bottomNavigationBar:  
+          CurvedNavigationBar(
             backgroundColor: Colors.white,
             color: Color(0xFF181d3d),
             buttonBackgroundColor: Color(0xFFF49F1C),

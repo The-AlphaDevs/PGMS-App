@@ -96,21 +96,24 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.signedIn:
-        if (role == "") {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-            ),
-          );
-        } else if (role == "citizen") {
+        // if (role == "") {
+        //   return Scaffold(
+        //     body: Center(
+        //       child: CircularProgressIndicator(
+        //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+        //       ),
+        //     ),
+        //   );
+        // } else 
+        // if (role == "citizen") {
           print('User1 Screen');
           return BottomNavBar(
             auth: widget.auth,
             onSignedOut: _signedOut,
             userEmail: user,
           );
+
+        
         } else {
           // TODO: Put Supervisor Feed Page here 
           print('Supervisor Screen');
@@ -120,6 +123,7 @@ class _RootPageState extends State<RootPage> {
             userEmail: user,
           );
         }
+
 
         break;
 

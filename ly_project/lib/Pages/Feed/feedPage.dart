@@ -47,8 +47,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 2);
+    
   }
-
 
   @override
   void dispose() {
@@ -235,22 +235,22 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                                Positioned(
-                                  bottom: 30,
-                                  right: 20,
-                                  child: FloatingActionButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => RaiseComplaint(auth: widget.auth,)
-                                        )
-                                      );
-                                    },
-                                    backgroundColor: DARK_BLUE,
-                                    child: const Icon(Icons.add),
-                                  ),
-                                ),
+                                // Positioned(
+                                //   bottom: 30,
+                                //   right: 20,
+                                //   child: FloatingActionButton(
+                                //     onPressed: () {
+                                //       Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //           builder: (context) => RaiseComplaint(auth: widget.auth,)
+                                //         )
+                                //       );
+                                //     },
+                                //     backgroundColor: DARK_BLUE,
+                                //     child: const Icon(Icons.add),
+                                //   ),
+                                // ),
                               ],
                             ),
                           )
@@ -265,7 +265,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   }
 
 
-  Widget getScreen(BuildContext context, Size size){
+  Widget getScreen(BuildContext context, Size size) {
+  
   return Scaffold(
       key: _scaffoldState,
       body: Stack(
@@ -275,7 +276,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                FeedTab(auth: widget.auth,),
+                FeedTab(auth: widget.auth, ),
                 BookmarksTab(),
               ],
             ),
