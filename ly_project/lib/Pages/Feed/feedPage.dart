@@ -64,7 +64,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       padding: EdgeInsets.fromLTRB(0,0,0,0),
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
-                  .collection('users')
+                  .collection('supervisors')
                   .doc(user)
                   .collection('notifications')
                   .snapshots()

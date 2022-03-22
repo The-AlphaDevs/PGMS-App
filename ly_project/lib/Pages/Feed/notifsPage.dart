@@ -37,7 +37,7 @@ class _NotificationsState extends State<Notifications> {
         padding: EdgeInsets.fromLTRB(size.width*0.03, size.height*0.03, size.width*0.03, size.height*0.06),
         child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("users")
+                    .collection("supervisors")
                     .doc(user)
                     .collection('notifications')
                     .snapshots(),
@@ -86,14 +86,19 @@ class _NotificationsState extends State<Notifications> {
                                       
                                       return NotifsCard
                                       (// 
+                                        docId: snapshot.data.docs[index]['docId'],
                                         id: snapshot.data.docs[index]["id"],
                                         auth: widget.auth,
                                         complaint: snapshot.data.docs[index]["complaint"],
-                                        date: snapshot.data.docs[index]["date"],
+                                        date: snapshot.data.docs[index]["dateTime"],
                                         status: snapshot.data.docs[index]["status"],
+                                        image: snapshot.data.docs[index]["imageurl"],
                                         location: snapshot.data.docs[index]["location"],
-                                        latitude: snapshot.data.docs[index]["latitude"],
-                                        longitude: snapshot.data.docs[index]["longitude"],
+                                        supervisor: snapshot.data.docs[index]["supervisorName"],
+                                        lat: snapshot.data.docs[index]["latitude"],
+                                        long: snapshot.data.docs[index]["longitude"],
+                                        description: snapshot.data.docs[index]["description"],
+                                        citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                                       );                        
                                     },
                                   );

@@ -29,8 +29,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("complaints")
-              .where("citizenEmail", isEqualTo: widget.userEmail)
-              .where("status", whereIn: ["Pending", "In Progress"])
+              .where("supervisorEmail", isEqualTo: widget.userEmail)
+              .where("status", whereIn: ["In Progress", "Resolved"])
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:
@@ -65,7 +65,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
             } else {
               if (snapshot.data.docs.length == 0) {
                 return Center(
-                  child: Text("No Past Feeds"),
+                  child: Text("No Ongoing Complaints"),
                 );
               } else {
                 print(snapshot.data.docs.length);
