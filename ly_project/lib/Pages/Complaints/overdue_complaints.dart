@@ -5,16 +5,16 @@ import 'package:ly_project/Pages/Feed/feedCardShimmer.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:uuid/uuid.dart';
 
-class ComplaintsHistoryTab extends StatefulWidget {
+class OverdueComplaintsTab extends StatefulWidget {
   final userEmail;
   final BaseAuth auth;
-  ComplaintsHistoryTab({this.userEmail, this.auth});
+  OverdueComplaintsTab({this.userEmail, this.auth});
 
   @override
-  State<ComplaintsHistoryTab> createState() => _ComplaintsHistoryTabState();
+  State<OverdueComplaintsTab> createState() => _OverdueComplaintsTabState();
 }
 
-class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
+class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> {
   var uuid = Uuid();
 
   @override
@@ -30,7 +30,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("supervisorEmail", isEqualTo: widget.userEmail)
-              .where("status", isEqualTo: "Closed")
+              .where("overdue", isEqualTo: "true")
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:
@@ -65,7 +65,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
             } else {
               if (snapshot.data.docs.length == 0) {
                 return Center(
-                  child: Text("No Past Feeds"),
+                  child: Text("No Overdue Complaints"),
                 );
               } else {
                 print(snapshot.data.docs.length);

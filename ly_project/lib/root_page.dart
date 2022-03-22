@@ -112,13 +112,12 @@ class _RootPageState extends State<RootPage> {
             userEmail: user,
           );
         } else {
+          // TODO: Put Supervisor Feed Page here 
           print('Supervisor Screen');
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-            ),
+          return BottomNavBar(
+            auth: widget.auth,
+            onSignedOut: _signedOut,
+            userEmail: user,
           );
         }
 
