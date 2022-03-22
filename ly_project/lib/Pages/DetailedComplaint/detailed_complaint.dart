@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import "package:latlong/latlong.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ly_project/Pages/Comments/commentsCard.dart';
@@ -63,6 +65,11 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String _photo="";
   String appBarTitle="";
   final _formKey = GlobalKey<FormState>();
+  String fileUrl;
+  File file;
+  String temp_semail = "dummysupervisor@gmail.com";
+  String temp_sid = "supervisor#ab001";
+  String temp_sname = "Shantaram Karnik";
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TextEditingController _commentController = new TextEditingController();
@@ -73,9 +80,23 @@ class _DetailComplaintState extends State<DetailComplaint> {
     latitude = double.parse(widget.lat);
     longitude = double.parse(widget.long);
     String complaint = widget.complaint.toString();
-    appBarTitle = "${complaint.substring(0, complaint.length>20 ? 25 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
+    appBarTitle = "Detailed Complaint";
+    // appBarTitle = "${complaint.substring(0, complaint.length>20 ? 25 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
     print("detail ka latitude - " + latitude.toString());
     print("detail ka longitude - " + longitude.toString());
+  }
+
+  _upload() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ["jpg", "jpeg", "png", "heif", "bmp"]);
+    file = File(result.files.single.path);
+    print("File path from upload func: " + file.path);
+    // fileUrl = await uploadFiles(file);
+    setState(() {
+      if (result != null) {
+      } else {
+        // User canceled the picker
+      }
+    });
   }
 
   @override
@@ -212,14 +233,66 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 height: screenSize.height * 0.04,
               ),
               sendNotifButton(context, screenSize),
-              SizedBox(
-                height: screenSize.height * 0.02,
-              ),
-              trackComplaintButton(context, screenSize),
+              Padding(
+                padding: EdgeInsets.fromLTRB(80.0, screenSize.height*0.01, 70.0, screenSize.height*0.01),
+                child: MaterialButton(
+                    onPressed: () async{
+                      await  _upload();
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22.0)),
+                    color: Colors.blue,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo, color: Colors.white),
+                          SizedBox(width: 10),
+                          Text("Add Photo",
+                              style: TextStyle(color: Colors.white))
+                        ])),
+              ),        
+              file != null?
+              Image.file(
+                File(file.path),
+                fit: BoxFit.cover,
+                width: double.infinity,
+              )
+              :
+              SizedBox(),
               SizedBox(
                 height: screenSize.height * 0.04,
               ),
-              commentBar(context, screenSize),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(80.0, 20.0, 70.0, 10.0),
+                  child: Material(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(22.0)),
+                    elevation: 5.0,
+                    color: DARK_BLUE,
+                    clipBehavior: Clip.antiAlias,
+                    child: MaterialButton(
+                        color: DARK_BLUE,
+                        onPressed: () async {
+                          //TODO: Run model and validate the image, then change status to resolved, then add photo to imagedata.
+                          await FirebaseFirestore.instance.collection('complaints').doc(widget.id).update({
+                            'status': 'Resolved',
+                          });
+                        },
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                            Icon(Icons.add, color: Colors.white),
+                            SizedBox(width: 10),
+                            Text("Solve Complaint",
+                                style: TextStyle(color: Colors.white))
+                          ])),
+                  ),
+                )
+              // trackComplaintButton(context, screenSize),
+              // SizedBox(
+              //   height: screenSize.height * 0.04,
+              // ),
+              // commentBar(context, screenSize),
             ],
           ),
         ),
@@ -630,20 +703,26 @@ class _DetailComplaintState extends State<DetailComplaint> {
               onPressed: () async{
                 // change status to resolve
                 await FirebaseFirestore.instance.collection('complaints').doc(widget.id).update({
-                  'status': 'Resolved',
+                  'status': 'In Progress',
                 });
 
                 // set complaint in notif collection of user
-                await FirebaseFirestore.instance.collection('users').doc(widget.citizenEmail).collection('notifications').doc(widget.id).set({
-                  'id': widget.id,
+                await FirebaseFirestore.instance.collection('supervisors').doc(temp_semail).collection('notifications').doc(widget.id).set({
+                  'citizenEmail': widget.citizenEmail,
                   'complaint': widget.complaint,
-                  'location': widget.location,
+                  'description': widget.description,
+                  'dateTime': widget.date,
+                  'id': widget.id,
+                  'imageurl': widget.image,
                   'latitude': widget.lat.toString(),
                   'longitude': widget.long.toString(),
-                  'date': widget.date.toString(),
-                  'status': 'Resolved',
+                  'location': widget.location,
+                  'status': 'In Progress',
+                  'supervisorName': 'Shantaram Karnik',
+                  'supervisorEmail': 'dummysupervisor@gmail.com',
+                  'docId': widget.docId
                 });
-                print("Status changed to resolved and complaint added to notif collection!");
+                print("Status changed to In Progress and complaint added to notif collection of supervisor!");
               },
               color: GOLDEN_YELLOW,
               textColor: Colors.white,
@@ -656,7 +735,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 children: <Widget>[
                   Icon(Icons.notifications_active),
                   SizedBox(width: screenSize.width * 0.03),
-                  Text("Close Complaint")
+                  Text("Assign Supervisor")
                 ],
               ),
             ),
