@@ -22,9 +22,10 @@ class ComplaintOverviewCard extends StatefulWidget {
   final citizenEmail;
   final docId;
   final upvoteCount;
+  final overdue;
   
   ComplaintOverviewCard({this.id, this.docId, this.auth, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail,
-  this.upvoteCount
+  this.upvoteCount, this.overdue
   });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
@@ -36,82 +37,85 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   String userEmail;
   int upvoteCount;
 
-  Future<void> updateUpvoteCount(DocumentReference upvoteDoc, DocumentReference complaintDoc, int updateValue) async{
-    try{
-      await FirebaseFirestore.instance.runTransaction((transaction) async{
-        //Get upvote count from the complaint doc
-        DocumentSnapshot snapshot = await transaction.get(complaintDoc);
-        int newUpvoteCount = snapshot.data()['upvoteCount']  + updateValue; 
+  // Future<String> showUpvoteCount() async{
+  //   try{
+  //     await FirebaseFirestore.instance.runTransaction((transaction) async{
+  //       //Get upvote count from the complaint doc
+  //       var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+  //       DocumentSnapshot snapshot = await transaction.get(complaintDoc);
+  //       int newUpvoteCount = snapshot.data()['upvoteCount'];
+  //       return newUpvoteCount.toString();   
 
-         //Update the upvote count as newUpvoteCount in the complaint doc
-        transaction.update(complaintDoc, {"upvoteCount":(newUpvoteCount)});
+  //        //Update the upvote count as newUpvoteCount in the complaint doc
+  //       // transaction.update(complaintDoc, {"upvoteCount":(newUpvoteCount)});
 
-        //Update upvoteCount on screen
-        setState(()=>upvoteCount=newUpvoteCount);
-      });
-    }catch(e){
-      print("Failed to update upvote counter!");
-    }
-  }
+  //       //Update upvoteCount on screen
+  //       // setState(()=>upvoteCount=newUpvoteCount);
+  //     });
+  //   }catch(e){
+  //     print("Failed to update upvote counter!");
+  //     return "Error";
+  //   }
+  // }
 
   /// Returns true if complaint is upvoted successfully
-  Future<bool> markAsUpvoted({bool init=false}) async{
-    try{
+  // Future<bool> markAsUpvoted({bool init=false}) async{
+  //   try{
 
-      if(init){
-        /// It is an error to call [setState] unless [mounted] is true.
-        if(this.mounted)
-          setState(()=>isUpvoted=true);
-        return true;
-        }
+  //     if(init){
+  //       /// It is an error to call [setState] unless [mounted] is true.
+  //       if(this.mounted)
+  //         setState(()=>isUpvoted=true);
+  //       return true;
+  //       }
     
-      var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
-      var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
-      setState(()=>isUpvoted=true);
+  //     var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
+  //     var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+  //     setState(()=>isUpvoted=true);
       
-      await upvoteDoc.set({
-        "upvotedAt": DateTime.now().toString(),
-        "upvotedBy": userEmail
-      });
-      await updateUpvoteCount(upvoteDoc, complaintDoc, 1);
-      return true;
-  }catch(e){
-      print("Failed to upvote");
-      setState(()=>isUpvoted=false);
-      return false;
-    }
-  }
+  //     await upvoteDoc.set({
+  //       "upvotedAt": DateTime.now().toString(),
+  //       "upvotedBy": userEmail
+  //     });
+  //     await updateUpvoteCount(upvoteDoc, complaintDoc, 1);
+  //     return true;
+  // }catch(e){
+  //     print("Failed to upvote");
+  //     setState(()=>isUpvoted=false);
+  //     return false;
+  //   }
+  // }
 
   /// Returns true if the upvote is removed successfully
-  Future<bool> removeUpvote() async {
-    try{
-      setState(()=>isUpvoted=false);
-      var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
-      var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
-      await upvoteDoc.delete();
-      await updateUpvoteCount(upvoteDoc, complaintDoc, -1);
+  // Future<bool> removeUpvote() async {
+  //   try{
+  //     setState(()=>isUpvoted=false);
+  //     var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
+  //     var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
+  //     await upvoteDoc.delete();
+  //     await updateUpvoteCount(upvoteDoc, complaintDoc, -1);
 
-      return true;
-    }catch(e){
-      print("Failed to remove upvote!");
-      setState(()=>isUpvoted=true);
-      return false;
-    }
-  } 
+  //     return true;
+  //   }catch(e){
+  //     print("Failed to remove upvote!");
+  //     setState(()=>isUpvoted=true);
+  //     return false;
+  //   }
+  // } 
 
-  Future<bool> checkIfUpvoted() async{
-    try {
-    // Get reference to Firestore collection
-    var collectionRef = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes");
-    var upvoteDoc = await collectionRef.doc(userEmail).get();
-    if(upvoteDoc.exists) 
-      markAsUpvoted(init:true);
+  // Future<bool> checkIfUpvoted() async{
+  //   try {
+  //   // Get reference to Firestore collection
+  //   var collectionRef = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes");
+  //   var upvoteDoc = await collectionRef.doc(userEmail).get();
+  //   if(upvoteDoc.exists) 
+  //     markAsUpvoted(init:true);
 
-    return upvoteDoc.exists;
-    } catch (e) {
-      return false;
-    }
-  }
+  //   return upvoteDoc.exists;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 
   @override
   void initState(){
@@ -119,7 +123,6 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
     userEmail = widget.auth.currentUserEmail();
     complaintId = widget.docId;
     upvoteCount = widget.upvoteCount;
-    checkIfUpvoted();
   }
 
   @override
@@ -131,6 +134,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        color: widget.overdue == "true" ? Colors.red[100] : Colors.white,
         child: InkWell(
           onTap: () {
             print("Tap!");
@@ -284,41 +288,22 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             ],
                           ),
 
-                          SizedBox(width: size.width*0.05),
+                          SizedBox(width: size.width*0.04),
 
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                width: size.width*0.08,
+                                // width: size.width*0.08,
                                 height: size.height*0.035,
-                                child: InkWell(
-                                  onTap:()async {
-
-                                  //Check if upvoted already
-                                  if(isUpvoted){
-                                    //Remove upvote
-                                    await removeUpvote();
-                                    print("Upvote Removed!");
-                                    
-                                  }
-                                  else{
-                                    //Add upvote 
-                                    await markAsUpvoted();
-                                    await HapticFeedback.vibrate();
-                                    print("Upvoted!");
-                                  }
-                                  },
-                                  
-                                  borderRadius: BorderRadius.circular(29),
-                                  child: Icon(
-                                    Icons.arrow_upward_outlined,
-                                    color: isUpvoted?Colors.orange:Colors.grey, 
-                                  ),
+                                child: Text(
+                                  upvoteCount.toString(),
+                                  style: TextStyle(fontSize: 18),
                                 ),
                               ),
-                              SizedBox(height: size.height*0.00),
+                              // SizedBox(height: size.height*0.00),
                               Text(
-                                "Upvote $upvoteCount",
+                                "Upvotes",
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 10,
@@ -327,13 +312,11 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             ],
                           ),
 
-                          SizedBox(width: size.width*0.05),
+                          SizedBox(width: size.width*0.03),
 
                           InkWell(
                             onTap: () {
                               print("Bookmarked!");
-
-
                             },
                             borderRadius: BorderRadius.circular(20),
                             child: Icon(

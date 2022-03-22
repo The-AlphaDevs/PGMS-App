@@ -73,7 +73,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     latitude = double.parse(widget.lat);
     longitude = double.parse(widget.long);
     String complaint = widget.complaint.toString();
-    appBarTitle = "${complaint.substring(0, complaint.length>20 ? 25 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
+    appBarTitle = "${complaint.substring(0, complaint.length>20 ? 20 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
     print("detail ka latitude - " + latitude.toString());
     print("detail ka longitude - " + longitude.toString());
   }
@@ -226,6 +226,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
       ),
     );
   }
+
 
   Container commentBar(BuildContext context, Size screenSize) {
     Size size = MediaQuery.of(context).size;
