@@ -263,7 +263,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                               ),
                             ],
                           ),
-                          SizedBox(width: size.width * 0.05),
+                          SizedBox(width: size.width * 0.03),
                           Column(
                             children: [
                               Container(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:exif/exif.dart';
@@ -15,6 +16,7 @@ import 'package:ly_project/Utils/colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:http/http.dart' as http;
 
 class RaiseComplaint extends StatefulWidget {
   final BaseAuth auth;
@@ -346,16 +348,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   return;
                                 }
 
-                                setState(() => isProcessingImage = true);
-                                bool isPotholeDetected =
-                                    await checkForPotholes();
-                                setState(() => isProcessingImage = false);
-
-                                if (!isPotholeDetected) {
-                                  await _showErrorDialog(context, "Error",
-                                      "Cannot register complaint since no pothole is detected in the image.");
-                                  return;
-                                }
+                                
                                 GeoFirePoint imageLocation =
                                     await ImageLocationServices
                                         .getImageLocation(
@@ -372,7 +365,26 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   await _showErrorDialog(context, "Error",
                                       "Unable to get image location. Please select an image containg location metadata.");
                                   return;
+                                }else{
+                                    print("image ka lat: " + imageLocation.latitude.toString());
+                                    print("image ka long: " + imageLocation.longitude.toString());
+                                    String url = "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+imageLocation.latitude.toString()+"&longitude=" + imageLocation.longitude.toString()+"&localityLanguage=en";
+                                    final response = await http.get(url);                                  
+                                    var responseData = json.decode(response.body);
+                                    print("Locality mila: "+ responseData['locality'].toString()); 
                                 }
+
+                                setState(() => isProcessingImage = true);
+                                bool isPotholeDetected =
+                                    await checkForPotholes();
+                                setState(() => isProcessingImage = false);
+
+                                if (!isPotholeDetected) {
+                                  await _showErrorDialog(context, "Error",
+                                      "Cannot register complaint since no pothole is detected in the image.");
+                                  return;
+                                }
+
                                 _showDialog(context);
 
                                 setState(() => isSubmittingComplaint = true);
