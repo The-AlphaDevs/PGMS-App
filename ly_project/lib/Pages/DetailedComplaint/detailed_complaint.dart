@@ -129,7 +129,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
         title: Text(
           appBarTitle ?? "Ye null hai 1",
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 20,
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

@@ -131,9 +131,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                         children: [
                                           SizedBox(width: 30),
                                           Text(
-                                            'PGMS',
+                                            'PGMS For Supervisors',
                                             style: TextStyle(
-                                              fontSize: 25.0,
+                                              fontSize: 20.0,
                                               color: Colors.white,
                                               fontFamily: 'Amaranth',
                                             ),

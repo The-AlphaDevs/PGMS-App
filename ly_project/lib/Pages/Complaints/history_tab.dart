@@ -14,11 +14,13 @@ class ComplaintsHistoryTab extends StatefulWidget {
   State<ComplaintsHistoryTab> createState() => _ComplaintsHistoryTabState();
 }
 
-class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> with AutomaticKeepAliveClientMixin<ComplaintsHistoryTab>{
+class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab>
+    with AutomaticKeepAliveClientMixin<ComplaintsHistoryTab> {
   var uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.only(
@@ -35,6 +37,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> with Automa
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print(snapshot.connectionState);
             if (snapshot.connectionState == ConnectionState.waiting) {
               return ListView.builder(
                   itemCount: 5,
@@ -74,6 +77,35 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> with Automa
                   padding: EdgeInsets.only(left: 10, right: 10),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    print(snapshot.data.docs[index].toString());
+                    // print(widget.auth);
+                    // print(snapshot.data.docs[index]["id"]);
+                    // print(snapshot.data.docs[index]["complaint"]);
+                    // print(snapshot.data.docs[index]["dateTime"]);
+                    // print(snapshot.data.docs[index]["status"]);
+                    // print(snapshot.data.docs[index]["imageData"]["url"]);
+                    // print(snapshot.data.docs[index]["imageData"]["location"]);
+                    // print(snapshot.data.docs[index]["supervisorName"]);
+                    // print(snapshot.data.docs[index]["latitude"]);
+                    // print(snapshot.data.docs[index]["longitude"]);
+                    // print(snapshot.data.docs[index]["description"]);
+                    // print(snapshot.data.docs[index]["citizenEmail"]);
+                    // print(snapshot.data.docs[index]["upvoteCount"]);
+                    print("snapshot.data.docs[index]['overdue']");
+                    print(snapshot.data.docs[index]["overdue"]);
+                    print(snapshot.data.docs[index]["overdue"] == null);
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
+                    // print();
                     return ComplaintOverviewCard(
                       auth: widget.auth,
                       id: snapshot.data.docs[index]["id"],

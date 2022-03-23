@@ -31,7 +31,7 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> with Automa
               .collection("complaints")
               .where("supervisorEmail", isEqualTo: widget.userEmail)
               .where("status", isEqualTo: "In Progress")
-              .where("overdue", isEqualTo: "true")
+              .where("overdue", isEqualTo: true)
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:

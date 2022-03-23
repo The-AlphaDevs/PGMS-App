@@ -1,4 +1,4 @@
-package com.example.ly_project
+package com.alphadevs.pgms_supervisor
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -19,6 +19,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> with Automa
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.only(
