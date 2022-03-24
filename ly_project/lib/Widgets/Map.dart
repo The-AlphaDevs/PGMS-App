@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart";
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CachedTileProvider extends TileProvider {
   const CachedTileProvider();
@@ -23,6 +25,22 @@ class ComplaintMap extends StatelessWidget {
     _latitude = latitude;
     _mapController = new MapController();
     centerPosition = LatLng(latitude, longitude);
+  }
+  Future<LocationData> getLocation() async {
+    Location location = new Location();
+    LocationData _locationData;
+
+    bool _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+    }
+    _locationData = await location.getLocation();
+
+    double srcLat = _locationData.latitude;
+    double srcLong = _locationData.longitude;
+    print("Device Location:\nlat: $srcLat, long:$srcLong");
+
+    return _locationData;
   }
 
   @override
@@ -63,6 +81,26 @@ class ComplaintMap extends StatelessWidget {
                 icon: Icon(Icons.my_location, color: Colors.black, size: 22),
                 onPressed: () => _mapController.moveAndRotate(
                     LatLng(_latitude, _longitude), 14.0, 0.0))),
+        Positioned(
+          bottom: 45,
+          right: 3,
+          child: IconButton(
+            tooltip: "Navigate",
+            color: Colors.white,
+            padding: EdgeInsets.all(3),
+            icon: Icon(Icons.navigation, color: Colors.black, size: 22),
+            onPressed: () async {
+              LocationData srcLocation = await getLocation();
+              String url =
+                  "https://www.google.com/maps/dir/?api=1&origin=${srcLocation.latitude.toString()},${srcLocation.longitude.toString()}&destination=${_latitude.toString()},${_longitude.toString()}&directionsmode=driving";
+              print(url);
+              if (await canLaunch(url))
+                await launch(url);
+              else
+                print('Could not open the map.');
+            },
+          ),
+        ),
         Positioned(
           bottom: 3,
           right: 3,
