@@ -24,22 +24,23 @@ class ComplaintOverviewCard extends StatefulWidget {
   final upvoteCount;
   final supervisorDocRef;
 
-  ComplaintOverviewCard(
-      {this.id,
-      this.docId,
-      this.auth,
-      this.complaint,
-      this.description,
-      this.date,
-      this.status,
-      this.image,
-      this.location,
-      this.supervisor,
-      this.lat,
-      this.long,
-      this.citizenEmail,
-      this.upvoteCount, 
-      this.supervisorDocRef});
+  ComplaintOverviewCard({
+    this.id,
+    this.docId,
+    this.auth,
+    this.complaint,
+    this.description,
+    this.date,
+    this.status,
+    this.image,
+    this.location,
+    this.supervisor,
+    this.lat,
+    this.long,
+    this.citizenEmail,
+    this.upvoteCount,
+    this.supervisorDocRef,
+  });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
 }
@@ -148,7 +149,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
       child: Card(
@@ -193,25 +194,28 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.complaint,
+                        widget.complaint.toString().length > 50
+                            ? widget.complaint.toString().substring(0, 51) +
+                                " ..."
+                            : widget.complaint.toString(),
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
+                      SizedBox(height: size.height * 0.02),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(Icons.contacts, size: 12, color: Colors.black),
                           SizedBox(width: 5),
-                          Text(
-                            "Posted by " + widget.citizenEmail,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                          Flexible(
+                            child: Text(
+                              "Posted by " + widget.citizenEmail,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
                           ),
                         ],
                       ),
@@ -284,11 +288,10 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                                     }
                                   },
                                   borderRadius: BorderRadius.circular(29),
-                                  child: Icon(
-                                    Icons.arrow_upward_outlined,
-                                    color:
-                                        isUpvoted ? Colors.orange : Colors.grey,
-                                  ),
+                                  child: Icon(Icons.arrow_upward_outlined,
+                                      color: isUpvoted
+                                          ? Colors.orange
+                                          : Colors.grey),
                                 ),
                               ),
                               SizedBox(height: size.height * 0.00),
@@ -299,12 +302,12 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                               ),
                             ],
                           ),
-                          SizedBox(width: size.width * 0.05),
+                          SizedBox(width: size.width * 0.03),
                           InkWell(
                             onTap: () => print("Bookmarked!"),
                             borderRadius: BorderRadius.circular(20),
                             child: Icon(Icons.bookmark_border_rounded,
-                                size: size.height * 0.04, color: Colors.grey),
+                                size: size.height * 0.03, color: Colors.grey),
                           ),
                         ],
                       ),

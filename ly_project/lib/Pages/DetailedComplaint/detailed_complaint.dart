@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Pages/DetailedComplaint/FullScreenImage.dart';
 import 'package:ly_project/Pages/SupervisorScorecard/SupervisorScorecard.dart';
 import 'package:ly_project/Widgets/Map.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
@@ -26,21 +27,22 @@ class DetailComplaint extends StatefulWidget {
   final docId;
   final supervisorDocRef;
 
-  DetailComplaint(
-      {this.id,
-      this.auth,
-      this.complaint,
-      this.description,
-      this.location,
-      this.status,
-      this.image,
-      this.date,
-      this.supervisor,
-      this.lat,
-      this.long,
-      this.citizenEmail,
-      this.docId,
-      this.supervisorDocRef});
+  DetailComplaint({
+    this.id,
+    this.auth,
+    this.complaint,
+    this.description,
+    this.location,
+    this.status,
+    this.image,
+    this.date,
+    this.supervisor,
+    this.lat,
+    this.long,
+    this.citizenEmail,
+    this.docId,
+    this.supervisorDocRef,
+  });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -56,7 +58,6 @@ class _DetailComplaintState extends State<DetailComplaint> {
   double latitude;
   double longitude;
   String description;
-  String _comment = "";
   String _name = "";
   String _photo = "";
   String appBarTitle = "";
@@ -72,7 +73,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     longitude = double.parse(widget.long);
     String complaint = widget.complaint.toString();
     appBarTitle =
-        "${complaint.substring(0, complaint.length > 20 ? 20 : complaint.length)} ${complaint.length > 20 ? '...' : ''}";
+        "${complaint.substring(0, complaint.length > 25 ? 25 : complaint.length)} ${complaint.length > 25 ? '...' : ''}";
   }
 
   @override
@@ -85,10 +86,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
         title: Text(
           appBarTitle ?? "Ye null hai 1",
           style: TextStyle(
-            fontSize: 15,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+              fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: DARK_BLUE,
       ),
@@ -105,12 +103,18 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                     ),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.image,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      fit: BoxFit.fitHeight,
+                    child: ImageFullScreenWrapperWidget(
+                      child: CachedNetworkImage(
+                        imageUrl: widget.image,
+                        placeholder: (context, url) => Center(
+                            child: Container(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.fitHeight,
+                      ),
+                      dark: true,
                     ),
                   ),
                   ComplaintMap(latitude: latitude, longitude: longitude),
@@ -126,60 +130,21 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   viewportFraction: 0.75,
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
               Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
-                child: Row(
-                  children: [
-                    Text(
-                      'Location: ',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      child: Text(
-                        widget.location ?? "Location null hai",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.012,
-                ),
-                child: Divider(
-                  thickness: 1.5,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height * 0.01,
+                    EdgeInsets.symmetric(vertical: screenSize.height * 0.015),
+                child: Divider(thickness: 1.5),
               ),
               complaintDetails(screenSize),
-              SizedBox(
-                height: screenSize.height * 0.04,
+              SizedBox(height: screenSize.height * 0.03),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  sendNotifButton(context, screenSize),
+                  trackComplaintButton(context, screenSize),
+                ],
               ),
-              sendNotifButton(context, screenSize),
-              SizedBox(
-                height: screenSize.height * 0.02,
-              ),
-              trackComplaintButton(context, screenSize),
-              SizedBox(
-                height: screenSize.height * 0.04,
-              ),
+              SizedBox(height: screenSize.height * 0.03),
               commentBar(context, screenSize),
             ],
           ),
@@ -287,20 +252,15 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     Icon(Icons.insert_comment_outlined,
                         size: 25, color: Colors.black),
                     SizedBox(width: 15),
-                    Text(
-                      'Comments',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
+                    Text('Comments',
+                        style: TextStyle(fontSize: 16, color: Colors.black)),
                   ],
                 ),
               ),
               IconButton(
                 splashColor: Colors.transparent,
-                icon: Icon(
-                  Icons.bookmark_border_rounded,
-                  size: 25,
-                  color: Colors.black,
-                ),
+                icon: Icon(Icons.bookmark_border_rounded,
+                    size: 25, color: Colors.black),
                 onPressed: () => print("Bookmark"),
               ),
             ],
@@ -406,123 +366,187 @@ class _DetailComplaintState extends State<DetailComplaint> {
     }
   }
 
-  Column complaintDetails(Size screenSize) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Flexible(
-              child: Text(
-                widget.complaint ?? "Complaint null hai",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.008,
-        ),
-        Row(
-          children: [
-            Text(
-              'Description: ',
+  Container complaintDetails(Size screenSize) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: DARK_PURPLE)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: screenSize.width * 0.8,
+            child: Text(
+              widget.complaint ?? "Complaint Title",
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 20,
                 color: Colors.black,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
+              textAlign: TextAlign.center,
             ),
-            Flexible(
-              child: Text(
-                widget.description,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
-        Row(
-          children: [
-            Text(
-              'Status: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              widget.status,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.lightGreen,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: screenSize.height * 0.005),
-        Row(
-          children: [
-            Text(
-              'Supervisor: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            InkWell(
-              onTap: () => widget.supervisor != null ? showScorecard() : {},
-              child: Container(
-                padding: EdgeInsets.only(
-                    bottom: 1), //Space between text and underline
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: DARK_PURPLE,
-                      width: 0.8,
-                    ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.004),
+            child: Divider(thickness: 1.5),
+          ),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Location: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
                   ),
-                ), //width of the underline
-                child: Row(
-                  children: [
-                    Text(widget.supervisor ?? "Supervisor Name",
-                        style: TextStyle(fontSize: 15, color: Colors.black)),
-                    SizedBox(width: 3),
-                    Icon(Icons.open_in_new, size: 16)
-                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
-        Row(
-          children: [
-            Text('Date: ',
-                style: TextStyle(
+              Text(
+                widget.location ?? "Complaint Location",
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Description: ',
+                  style: TextStyle(
                     fontSize: 15,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-            Text(
-              DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
-              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-            ),
-          ],
-        ),
-      ],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Text(
+                  widget.description ?? "Complaint Description",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Status: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                widget.status,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: COMPLAINT_STATUS_COLOR_MAP[widget.status] != null
+                      ? COMPLAINT_STATUS_COLOR_MAP[widget.status]
+                      : Colors.deepOrange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Supervisor: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => widget.supervisor != null ? showScorecard() : {},
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: 1), //Space between text and underline
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: DARK_PURPLE,
+                        width: 0.8,
+                      ),
+                    ),
+                  ), //width of the underline
+                  child: Row(
+                    children: [
+                      Text(widget.supervisor ?? "Supervisor Name",
+                          style:
+                              TextStyle(fontSize: 15, color: Colors.black87)),
+                      SizedBox(width: 3),
+                      Icon(
+                        Icons.open_in_new,
+                        size: 16,
+                        color: Colors.black87,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Date: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Time: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                DateFormat.jms().format(DateTime.parse(widget.date)),
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -533,33 +557,37 @@ class _DetailComplaintState extends State<DetailComplaint> {
       children: [
         Container(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(29),
+            borderRadius: BorderRadius.circular(30),
             child: FlatButton(
               onPressed: () => {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => TrackComplaints(
-                            auth: widget.auth,
-                            id: widget.id,
-                            complaint: widget.complaint,
-                            date: widget.date,
-                            location: widget.location,
-                            latitude: latitude,
-                            longitude: longitude,
-                            status: widget.status)))
+                              auth: widget.auth,
+                              id: widget.id,
+                              complaint: widget.complaint,
+                              date: widget.date,
+                              location: widget.location,
+                              latitude: latitude,
+                              longitude: longitude,
+                              status: widget.status,
+                            )))
               },
               color: DARK_BLUE,
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.014,
+                  vertical: screenSize.height * 0.012,
                   horizontal: screenSize.width * 0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.track_changes_rounded),
-                  SizedBox(width: screenSize.width * 0.03),
+                  Icon(
+                    Icons.track_changes_rounded,
+                    size: 20,
+                  ),
+                  SizedBox(width: screenSize.width * 0.01),
                   Text("Track Complaint")
                 ],
               ),
@@ -583,7 +611,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
       children: [
         Container(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(29),
+            borderRadius: BorderRadius.circular(30),
             child: FlatButton(
               onPressed: () async {
                 // change status to resolve
@@ -612,17 +640,17 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 print(
                     "Status changed to resolved and complaint added to notif collection!");
               },
-              color: GOLDEN_YELLOW,
+              color: Colors.orange[900],
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.014,
+                  vertical: screenSize.height * 0.012,
                   horizontal: screenSize.width * 0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.notifications_active),
-                  SizedBox(width: screenSize.width * 0.03),
+                  Icon(Icons.notifications_active, size: 20),
+                  SizedBox(width: screenSize.width * 0.01),
                   Text("Close Complaint")
                 ],
               ),
