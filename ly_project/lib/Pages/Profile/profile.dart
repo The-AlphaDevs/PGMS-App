@@ -15,41 +15,30 @@ import 'package:ly_project/utils/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
-  ProfileScreen({this.auth, this.onSignedOut});
+  ProfileScreen({@required this.auth});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
-  String _autoname = "";
-  String _autoemail = "";
-  String _autooccupation = "";
-  String _autoward = "";
-  String _autojoiningdate = "";
-  String _autophoneno = "";
-  String fileurl;
-  String userType = "User";
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _phonenoController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+  TextEditingController _occupationController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController _wardController = TextEditingController();
+  TextEditingController _joiningdateController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController(text: 'Not Set');
+  String birthdate = DateFormat.yMMMd().format(DateTime.now());
+
+  File file;
   String imageUrl =
       "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
-
-  TextEditingController _nameController = new TextEditingController();
-  TextEditingController _phonenoController = new TextEditingController();
-  TextEditingController _ageController = new TextEditingController();
-  TextEditingController _occupationController = new TextEditingController();
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _addressController = new TextEditingController();
-  TextEditingController _wardController = new TextEditingController();
-  TextEditingController _joiningdateController = new TextEditingController();
-  TextEditingController birthdayController =
-      new TextEditingController(text: 'Not Set');
-  String birthdate = DateFormat.yMMMd().format(DateTime.now());
-  final _formKey = GlobalKey<FormState>();
-  File file;
-
+  
   @override
   void initState() {
     autofill();
@@ -77,6 +66,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderSide: BorderSide(color: Colors.black),
         ),
       );
+
+  AlertDialog logOutAlert() {
+    Widget okButton = OutlinedButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+      ),
+      child: Text("Yes", style: TextStyle(color: Colors.grey[700])),
+      onPressed: () async {
+        try {
+          Navigator.pop(context, null);
+          await widget.auth.signOut();
+        } catch (e) {
+          print("Error in Signout!!");
+          print(e);
+        }
+      },
+    );
+    Widget cancelButton = OutlinedButton(
+      autofocus: true,
+      style: ButtonStyle(
+        side: MaterialStateProperty.all(BorderSide(color: Colors.green)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+      ),
+      child: Text("No", style: TextStyle(color: Colors.green[900])),
+      onPressed: () => Navigator.pop(context, null),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Wait!"),
+      content: Text("Do you want to log out?"),
+      actions: [okButton, cancelButton],
+      titlePadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+      contentPadding: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 8.0),
+      actionsPadding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+    );
+    return alert;
+  }
+
+  void _showDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Text("Updating Data...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            return;
+          },
+          child: alert,
+        );
+      },
+    );
+  }
 
   showAlert({
     @required String title,
@@ -113,13 +170,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     switch (value) {
       case 'Logout':
         {
-          try {
-            await widget.auth.signOut();
-            widget.onSignedOut();
-          } catch (e) {
-            print("Error in Signout!!");
-            print(e);
-          }
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => logOutAlert(),
+          );
           break;
         }
     }
@@ -134,16 +188,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .doc(user)
           .snapshots()
           .listen((data) {
-        _autoname = data.data()['name'];
+        String _autoname = data.data()['name'];
         birthdate = data.data()['dateOfBirth'];
         birthdayController.text =
             DateFormat.yMMMMd().format(DateTime.parse(birthdate));
-        _autoemail = data.data()['email'];
-        _autooccupation = "BMC Ward Supervisor";
-        _autoward = data.data()['ward'];
-        _autojoiningdate = DateFormat.yMMMMd()
+        String _autoemail = data.data()['email'];
+        String _autooccupation = "BMC Ward Supervisor";
+        String _autoward = data.data()['ward'];
+        String _autojoiningdate = DateFormat.yMMMMd()
             .format(DateTime.parse(data.data()['joiningDate']));
-        _autophoneno = data.data()['mobile'];
+        String _autophoneno = data.data()['mobile'];
         imageUrl = data.data()['imageUrl'];
         setState(() {
           _nameController.text = _autoname;
@@ -157,31 +211,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (e) {
       print("Error: " + e);
     }
-  }
-
-  void _showDialog(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-      content: new Row(
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 7),
-              child: Text("Updating Data...")),
-        ],
-      ),
-    );
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {return;},
-          child: alert,
-        );
-      },
-    );
   }
 
   Future<void> validateAndUpdateProfile() async {
@@ -213,9 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     /// imageUrl is set to null when image is selected by the user
     if (imageUrl == null) {
       final user = await widget.auth.currentUser();
-      print(user);
       String imageRef = user + '/' + _image.path.split('/').last;
-      print(imageRef);
       imageUrl =
           await (await FirebaseStorage.instance.ref(imageRef).putFile(_image))
               .ref

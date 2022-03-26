@@ -19,6 +19,7 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> with Automa
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.only(
@@ -101,6 +102,5 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> with Automa
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

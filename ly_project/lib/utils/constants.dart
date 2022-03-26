@@ -1,4 +1,4 @@
-import 'package:ly_project/Utils/constant_strings.dart';
+import 'package:ly_project/utils/constant_strings.dart';
 
 const WARDS = [
   'Ward A',
@@ -56,6 +56,18 @@ const Map<String, String> authExceptionMessageMap = {
   "wrong-password": WRONG_PASSWORD
 };
 
+const Map<String, String> emailRegistrationExceptionMessageMap = {
+  "email-already-in-use": EMAIL_ALREADY_IN_USE,
+  "invalid-email": INVALID_EMAIL_ID,
+  "operation-not-allowed": OPERATION_NOT_ALLOWED,
+  "weak-password": WEAK_PASSWORD
+};
+
+const Map<String, String> passwordChangeExceptionMessageMap = {
+  "email-already-in-use": EMAIL_ALREADY_IN_USE,
+  "user-not-found": USER_NOT_FOUND,
+};
+
 const List<Map<String, String>> dummyPerformanceData = [
   {"Rank": "1", "Ward": "Ward A", "Locality": "Colaba", "Points": "529"},
   {"Rank": "2", "Ward": "Ward B", "Locality": "Churchgate", "Points": "528"},
@@ -68,12 +80,7 @@ const List<Map<String, String>> dummyPerformanceData = [
   {"Rank": "9", "Ward": "Ward I", "Locality": "Worli", "Points": "478"},
   {"Rank": "10", "Ward": "Ward J", "Locality": "Masjid", "Points": "469"},
   {"Rank": "11", "Ward": "Ward K", "Locality": "Chinchpokli", "Points": "465"},
-  {
-    "Rank": "12",
-    "Ward": "Ward R Central",
-    "Locality": "Vikroli",
-    "Points": "459"
-  },
+  {"Rank": "12", "Ward": "Ward R Central", "Locality": "Vikroli", "Points": "459"},
 ];
 
 const RESOLUTION_POINTS = 5;

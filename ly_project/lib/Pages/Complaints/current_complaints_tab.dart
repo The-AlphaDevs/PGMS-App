@@ -101,6 +101,5 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> with Automa
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

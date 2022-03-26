@@ -132,6 +132,5 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
