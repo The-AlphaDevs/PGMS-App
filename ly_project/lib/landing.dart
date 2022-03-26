@@ -6,8 +6,7 @@ import 'package:ly_project/Pages/Registration/registration.dart';
 
 class LandingPage extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedIn;
-  LandingPage({this.auth, this.onSignedIn});
+  LandingPage({this.auth});
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -16,96 +15,6 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   bool loginChange = false;
   bool registerChange = false;
-  // bool loginStateChange() {
-  //   setState(() {
-  //     loginChange = !loginChange;
-  //   });
-  //   return loginChange;
-  // }
-
-  // bool registerStateChange() {
-  //   setState(() {
-  //     registerChange = !registerChange;
-  //   });
-  //   return registerChange;
-  // }
-
-//   Future<void> _handleButtonClick() async {
-//     var connectivityResult = await (Connectivity().checkConnectivity());
-
-//     if (connectivityResult == ConnectivityResult.none) {
-//       return showDialog<void>(
-//         context: context,
-//         builder: (BuildContext context) {
-//           return AlertDialog(
-//             title: Text('No Internet Connection'),
-//             content: SingleChildScrollView(
-//               child: Text(
-//                   "You need to have an active internet connection to access this. Please try again later."),
-//             ),
-//             actions: <Widget>[
-//               RaisedButton(
-//                 child: Text('Close'),
-//                 onPressed: () {
-//                   Navigator.of(context).pop();
-//                 },
-//               ),
-//             ],
-//           );
-//         },
-//       );
-//     }
-
-//     // Start Authentication Process
-//     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-//     // Obtain the auth details from the request
-//     final String email = googleUser.email;
-//     if (email.substring(email.length - 11) != 'itbhu.ac.in') {
-//       await GoogleSignIn().signOut();
-//       return showDialog<void>(
-//         context: context,
-//         builder: (BuildContext context) {
-//           return AlertDialog(
-//             title: Row(
-//               children: [
-//                 Icon(Icons.error),
-//                 Text(' Sorry!'),
-//               ],
-//             ), //
-//             content: SingleChildScrollView(
-//               child: Text(
-//                   "This email doesn't seem to belong to the IIT BHU domain. Please try again with your institute email"),
-//             ),
-//             actions: <Widget>[
-//               RaisedButton(
-//                 child: Text('Close'),
-//                 onPressed: () {
-//                   Navigator.of(context).pop();
-//                 },
-//               ),
-//             ],
-//           );
-//         },
-//       );
-//     }
-//     final GoogleSignInAuthentication googleAuth =
-//         await googleUser.authentication;
-//     final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-//       accessToken: googleAuth.accessToken,
-//       idToken: googleAuth.idToken,
-//     );
-//     final UserCredential _currentUser =
-//         await FirebaseAuth.instance.signInWithCredential(credential);
-
-//     if (_currentUser.additionalUserInfo.isNewUser) {
-//       // The user is just created
-//       Navigator.pushNamed(context, '/register');
-//     } else {
-//       // The user is already there, so redirect to feed
-//       Navigator.pop(context);
-//       Navigator.pushNamed(context, '/navigation');
-//     }
-//   }
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +25,7 @@ class _LandingPageState extends State<LandingPage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    "assets/logo_final.jpg"), //adding background image
+                image: AssetImage("assets/logo_final.jpg"), //adding background image
                 fit: BoxFit.fill,
               ),
             ),
@@ -127,34 +35,8 @@ class _LandingPageState extends State<LandingPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  height: 20.0,
-                ),
-
-                // code for separately attaching logo and title of app on the background
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     Image.asset("assets/app_logo_final0.png",
-                //       height: 300, width: 300, fit: BoxFit.fill,
-                //     ),
-                //     Text(
-                //       "InstiComplaints",
-                //       style: TextStyle(
-                //         fontFamily: 'Amaranth',
-                //         fontSize: 20.0,
-                //         fontWeight: FontWeight.w500,
-                //         decoration: TextDecoration.none,
-                //         color: Color(0xFF181D3D),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                SizedBox(
-                  height: 500.0,
-                ),
-
+                SizedBox(height: 20.0),
+                SizedBox(height: 500.0),
                 Container(
                   child: RaisedButton(
                     padding: EdgeInsets.fromLTRB(48.0, 12.0, 48.0, 9.0),
@@ -172,13 +54,8 @@ class _LandingPageState extends State<LandingPage> {
                                 topLeft: Radius.circular(20.0),
                                 bottomRight: Radius.circular(20.0))),
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
-                    onPressed: () {
-                      // Navigator.pop(context);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage(auth: widget.auth)));
-                      //   // loginStateChange();
-                      //   // _handleButtonClick();
-                    },
+                    onPressed: () =>
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage(auth: widget.auth))),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Text(
@@ -193,9 +70,7 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20.0,
-                ),
+                SizedBox(height: 20.0),
                 RaisedButton(
                   padding: EdgeInsets.fromLTRB(34.0, 12.0, 34.0, 9.0),
                   elevation: 20.0,
@@ -213,12 +88,7 @@ class _LandingPageState extends State<LandingPage> {
                   color:
                       registerChange ? Colors.transparent : Color(0xFFF49F1C),
                   onPressed: () {
-                    //  registerStateChange();
-                    // _handleButtonClick();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegistrationPage(auth:widget.auth)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(auth: widget.auth)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -243,4 +113,3 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
-//.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)) -- differently shaped button

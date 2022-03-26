@@ -11,9 +11,8 @@ import 'overdue_complaints.dart';
 
 class ComplaintsPage extends StatefulWidget {
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
   final String userEmail;
-  ComplaintsPage({Key key, this.auth, this.onSignedOut, this.userEmail});
+  ComplaintsPage({Key key, this.auth, this.userEmail});
 
   @override
   _ComplaintsPageState createState() => _ComplaintsPageState();
