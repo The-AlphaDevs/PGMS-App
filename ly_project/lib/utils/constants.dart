@@ -41,12 +41,13 @@ const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
   "This Month": "monthlyScore",
   "This Year": "yearlyScore",
   "All Time": "lifetimeScore"
-  };
+};
 
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
 const EMAIL_REGEX =
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
+const PHONE_REGEX = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
 const Map<String, String> authExceptionMessageMap = {
   "invalid-email": INVALID_EMAIL_ID,
@@ -56,62 +57,18 @@ const Map<String, String> authExceptionMessageMap = {
 };
 
 const List<Map<String, String>> dummyPerformanceData = [
+  {"Rank": "1", "Ward": "Ward A", "Locality": "Colaba", "Points": "529"},
+  {"Rank": "2", "Ward": "Ward B", "Locality": "Churchgate", "Points": "528"},
+  {"Rank": "3", "Ward": "Ward C", "Locality": "Byculla", "Points": "518"},
+  {"Rank": "4", "Ward": "Ward D", "Locality": "Marine Lines", "Points": "509"},
+  {"Rank": "5", "Ward": "Ward E", "Locality": "Malbar Hills", "Points": "505"},
+  {"Rank": "6", "Ward": "Ward F", "Locality": "Grant Road", "Points": "499"},
+  {"Rank": "7", "Ward": "Ward G", "Locality": "Mahalakshmi", "Points": "490"},
+  {"Rank": "8", "Ward": "Ward H", "Locality": "Parel", "Points": "487"},
+  {"Rank": "9", "Ward": "Ward I", "Locality": "Worli", "Points": "478"},
+  {"Rank": "10", "Ward": "Ward J", "Locality": "Masjid", "Points": "469"},
+  {"Rank": "11", "Ward": "Ward K", "Locality": "Chinchpokli", "Points": "465"},
   {
-    "Rank": "1",
-    "Ward": "Ward A",
-    "Locality": "Colaba",
-    "Points": "529"
-  },{
-    "Rank": "2",
-    "Ward": "Ward B",
-    "Locality": "Churchgate",
-    "Points": "528"
-  },{
-    "Rank": "3",
-    "Ward": "Ward C",
-    "Locality": "Byculla",
-    "Points": "518"
-  },{
-    "Rank": "4",
-    "Ward": "Ward D",
-    "Locality": "Marine Lines",
-    "Points": "509"
-  },{
-    "Rank": "5",
-    "Ward": "Ward E",
-    "Locality": "Malbar Hills",
-    "Points": "505"
-  },{
-    "Rank": "6",
-    "Ward": "Ward F",
-    "Locality": "Grant Road",
-    "Points": "499"
-  },{
-    "Rank": "7",
-    "Ward": "Ward G",
-    "Locality": "Mahalakshmi",
-    "Points": "490"
-  },{
-    "Rank": "8",
-    "Ward": "Ward H",
-    "Locality": "Parel",
-    "Points": "487"
-  },{
-    "Rank": "9",
-    "Ward": "Ward I",
-    "Locality": "Worli",
-    "Points": "478"
-  },{
-    "Rank": "10",
-    "Ward": "Ward J",
-    "Locality": "Masjid",
-    "Points": "469"
-  },{
-    "Rank": "11",
-    "Ward": "Ward K",
-    "Locality": "Chinchpokli",
-    "Points": "465"
-  },{
     "Rank": "12",
     "Ward": "Ward R Central",
     "Locality": "Vikroli",
@@ -127,80 +84,47 @@ const Map<String, dynamic> SUPERVISOR_LEVELS = {
   "levelsCount": 11,
   "levels": {
     "1": {
-      "scores": [
-        -100000,
-        0
-      ],
+      "scores": [-100000, 0],
       "levelName": "Overduer"
     },
     "2": {
-      "scores": [
-        1,
-        49
-      ],
+      "scores": [1, 49],
       "levelName": "Newbie"
     },
     "3": {
-      "scores": [
-        50,
-        99
-      ],
+      "scores": [50, 99],
       "levelName": "Fresher"
     },
     "4": {
-      "scores": [
-        100,
-        149
-      ],
+      "scores": [100, 149],
       "levelName": "Persistant"
     },
     "5": {
-      "scores": [
-        150,
-        224
-      ],
+      "scores": [150, 224],
       "levelName": "Performer"
     },
     "6": {
-      "scores": [
-        225,
-        299
-      ],
+      "scores": [225, 299],
       "levelName": ""
     },
     "7": {
-      "scores": [
-        300,
-        399
-      ],
+      "scores": [300, 399],
       "levelName": "Magnificent"
     },
     "8": {
-      "scores": [
-        400,
-        549
-      ],
+      "scores": [400, 549],
       "levelName": "Super"
     },
     "9": {
-      "scores": [
-        550,
-        749
-      ],
+      "scores": [550, 749],
       "levelName": "Epic"
     },
     "10": {
-      "scores": [
-        750,
-        999
-      ],
+      "scores": [750, 999],
       "levelName": "Ultimate"
     },
     "11": {
-      "scores": [
-        1000,
-        999999
-      ],
+      "scores": [1000, 999999],
       "levelName": "Godlevel"
     }
   }
