@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Services/DBServices.dart';
@@ -56,6 +55,34 @@ class AuthServices {
 
       print("Attempting to log out");
       Auth().signOut();
+      errorCallback(errorMessage);
+    }
+  }
+
+  static Future<void> loginSupervisor({
+    @required String email,
+    @required String password,
+    @required Function errorCallback,
+    @required Function successCallback,
+  }) async {
+    try {
+      bool isCitizen = await DBServices.checkIfCitizen(email);
+      if (isCitizen) {
+        errorCallback("Please login with a valid supervisor account");
+        return;
+      }
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+      successCallback();
+    } catch (e) {
+      print("Error during login with email.");
+      String errorMessage =
+          "Some error occured! Please check your internet connection.";
+      if (e is FirebaseAuthException) {
+        errorMessage = authExceptionMessageMap[e.code];
+        print(e);
+        print(e.code);
+      }
       errorCallback(errorMessage);
     }
   }

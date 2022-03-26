@@ -12,18 +12,18 @@ class DBServices {
     @required String age,
   }) async {
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection('supervisors')
         .doc(email.trim().toLowerCase())
         .set({
       'name': name,
       'email': email.trim().toLowerCase(),
       'mobile': phone.trim(),
-      'photo':
+      'imageUrl':
           "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png",
       'address': address,
       'age': age,
       'ward': ward,
-      'date': DateTime.now().toString(),
+      'joiningDate': DateTime.now().toString(),
       'occupation': occupation,
     });
   }
@@ -32,5 +32,14 @@ class DBServices {
     final ds =
         await FirebaseFirestore.instance.collection('users').doc(email).get();
     return ds;
+  }
+
+
+  /// Returns true if the email is a citizen email, else returns false  
+  static Future<bool> checkIfCitizen(String email) async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(email).get();
+
+    return (snapshot.exists || snapshot.data() != null);
   }
 }
