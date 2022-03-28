@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
 import 'package:ly_project/Pages/Feed/feedCardShimmer.dart';
+import 'package:ly_project/Services/FeedServices.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,90 +15,81 @@ class OverdueComplaintsTab extends StatefulWidget {
   State<OverdueComplaintsTab> createState() => _OverdueComplaintsTabState();
 }
 
-class _OverdueComplaintsTabState extends State<OverdueComplaintsTab> with AutomaticKeepAliveClientMixin<OverdueComplaintsTab>{
+class _OverdueComplaintsTabState extends State<OverdueComplaintsTab>
+    with AutomaticKeepAliveClientMixin<OverdueComplaintsTab> {
   var uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: EdgeInsets.only(
-          right: size.width * 0.01,
-          left: size.width * 0.01,
-          top: size.height * 0.02,
-          bottom: size.height * 0.03),
-      child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("complaints")
-              .where("supervisorEmail", isEqualTo: widget.userEmail)
-              .where("status", isEqualTo: "In Progress")
-              .where("overdue", isEqualTo: true)
-              // .orderBy("dateTime", descending: true)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return ListView.builder(
-                  itemCount: 5,
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  shrinkWrap: true,
-                  key: new Key(uuid.v4()),
-                  itemBuilder: (context, index) =>
-                      ComplaintOverviewCardShimmer(size));
-            }
 
-            if (snapshot.hasError) {
-              return Card(
-                child: Center(
-                  child: Text("Something went wrong!"),
-                ),
-              );
-            }
-            if (!snapshot.hasData) {
-              print("Connection state: has no data");
-              return Column(
-                children: [
-                  SizedBox(
-                    height: size.height * 0.2,
-                  ),
-                  CircularProgressIndicator(),
-                ],
-              );
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.01, vertical: size.height * 0.03),
+      child: StreamBuilder(
+        stream: FeedServices.getOverdueStream(widget.userEmail),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return ListView.builder(
+                itemCount: 5,
+                padding: EdgeInsets.only(left: 10, right: 10),
+                shrinkWrap: true,
+                key: new Key(uuid.v4()),
+                itemBuilder: (context, index) =>
+                    ComplaintOverviewCardShimmer(size));
+          }
+
+          if (snapshot.hasError) {
+            return Card(child: Center(child: Text("Something went wrong!")));
+          }
+
+          if (!snapshot.hasData) {
+            print("Connection state: has no data");
+            return Column(
+              children: [
+                SizedBox(height: size.height * 0.2),
+                CircularProgressIndicator(),
+              ],
+            );
+          } else {
+            if (snapshot.data.docs.length == 0) {
+              return Center(child: Text("No Overdue Complaints"));
             } else {
-              if (snapshot.data.docs.length == 0) {
-                return Center(
-                  child: Text("No Overdue Complaints"),
-                );
-              } else {
-                print(snapshot.data.docs.length);
-                return ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ComplaintOverviewCard(
-                      auth: widget.auth,
-                      id: snapshot.data.docs[index]["id"],
-                      complaint: snapshot.data.docs[index]["complaint"],
-                      date: snapshot.data.docs[index]["dateTime"],
-                      status: snapshot.data.docs[index]["status"],
-                      image: snapshot.data.docs[index]["imageData"]["url"],
-                      location: snapshot.data.docs[index]["imageData"]
-                          ["location"],
-                      supervisor: snapshot.data.docs[index]["supervisorName"],
-                      lat: snapshot.data.docs[index]["latitude"],
-                      long: snapshot.data.docs[index]["longitude"],
-                      description: snapshot.data.docs[index]["description"],
-                      citizenEmail: snapshot.data.docs[index]["citizenEmail"],
-                      upvoteCount: snapshot.data.docs[index]["upvoteCount"],
-                      overdue: snapshot.data.docs[index]["overdue"],
-                    );
-                  },
-                );
-              }
+              print(snapshot.data.docs.length);
+              return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                padding: EdgeInsets.only(left: 10, right: 10),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ComplaintOverviewCard(
+                    docId: snapshot.data.docs[index].id,
+                    supervisorDocRef: snapshot.data.docs[index]
+                        ["supervisorDocRef"],
+                    auth: widget.auth,
+                    id: snapshot.data.docs[index]["id"],
+                    complaint: snapshot.data.docs[index]["complaint"],
+                    date: snapshot.data.docs[index]["dateTime"],
+                    status: snapshot.data.docs[index]["status"],
+                    image: snapshot.data.docs[index]["imageData"]["url"],
+                    location: snapshot.data.docs[index]["imageData"]
+                        ["location"],
+                    supervisor: snapshot.data.docs[index]["supervisorName"],
+                    supervisorEmail: snapshot.data.docs[index]
+                        ["supervisorEmail"],
+                    lat: snapshot.data.docs[index]["latitude"],
+                    long: snapshot.data.docs[index]["longitude"],
+                    description: snapshot.data.docs[index]["description"],
+                    citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                    upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                    overdue: snapshot.data.docs[index]["overdue"],
+                  );
+                },
+              );
             }
-          }),
+          }
+        },
+      ),
     );
   }
 

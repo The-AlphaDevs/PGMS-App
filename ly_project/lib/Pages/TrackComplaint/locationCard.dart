@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import "package:latlong/latlong.dart";
 
 class ComplaintCard extends StatefulWidget {
@@ -28,9 +27,9 @@ class _ComplaintCardState extends State<ComplaintCard> {
     print("track ka lat: " + widget.latitude.toString());
     print("track ka long: " + widget.longitude.toString());
     final date = DateTime.parse(widget.date);
-    final start_date = DateTime(date.year, date.month, date.day);
+    final startDate = DateTime(date.year, date.month, date.day);
     final date2 = DateTime.now();
-    difference = date2.difference(start_date).inDays;
+    difference = date2.difference(startDate).inDays;
   }
   
   @override

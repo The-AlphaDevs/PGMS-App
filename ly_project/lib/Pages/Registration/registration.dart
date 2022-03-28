@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Login/login.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/navigation.dart';
 import 'package:ly_project/root_page.dart';
 import 'package:ly_project/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';

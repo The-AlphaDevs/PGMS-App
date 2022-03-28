@@ -73,6 +73,7 @@ class _FeedTabState extends State<FeedTab> {
                   itemBuilder: (context, index) {
                     return ComplaintOverviewCard(
                       docId: snapshot.data.docs[index].id,
+                      supervisorDocRef: snapshot.data.docs[index]["supervisorDocRef"],
                       id: snapshot.data.docs[index]["id"],
                       auth: widget.auth,
                       complaint: snapshot.data.docs[index]["complaint"],
@@ -81,6 +82,7 @@ class _FeedTabState extends State<FeedTab> {
                       image: snapshot.data.docs[index]["imageData"]["url"],
                       location: snapshot.data.docs[index]["imageData"]["location"],
                       supervisor: snapshot.data.docs[index]["supervisorName"],
+                      supervisorEmail: snapshot.data.docs[index]["supervisorEmail"],
                       lat: snapshot.data.docs[index]["latitude"],
                       long: snapshot.data.docs[index]["longitude"],
                       description: snapshot.data.docs[index]["description"],

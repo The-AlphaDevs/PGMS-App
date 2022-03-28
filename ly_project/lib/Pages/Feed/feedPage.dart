@@ -1,24 +1,13 @@
-// import 'package:InstiComplaints/feedCard.dart';
-// import 'loading.dart';
-// import 'UpdateNotification.dart';
-// import 'package:InstiComplaints/search.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/BookmarksTab.dart';
 
 import 'package:ly_project/Pages/Feed/FeedTab.dart';
-import 'package:ly_project/Pages/Feed/notifsCard.dart';
-import 'package:ly_project/Pages/RaiseComplaint/raise_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/Utils/colors.dart';
 import 'package:ly_project/Widgets/CurveClipper.dart';
-import 'package:top_modal_sheet/top_modal_sheet.dart';
 import 'package:uuid/uuid.dart';
 import 'notifsPage.dart';
-
-// import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class Feed extends StatefulWidget {
@@ -32,16 +21,12 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-  // final FirebaseMessaging _fcm = FirebaseMessaging();
+
   var uuid = Uuid();
   TabController _tabController;
   int selectedIndex = 0;
   int len=0;
-  void onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
+  void onItemTapped(int index) => setState(() => selectedIndex = index);
 
   @override
   void initState() {

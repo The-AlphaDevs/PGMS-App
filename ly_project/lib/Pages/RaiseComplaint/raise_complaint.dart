@@ -6,7 +6,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ly_project/Services/PredictonServices.dart';
 import 'package:ly_project/Utils/colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';

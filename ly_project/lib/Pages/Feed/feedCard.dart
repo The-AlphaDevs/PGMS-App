@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
   final id;
@@ -23,9 +21,27 @@ class ComplaintOverviewCard extends StatefulWidget {
   final docId;
   final upvoteCount;
   final overdue;
-  
-  ComplaintOverviewCard({this.id, this.docId, this.auth, this.complaint, this.description, this.date, this.status, this.image, this.location, this.supervisor, this.lat, this.long, this.citizenEmail,
-  this.upvoteCount, this.overdue
+  final supervisorDocRef;
+  final supervisorEmail;
+
+  ComplaintOverviewCard({
+    @required this.id,
+    @required this.docId,
+    @required this.auth,
+    @required this.complaint,
+    @required this.description,
+    @required this.date,
+    @required this.status,
+    @required this.image,
+    @required this.location,
+    @required this.supervisor,
+    @required this.lat,
+    @required this.long,
+    @required this.citizenEmail,
+    @required this.upvoteCount,
+    @required this.overdue,
+    @required this.supervisorDocRef,
+    @required this.supervisorEmail,
   });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
@@ -37,88 +53,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   String userEmail;
   int upvoteCount;
 
-  // Future<String> showUpvoteCount() async{
-  //   try{
-  //     await FirebaseFirestore.instance.runTransaction((transaction) async{
-  //       //Get upvote count from the complaint doc
-  //       var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
-  //       DocumentSnapshot snapshot = await transaction.get(complaintDoc);
-  //       int newUpvoteCount = snapshot.data()['upvoteCount'];
-  //       return newUpvoteCount.toString();   
-
-  //        //Update the upvote count as newUpvoteCount in the complaint doc
-  //       // transaction.update(complaintDoc, {"upvoteCount":(newUpvoteCount)});
-
-  //       //Update upvoteCount on screen
-  //       // setState(()=>upvoteCount=newUpvoteCount);
-  //     });
-  //   }catch(e){
-  //     print("Failed to update upvote counter!");
-  //     return "Error";
-  //   }
-  // }
-
-  /// Returns true if complaint is upvoted successfully
-  // Future<bool> markAsUpvoted({bool init=false}) async{
-  //   try{
-
-  //     if(init){
-  //       /// It is an error to call [setState] unless [mounted] is true.
-  //       if(this.mounted)
-  //         setState(()=>isUpvoted=true);
-  //       return true;
-  //       }
-    
-  //     var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
-  //     var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
-  //     setState(()=>isUpvoted=true);
-      
-  //     await upvoteDoc.set({
-  //       "upvotedAt": DateTime.now().toString(),
-  //       "upvotedBy": userEmail
-  //     });
-  //     await updateUpvoteCount(upvoteDoc, complaintDoc, 1);
-  //     return true;
-  // }catch(e){
-  //     print("Failed to upvote");
-  //     setState(()=>isUpvoted=false);
-  //     return false;
-  //   }
-  // }
-
-  /// Returns true if the upvote is removed successfully
-  // Future<bool> removeUpvote() async {
-  //   try{
-  //     setState(()=>isUpvoted=false);
-  //     var upvoteDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes").doc(userEmail);
-  //     var complaintDoc = FirebaseFirestore.instance.collection("complaints").doc(complaintId);
-  //     await upvoteDoc.delete();
-  //     await updateUpvoteCount(upvoteDoc, complaintDoc, -1);
-
-  //     return true;
-  //   }catch(e){
-  //     print("Failed to remove upvote!");
-  //     setState(()=>isUpvoted=true);
-  //     return false;
-  //   }
-  // } 
-
-  // Future<bool> checkIfUpvoted() async{
-  //   try {
-  //   // Get reference to Firestore collection
-  //   var collectionRef = FirebaseFirestore.instance.collection("complaints").doc(complaintId).collection("upvotes");
-  //   var upvoteDoc = await collectionRef.doc(userEmail).get();
-  //   if(upvoteDoc.exists) 
-  //     markAsUpvoted(init:true);
-
-  //   return upvoteDoc.exists;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     userEmail = widget.auth.currentUserEmail();
     complaintId = widget.docId;
@@ -127,25 +63,25 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
 
   @override
   Widget build(BuildContext context) {
-     print("upvoteCount :- " + upvoteCount.toString());
+    print("upvoteCount :- " + upvoteCount.toString());
     Size size = MediaQuery.of(context).size;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        // color: widget.overdue == "true" ? Colors.red[100] : Colors.white,
+        color: widget.overdue ? Colors.red[100] : Colors.white,
         child: InkWell(
           onTap: () {
-            print("Tap!");
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => (DetailComplaint(
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailComplaint(
                   auth: widget.auth,
                   id: widget.id,
                   docId: widget.docId,
                   complaint: widget.complaint,
                   description: widget.description,
-                  // name: widget.name,
                   date: widget.date,
                   status: widget.status,
                   image: widget.image,
@@ -154,10 +90,15 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   lat: widget.lat,
                   long: widget.long,
                   citizenEmail: widget.citizenEmail,
-                )),),);
+                  supervisorDocRef: widget.supervisorDocRef,
+                  supervisorEmail: widget.supervisorEmail,
+                ),
+              ),
+            );
           },
           child: Container(
-            padding: EdgeInsets.fromLTRB(size.width * 0.01, size.height*0.01, size.width * 0.01, size.height*0.005),
+            padding: EdgeInsets.fromLTRB(size.width * 0.01, size.height * 0.01,
+                size.width * 0.01, size.height * 0.005),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,106 +110,63 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.complaint,
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                        widget.complaint.toString().length > 50
+                            ? widget.complaint.toString().substring(0, 51) +
+                                " ..."
+                            : widget.complaint.toString(),
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
                       ),
-
-                      SizedBox(
-                        height: size.height*0.02,
-                      ),
-
+                      SizedBox(height: size.height * 0.02),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.contacts,
-                            size: 12,
-                            color: Colors.black,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Posted by " + widget.citizenEmail ,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+                          Icon(Icons.contacts, size: 12, color: Colors.black),
+                          SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              "Posted by " + widget.citizenEmail,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
                           ),
                         ],
                       ),
-
-                      SizedBox(
-                        height: 5,
-                      ),
-
+                      SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.calendar_today,
-                            size: 12,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          Icon(Icons.calendar_today,
+                              size: 12, color: Colors.grey),
+                          SizedBox(width: 5),
                           Text(
-                            DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                            DateFormat.yMMMMd()
+                                .format(DateTime.parse(widget.date)),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[700]),
                           ),
                         ],
                       ),
-
-                      
-
-                      SizedBox(height: size.height*0.01),
-
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   // crossAxisAlignment: CrossAxisAlignment.end,
-                      //   children: <Widget>[
-                          
-                      //   ],
-                      // ),
-
-                      // SizedBox(height: 4),
-                      // Container(
-                      //   height: size.height * 0.04,
-                        
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(29),
-                      //     child: FlatButton(
-                      //       color: Colors.amber[500],
-                      //       onPressed: () {
-                      //         // Navigator.push(context, MaterialPageRoute(builder: (context)=> InDetail(auth: widget.auth, helper_data_new: helper_data_new[index])));
-                      //       },
-                      //       child: Text('Comment',
-                      //           style: TextStyle(
-                      //             fontSize: 12,
-                      //             color: Colors.white,
-                      //             fontWeight: FontWeight.bold,
-                      //           )),
-                      //     ),
-                      //   ),
-                      // )
+                      SizedBox(height: size.height * 0.01),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
-
                         children: [
-
                           Column(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: size.height*0.005),
+                              SizedBox(height: size.height * 0.005),
                               Text(
-                                widget.status,
+                                widget.overdue ? "Overdue" : widget.status,
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: COMPLAINT_STATUS_COLOR_MAP[
+                                  color: widget.overdue ? Colors.red :COMPLAINT_STATUS_COLOR_MAP[
                                               widget.status] !=
                                           null
                                       ? COMPLAINT_STATUS_COLOR_MAP[
@@ -277,25 +175,21 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: size.height*0.008),
+                              SizedBox(height: size.height * 0.008),
                               Text(
                                 "Status",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: widget.overdue? 14 :10),
                               ),
                             ],
                           ),
-
-                          SizedBox(width: size.width*0.04),
-
+                          SizedBox(width: size.width * 0.04),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
                                 // width: size.width*0.08,
-                                height: size.height*0.035,
+                                height: size.height * 0.035,
                                 child: Text(
                                   upvoteCount.toString(),
                                   style: TextStyle(fontSize: 18),
@@ -304,26 +198,17 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                               // SizedBox(height: size.height*0.00),
                               Text(
                                 "Upvotes",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 10),
                               ),
                             ],
                           ),
-
-                          SizedBox(width: size.width*0.03),
-
+                          SizedBox(width: size.width * 0.03),
                           InkWell(
-                            onTap: () {
-                              print("Bookmarked!");
-                            },
+                            onTap: () => print("Bookmarked!"),
                             borderRadius: BorderRadius.circular(20),
-                            child: Icon(
-                              Icons.bookmark_border_rounded,
-                              size: size.height*0.04,
-                              color: Colors.grey,
-                            ),
+                            child: Icon(Icons.bookmark_border_rounded,
+                                size: size.height * 0.03, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -333,16 +218,15 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                 Container(
                   width: size.width * 0.35,
                   height: size.height * 0.15,
-
                   child: CachedNetworkImage(
                     imageUrl: widget.image,
                     placeholder: (context, url) => Center(
-                      child:Container(
+                      child: Container(
                         height: 25,
                         width: 25,
-                        child:CircularProgressIndicator(strokeWidth: 2.0),
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2.0),
                       ),
+                    ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                     fit: BoxFit.fitWidth,
                   ),

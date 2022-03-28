@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/root_page.dart';
 
 class NavDrawer extends StatefulWidget {
   final BaseAuth auth;

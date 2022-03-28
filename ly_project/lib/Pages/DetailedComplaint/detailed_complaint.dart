@@ -1,20 +1,18 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Pages/DetailedComplaint/Scorecard.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:location/location.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import "package:latlong/latlong.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ly_project/Pages/Comments/commentsCard.dart';
 import 'package:ly_project/Services/PredictonServices.dart';
+import 'package:ly_project/Services/StorageServices.dart';
 import 'package:ly_project/Services/auth.dart';
-// import 'package:ly_project/Utils/colors.dart';
+import 'package:ly_project/Pages/DetailedComplaint/FullScreenImage.dart';
+import 'package:ly_project/Widgets/Map.dart';
 import 'package:ly_project/utils/colors.dart';
 
 class DetailComplaint extends StatefulWidget {
@@ -30,22 +28,27 @@ class DetailComplaint extends StatefulWidget {
   final location;
   final description;
   final citizenEmail;
+  final supervisorEmail;
   final docId;
+  final supervisorDocRef;
 
-  DetailComplaint(
-      {this.id,
-      this.auth,
-      this.complaint,
-      this.description,
-      this.location,
-      this.status,
-      this.image,
-      this.date,
-      this.supervisor,
-      this.lat,
-      this.long,
-      this.citizenEmail,
-      this.docId});
+  DetailComplaint({
+    @required this.id,
+    @required this.auth,
+    @required this.complaint,
+    @required this.description,
+    @required this.location,
+    @required this.status,
+    @required this.image,
+    @required this.date,
+    @required this.supervisor,
+    @required this.lat,
+    @required this.long,
+    @required this.citizenEmail,
+    @required this.docId,
+    @required this.supervisorDocRef,
+    @required this.supervisorEmail,
+  });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
@@ -61,25 +64,23 @@ class _DetailComplaintState extends State<DetailComplaint> {
   double latitude;
   double longitude;
   String description;
-  String _comment = "";
-  String _name = "";
-  String _photo = "";
+  // String _comment = "";
+  // String _name = "";
+  // String _photo = "";
   String appBarTitle = "";
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
   String fileUrl;
   File file;
-  String temp_semail = "dummysupervisor@gmail.com";
-  String temp_sid = "supervisor#ab001";
-  String temp_sname = "Shantaram Karnik";
-  String imageUrl = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
+
+  String imageUrl =
+      "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
 
   bool isModelLoaded = false;
   bool isProcessingImage = false;
   bool isSubmittingComplaint = false;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  TextEditingController _commentController = new TextEditingController();
+  // TextEditingController _commentController = new TextEditingController();
 
   @override
   void initState() {
@@ -88,8 +89,9 @@ class _DetailComplaintState extends State<DetailComplaint> {
     longitude = double.parse(widget.long);
     String complaint = widget.complaint.toString();
 
-    appBarTitle = "Detailed Complaint";
-    // appBarTitle = "${complaint.substring(0, complaint.length>20 ? 25 : complaint.length)} ${complaint.length>20 ? '...' : ''}";
+    appBarTitle = complaint == null
+        ? "Detailed Complaint"
+        : "${complaint.substring(0, complaint.length > 25 ? 25 : complaint.length)} ${complaint.length > 25 ? '...' : ''}";
 
     //Load the prediction model
     PredictionServices.loadModel()
@@ -102,6 +104,12 @@ class _DetailComplaintState extends State<DetailComplaint> {
   void dispose() async {
     super.dispose();
     await PredictionServices.disposeModel();
+  }
+
+  void showSnackbar(String message, [int duration = 3]) {
+    final snackBar =
+        SnackBar(content: Text(message), duration: Duration(seconds: duration));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   _upload() async {
@@ -129,10 +137,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
         title: Text(
           appBarTitle ?? "Ye null hai 1",
           style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+              fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: DARK_BLUE,
       ),
@@ -146,54 +151,23 @@ class _DetailComplaintState extends State<DetailComplaint> {
               CarouselSlider(
                 items: [
                   Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.image,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
-                  Container(
-                    // decoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.circular(6.0),
-                    //   image: DecorationImage(
-                    //     image: AssetImage('assets/loc.jpg'),
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
-                    child: FlutterMap(
-                      options: MapOptions(
-                        center: LatLng(latitude, longitude),
-                        zoom: 13.0,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
+                    child: ImageFullScreenWrapperWidget(
+                      child: CachedNetworkImage(
+                        imageUrl: widget.image,
+                        placeholder: (context, url) => Center(
+                            child: Container(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.fitHeight,
                       ),
-                      layers: [
-                        TileLayerOptions(
-                          urlTemplate:
-                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          subdomains: ['a', 'b', 'c'],
-                          // attributionBuilder: (_) {
-                          //   return Text("© OpenStreetMap contributors");
-                          // },
-                        ),
-                        MarkerLayerOptions(
-                          markers: [
-                            Marker(
-                              width: 40.0,
-                              height: 40.0,
-                              point: LatLng(latitude, longitude),
-                              builder: (ctx) => Container(
-                                child: FlutterLogo(size: 0),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      dark: true,
                     ),
                   ),
+                  ComplaintMap(latitude: latitude, longitude: longitude),
                 ],
                 options: CarouselOptions(
                   height: screenSize.height * 0.30,
@@ -206,155 +180,77 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   viewportFraction: 0.75,
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
               Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
-                child: Row(
-                  children: [
-                    Text(
-                      'Location: ',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      child: Text(
-                        widget.location ?? "Location null hai",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.012,
-                ),
-                child: Divider(
-                  thickness: 1.5,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height * 0.01,
+                    EdgeInsets.symmetric(vertical: screenSize.height * 0.015),
+                child: Divider(thickness: 1.5),
               ),
               complaintDetails(screenSize),
-              SizedBox(
-                height: screenSize.height * 0.04,
-              ),
-              sendNotifButton(context, screenSize),
-              Padding(
-                padding: EdgeInsets.fromLTRB(80.0, screenSize.height * 0.01,
-                    70.0, screenSize.height * 0.01),
-                child: MaterialButton(
-                    onPressed: () async {
-                      await _upload();
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22.0)),
-                    color: Colors.blue,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.photo, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text("Add Photo",
-                              style: TextStyle(color: Colors.white))
-                        ])),
-              ),
-              file != null
-                  ? Image.file(
-                      File(file.path),
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    )
-                  : SizedBox(),
-              SizedBox(
-                height: screenSize.height * 0.04,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(80.0, 20.0, 70.0, 10.0),
-                child:(!isProcessingImage && !isSubmittingComplaint) ? Material(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22.0)),
-                  elevation: 5.0,
-                  color: DARK_BLUE,
-                  clipBehavior: Clip.antiAlias,
-                  child: MaterialButton(
-                      color: DARK_BLUE,
-                      onPressed: () async {
-                        setState(() => isProcessingImage = true);
-                        bool isPotholeDetected = await checkForPotholes();
-                        setState(() => isProcessingImage = false);
-
-                        if (isPotholeDetected) {
-                          await _showErrorDialog(context, "Error",
-                              "Cannot resolve this complaint since pothole is detected in the image.");
-                          return;
-                        }
-                        
-                        _showDialog(context);
-
-                        setState(() => isSubmittingComplaint = true);
-                        String status = await mixtureofcalls(context);
-                        setState(() => isSubmittingComplaint = true);
-
-                        Navigator.pop(context);
-                        if (status == 'Success') {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.SUCCES,
-                            animType: AnimType.BOTTOMSLIDE,
-                            title: 'Success',
-                            desc:
-                                'The Complaint has been successfully resolved..',
-                            btnCancelOnPress: () =>
-                                Navigator.pop(context),
-                            btnOkOnPress: () => Navigator.pop(context),
-                          )..show();
-                        } else {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.ERROR,
-                            animType: AnimType.BOTTOMSLIDE,
-                            title: 'Error',
-                            desc:
-                                'Error occured while resolving complaint..',
-                            btnCancelOnPress: () =>
-                                Navigator.pop(context),
-                            btnOkOnPress: () => Navigator.pop(context),
-                          )..show();
-                        }
-
-                        //TODO: Run model and validate the image, then change status to resolved, then add photo to imagedata.
-                        // await FirebaseFirestore.instance
-                        //     .collection('complaints')
-                        //     .doc(widget.id)
-                        //     .update({
-                        //   'status': 'Resolved',
-                        // });
-                      },
-                      child: Row(
+              SizedBox(height: screenSize.height * 0.025),
+              file == null
+                  ? Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          80.0,
+                          screenSize.height * 0.01,
+                          70.0,
+                          screenSize.height * 0.01),
+                      child: MaterialButton(
+                        onPressed: () async => await _upload(),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(22.0)),
+                        color: Colors.blue,
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.add, color: Colors.white),
+                            Icon(Icons.photo, color: Colors.white),
                             SizedBox(width: 10),
-                            Text("Solve Complaint",
+                            Text("Add Photo",
                                 style: TextStyle(color: Colors.white))
-                          ])),
-                )
-                : CircularProgressIndicator(),
-              )
+                          ],
+                        ),
+                      ),
+                    )
+                  : Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 6),
+                          child: Image.file(File(file.path),
+                              fit: BoxFit.cover, width: double.infinity),
+                        ),
+                        //Unselected the image
+                        Positioned(
+                          right: 2,
+                          top: 8,
+                          child: CircleAvatar(
+                            radius: 16,
+                            backgroundColor: Colors.grey[300],
+                            child: IconButton(
+                              color: Colors.red,
+                              icon: Icon(
+                                Icons.close,
+                                semanticLabel: "Clear selected image",
+                                size: 16,
+                              ),
+                              focusColor: Colors.white,
+                              onPressed: () => setState(() => file = null),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              SizedBox(height: screenSize.height * 0.025),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  sendNotifButton(context, screenSize),
+                  resolveComplaintButton(context, screenSize),
+                ],
+              ),
+
+              SizedBox(height: screenSize.height * 0.025),
+
               // trackComplaintButton(context, screenSize),
               // SizedBox(
               //   height: screenSize.height * 0.04,
@@ -363,6 +259,252 @@ class _DetailComplaintState extends State<DetailComplaint> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget resolveComplaintButton(BuildContext context, Size screenSize) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        (!isProcessingImage && !isSubmittingComplaint)
+            ? Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: FlatButton(
+                    color: DARK_BLUE,
+                    onPressed: () async {
+                      if (file == null) {
+                        showSnackbar(
+                            "Please add image of work done to resolve the complaint",
+                            5);
+                        return;
+                      }
+                      setState(() => isProcessingImage = true);
+                      bool isPotholeDetected = await checkForPotholes();
+                      setState(() => isProcessingImage = false);
+
+                      if (isPotholeDetected) {
+                        await _showErrorDialog(context, "Error",
+                            "Cannot resolve this complaint since pothole is detected in the image.");
+                        return;
+                      }
+
+                      _showDialog(context);
+
+                      setState(() => isSubmittingComplaint = true);
+                      String status = await mixtureofcalls(context);
+                      setState(() => isSubmittingComplaint = true);
+
+                      Navigator.pop(context);
+
+                      if (status == 'Success') {
+                        _showSuccessDialog(context, 'Success',
+                            'The Complaint has been successfully resolved..');
+                      } else {
+                        _showErrorDialog(context, "Error", status);
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add, color: Colors.white, size: 20),
+                        SizedBox(width: screenSize.width * 0.01),
+                        Text("Solve Complaint",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            : Container(width: 20, child: CircularProgressIndicator()),
+      ],
+    );
+  }
+
+  showScorecard() async {
+    Dialog scorecard = Dialog(
+        child: SupervisorScorecard(supervisorDocRef: widget.supervisorDocRef));
+    await showDialog(context: context, builder: (_) => scorecard);
+  }
+
+  Container complaintDetails(Size screenSize) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: DARK_PURPLE)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: screenSize.width * 0.8,
+            child: Text(
+              widget.complaint ?? "Complaint Title",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.004),
+            child: Divider(thickness: 1.5),
+          ),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Location: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                widget.location ?? "Complaint Location",
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Description: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Text(
+                  widget.description ?? "Complaint Description",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Status: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                widget.status,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: COMPLAINT_STATUS_COLOR_MAP[widget.status] != null
+                      ? COMPLAINT_STATUS_COLOR_MAP[widget.status]
+                      : Colors.deepOrange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Supervisor: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => widget.supervisor != null ? showScorecard() : {},
+                child: Container(
+                  //Space between text and underline
+                  padding: EdgeInsets.only(bottom: 1),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: DARK_PURPLE, width: 0.8),
+                    ),
+                  ), //width of the underline
+                  child: Row(
+                    children: [
+                      Text(widget.supervisor ?? "Supervisor Name",
+                          style:
+                              TextStyle(fontSize: 15, color: Colors.black87)),
+                      SizedBox(width: 3),
+                      Icon(
+                        Icons.open_in_new,
+                        size: 16,
+                        color: Colors.black87,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Date: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Time: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                DateFormat.jms().format(DateTime.parse(widget.date)),
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -404,8 +546,6 @@ class _DetailComplaintState extends State<DetailComplaint> {
     );
   }
 
-
-
   // Future<String> uploadcomments() async {
   //   try {
   //     final emailid = widget.auth.currentUserEmail();
@@ -428,31 +568,13 @@ class _DetailComplaintState extends State<DetailComplaint> {
   // }
 
   Future<String> store(File _image) async {
-    print("Inside store function");
-    print("Upload docs wala user\n");
-    final user = await widget.auth.currentUser();
-    print(user);
-    String imageRef = user + '/' + _image.path.split('/').last;
-    print(imageRef);
-    imageUrl =
-        await (await FirebaseStorage.instance.ref(imageRef).putFile(_image))
-            .ref
-            .getDownloadURL();
-    print(imageUrl);
+    String userId = await widget.auth.currentUser();
+    imageUrl = await StorageServices.uploadImage(userId, _image);
+    if (imageUrl == null)
+      return "Something went wrong while uploading image. Please check your internet connection.";
 
     try {
-      ///TODO: Get ward Name and Id
-      // String ward = "Ward A";
-      // String wardId = "WardA#50ad3f7a-dea5-49aa-b27c-59b72aa0b1c2";
       final emailid = widget.auth.currentUserEmail();
-      // QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("supervisors").where("ward", isEqualTo: "Ward A").get();
-      // QueryDocumentSnapshot supervisorDoc = snapshot.docs.first;
-      // String supervisorName = supervisorDoc["name"];
-      // String supervisorEmail = supervisorDoc["email"];
-      // String supervisorId = supervisorDoc["id"];
-      // DocumentReference supervisorDocRef = FirebaseFirestore.instance.collection("supervisors").doc(supervisorDoc.id);
-
-      // docname = uuid.v4();
       await FirebaseFirestore.instance
           .collection('complaints')
           .doc(widget.id)
@@ -484,131 +606,130 @@ class _DetailComplaintState extends State<DetailComplaint> {
         'date': widget.date.toString(),
         'status': 'Resolved',
       });
-      
+
       return "Success";
     } catch (e) {
       print("Error: " + e.toString());
-      return "Error";
+      return "Something went wrong! Check your internet connection!";
     }
   }
 
   Future<String> mixtureofcalls(BuildContext context) async {
-    print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
     String status = await store(file);
     return status;
   }
 
-  Column complaintDetails(Size screenSize) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Flexible(
-              child: Text(
-                widget.complaint ?? "Complaint null hai",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.008,
-        ),
-        Row(
-          children: [
-            Text(
-              'Description: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Flexible(
-              child: Text(
-                widget.description,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
-        Row(
-          children: [
-            Text(
-              'Status: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              widget.status,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.lightGreen,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
-        Row(
-          children: [
-            Text(
-              'Supervisor: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              widget.supervisor ?? "Supervisor null hai 1",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenSize.height * 0.005,
-        ),
-        Row(
-          children: [
-            Text(
-              'Date: ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey[800],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  // Column complaintDetails(Size screenSize) {
+  //   return Column(
+  //     children: [
+  //       Row(
+  //         children: [
+  //           Flexible(
+  //             child: Text(
+  //               widget.complaint ?? "Complaint null hai",
+  //               style: TextStyle(
+  //                 fontSize: 20,
+  //                 color: Colors.black,
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: screenSize.height * 0.008,
+  //       ),
+  //       Row(
+  //         children: [
+  //           Text(
+  //             'Description: ',
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           Flexible(
+  //             child: Text(
+  //               widget.description,
+  //               style: TextStyle(
+  //                 fontSize: 12,
+  //                 color: Colors.black,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: screenSize.height * 0.005,
+  //       ),
+  //       Row(
+  //         children: [
+  //           Text(
+  //             'Status: ',
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           Text(
+  //             widget.status,
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.lightGreen,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: screenSize.height * 0.005,
+  //       ),
+  //       Row(
+  //         children: [
+  //           Text(
+  //             'Supervisor: ',
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           Text(
+  //             widget.supervisor ?? "Supervisor null hai 1",
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.black,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: screenSize.height * 0.005,
+  //       ),
+  //       Row(
+  //         children: [
+  //           Text(
+  //             'Date: ',
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           Text(
+  //             DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+  //             style: TextStyle(
+  //               fontSize: 15,
+  //               color: Colors.grey[800],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Row trackComplaintButton(BuildContext context, Size screenSize) {
     return Row(
@@ -661,52 +782,51 @@ class _DetailComplaintState extends State<DetailComplaint> {
       children: [
         Container(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(29),
+            borderRadius: BorderRadius.circular(30),
             child: FlatButton(
               onPressed: () async {
                 // change status to resolve
                 await FirebaseFirestore.instance
                     .collection('complaints')
                     .doc(widget.id)
-                    .update({
-                  'status': 'In Progress',
-                });
+                    .update({'status': 'In Progress'});
 
                 // set complaint in notif collection of user
                 await FirebaseFirestore.instance
                     .collection('supervisors')
-                    .doc(temp_semail)
+                    .doc(widget.supervisorEmail)
                     .collection('notifications')
                     .doc(widget.id)
                     .set({
-                  'citizenEmail': widget.citizenEmail,
-                  'complaint': widget.complaint,
-                  'description': widget.description,
-                  'dateTime': widget.date,
+                  'supervisorDocRef': widget.supervisorDocRef,
+                  'docId': widget.docId,
                   'id': widget.id,
+                  'complaint': widget.complaint,
+                  'dateTime': widget.date,
+                  'status': 'In Progress',
                   'imageurl': widget.image,
+                  'location': widget.location,
+                  'supervisorName': widget.supervisor,
+                  'supervisorEmail': widget.supervisorEmail,
                   'latitude': widget.lat.toString(),
                   'longitude': widget.long.toString(),
-                  'location': widget.location,
-                  'status': 'In Progress',
-                  'supervisorName': 'Shantaram Karnik',
-                  'supervisorEmail': 'dummysupervisor@gmail.com',
-                  'docId': widget.docId
+                  'description': widget.description,
+                  'citizenEmail': widget.citizenEmail,
                 });
                 print(
                     "Status changed to In Progress and complaint added to notif collection of supervisor!");
               },
-              color: GOLDEN_YELLOW,
+              color: Colors.orange[900],
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.014,
+                  vertical: screenSize.height * 0.012,
                   horizontal: screenSize.width * 0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.notifications_active),
-                  SizedBox(width: screenSize.width * 0.03),
+                  Icon(Icons.notifications_active, size: 20),
+                  SizedBox(width: screenSize.width * 0.01),
                   Text("Assign Supervisor")
                 ],
               ),
@@ -720,7 +840,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
   Future<void> _showSuccessDialog(
       BuildContext context, String title, String message) async {
     AwesomeDialog alert = AwesomeDialog(
-      btnOkOnPress: () {},
+      btnOkOnPress: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
       desc: message,
       dialogType: DialogType.SUCCES,
       title: title,
@@ -745,7 +868,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     if (isModelLoaded && file != null) {
       final output = await PredictionServices.classifyImage(file);
       print(output.toString());
-      return !output.isEmpty;
+      return output.isNotEmpty;
     }
     return false;
   }
