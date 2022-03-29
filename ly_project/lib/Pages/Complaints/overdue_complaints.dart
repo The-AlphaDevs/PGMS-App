@@ -62,6 +62,12 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab>
                 padding: EdgeInsets.only(left: 10, right: 10),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  String supervisorImageUrl = snapshot.data.docs[index]
+                                  ['supervisorImageData'] ==
+                              null
+                          ? null
+                          : snapshot.data.docs[index]['supervisorImageData']
+                              ['url'];
                   return ComplaintOverviewCard(
                     docId: snapshot.data.docs[index].id,
                     supervisorDocRef: snapshot.data.docs[index]
@@ -83,6 +89,7 @@ class _OverdueComplaintsTabState extends State<OverdueComplaintsTab>
                     citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                     upvoteCount: snapshot.data.docs[index]["upvoteCount"],
                     overdue: snapshot.data.docs[index]["overdue"],
+                    supervisorImageUrl: supervisorImageUrl,
                   );
                 },
               );

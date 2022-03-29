@@ -19,6 +19,7 @@ class NotifsCard extends StatefulWidget {
   final docId;
   final supervisorDocRef;
   final supervisorEmail;
+  final supervisorImageUrl;
 
   NotifsCard({
     @required this.id,
@@ -36,6 +37,7 @@ class NotifsCard extends StatefulWidget {
     @required this.docId,
     @required this.supervisorDocRef,
     @required this.supervisorEmail,
+    @required this.supervisorImageUrl,
   });
 
   @override
@@ -72,6 +74,7 @@ class _NotifsCardState extends State<NotifsCard> {
                         long: widget.long,
                         citizenEmail: widget.citizenEmail,
                         supervisorEmail: widget.supervisorEmail,
+                        supervisorImageUrl: widget.supervisorImageUrl,
                       )));
           await FirebaseFirestore.instance
               .collection('supervisors')

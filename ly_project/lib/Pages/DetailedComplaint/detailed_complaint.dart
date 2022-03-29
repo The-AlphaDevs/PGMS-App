@@ -31,6 +31,7 @@ class DetailComplaint extends StatefulWidget {
   final supervisorEmail;
   final docId;
   final supervisorDocRef;
+  final supervisorImageUrl;
 
   DetailComplaint({
     @required this.id,
@@ -48,6 +49,7 @@ class DetailComplaint extends StatefulWidget {
     @required this.docId,
     @required this.supervisorDocRef,
     @required this.supervisorEmail,
+    @required this.supervisorImageUrl,
   });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
@@ -70,6 +72,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String appBarTitle = "";
   // final _formKey = GlobalKey<FormState>();
   String fileUrl;
+
   File file;
 
   String imageUrl =
@@ -605,6 +608,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
         'longitude': widget.long.toString(),
         'date': widget.date.toString(),
         'status': 'Resolved',
+        'supervisorImageUrl': imageUrl
       });
 
       return "Success";
@@ -812,6 +816,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   'longitude': widget.long.toString(),
                   'description': widget.description,
                   'citizenEmail': widget.citizenEmail,
+                  'supervisorImageUrl': widget.supervisorImageUrl
                 });
                 print(
                     "Status changed to In Progress and complaint added to notif collection of supervisor!");
@@ -842,7 +847,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
     AwesomeDialog alert = AwesomeDialog(
       btnOkOnPress: () {
         Navigator.pop(context);
-        Navigator.pop(context);
+        
       },
       desc: message,
       dialogType: DialogType.SUCCES,

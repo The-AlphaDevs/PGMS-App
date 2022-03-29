@@ -89,6 +89,7 @@ class _NotificationsState extends State<Notifications> {
                         long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                        supervisorImageUrl: snapshot.data.docs[index]["supervisorImageUrl"],
                       );
                     },
                   );

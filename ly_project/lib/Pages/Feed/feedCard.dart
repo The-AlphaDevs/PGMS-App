@@ -23,6 +23,7 @@ class ComplaintOverviewCard extends StatefulWidget {
   final overdue;
   final supervisorDocRef;
   final supervisorEmail;
+  final supervisorImageUrl;
 
   ComplaintOverviewCard({
     @required this.id,
@@ -42,6 +43,8 @@ class ComplaintOverviewCard extends StatefulWidget {
     @required this.overdue,
     @required this.supervisorDocRef,
     @required this.supervisorEmail,
+    @required this.supervisorImageUrl,
+
   });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
@@ -92,6 +95,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   citizenEmail: widget.citizenEmail,
                   supervisorDocRef: widget.supervisorDocRef,
                   supervisorEmail: widget.supervisorEmail,
+                  supervisorImageUrl: widget.supervisorImageUrl,
                 ),
               ),
             );
