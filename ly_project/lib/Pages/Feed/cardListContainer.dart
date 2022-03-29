@@ -27,6 +27,12 @@ class _CardListContainerState extends State<CardListContainer> {
       // cacheExtent: 5,
       key: new Key(uuid.v4()),
       itemBuilder: (context, index) {
+        String supervisorImageUrl = widget.snapshot.data.docs[index]
+                                  ['supervisorImageData'] ==
+                              null
+                          ? null
+                          : widget.snapshot.data.docs[index]['supervisorImageData']
+                              ['url'];
         return ComplaintOverviewCard(
           docId: widget.snapshot.data.docs[index].id,
           id: widget.snapshot.data.docs[index]["id"],
@@ -44,6 +50,7 @@ class _CardListContainerState extends State<CardListContainer> {
           description: widget.snapshot.data.docs[index]["description"],
           citizenEmail: widget.snapshot.data.docs[index]["citizenEmail"],
           upvoteCount: widget.snapshot.data.docs[index]["upvoteCount"],
+          supervisorImageUrl:supervisorImageUrl
         );
       },
     );

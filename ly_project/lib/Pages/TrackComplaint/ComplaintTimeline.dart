@@ -1,17 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 
 class ComplaintTimeline extends StatefulWidget {
   final id;
   final status;
+  final supervisorImageUrl;
 
-  ComplaintTimeline({this.id, this.status});
+  ComplaintTimeline({this.id, this.status, this.supervisorImageUrl});
   @override
   State<ComplaintTimeline> createState() => _ComplaintTimelineState();
 }
 
 class _ComplaintTimelineState extends State<ComplaintTimeline> {
-  
   String pendingBoxColor;
   String inProgressBoxColor;
   String resolvedBoxColor;
@@ -19,18 +20,15 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
   @override
   void initState() {
     super.initState();
-    if(widget.status=="Pending"){
+    if (widget.status == "Pending") {
       pendingBoxColor = "green";
       inProgressBoxColor = "red";
       resolvedBoxColor = "red";
-
-    } 
-    else if(widget.status=="In Progress"){
+    } else if (widget.status == "In Progress") {
       pendingBoxColor = "green";
       inProgressBoxColor = "green";
       resolvedBoxColor = "red";
-    }
-    else{
+    } else {
       pendingBoxColor = "green";
       inProgressBoxColor = "green";
       resolvedBoxColor = "green";
@@ -64,16 +62,14 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
           ),
 
           builder: TimelineTileBuilder.connected(
-            itemCount: itemCount ,
+            itemCount: itemCount,
             // itemExtentBuilder: (_, __) => 50,
             indicatorBuilder: (_, index) {
-              if(index==0){
+              if (index == 0) {
                 return dotIndicator(pendingBoxColor);
-              }
-              else if(index==1){
+              } else if (index == 1) {
                 return dotIndicator(inProgressBoxColor);
-              }
-              else{
+              } else {
                 return dotIndicator(resolvedBoxColor);
               }
             },
@@ -91,14 +87,22 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
               // if (isEdgeIndex(index)) {
               //   return null;
               // }
-              if(index==0){
-                return timelineTile(context, "Pending", "Description", pendingBoxColor);
-              }
-              else if(index==1){
-                return timelineTile(context, "In Progress", "Description", inProgressBoxColor);
-              }
-              else{
-                return timelineTile(context, "Resolved", "Description", resolvedBoxColor);
+              if (index == 0) {
+                return timelineTile(context, "Pending",
+                    "The complaint is pending", pendingBoxColor);
+              } else if (index == 1) {
+                return timelineTile(
+                    context,
+                    "In Progress",
+                    "The complaint resolution is in progress",
+                    inProgressBoxColor);
+              } else {
+                return timelineTile(
+                    context,
+                    "Resolved",
+                    "The complaint has been resolved",
+                    resolvedBoxColor,
+                    widget.supervisorImageUrl);
               }
             },
           ),
@@ -107,12 +111,11 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
     );
   }
 
-  Widget dotIndicator(color){
+  Widget dotIndicator(color) {
     IconData boxIcon;
-    if(color=="green"){
+    if (color == "green") {
       boxIcon = Icons.check;
-    }
-    else{
+    } else {
       boxIcon = Icons.circle;
     }
     return DotIndicator(
@@ -125,13 +128,12 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
     );
   }
 
-  Widget timelineTile(context, title, description, color){
+  Widget timelineTile(context, title, description, color, [String imageUrl]) {
     Size size = MediaQuery.of(context).size;
     Color boxColor;
-    if(color=="green"){
+    if (color == "green") {
       boxColor = Colors.green[100];
-    }
-    else{
+    } else {
       boxColor = Colors.red[100];
     }
     return SingleChildScrollView(
@@ -160,8 +162,7 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
                             fontWeight: FontWeight.w500,
                             color: Colors.black),
                       ),
-                      SizedBox(height: size.height*0.04),
-                      // SizedBox(height: 5),
+                      SizedBox(height: size.height * 0.04),
                       Text(
                         description,
                         maxLines: 3,
@@ -170,6 +171,15 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
                             fontWeight: FontWeight.w500,
                             color: Colors.grey),
                       ),
+                      imageUrl != null
+                          ? Container(
+                              padding: EdgeInsets.only(top: size.height * 0.04),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                              ))
+                          : SizedBox()
                     ],
                   ),
                 )

@@ -74,9 +74,16 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                   padding: EdgeInsets.only(left: 10, right: 10),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    String supervisorImageUrl = snapshot.data.docs[index]
+                                  ['supervisorImageData'] ==
+                              null
+                          ? null
+                          : snapshot.data.docs[index]['supervisorImageData']
+                              ['url'];
                     return ComplaintOverviewCard(
                       auth: widget.auth,
                       id: snapshot.data.docs[index]["id"],
+                      docId: snapshot.data.docs[index].id,
                       complaint: snapshot.data.docs[index]["complaint"],
                       date: snapshot.data.docs[index]["dateTime"],
                       status: snapshot.data.docs[index]["status"],
@@ -91,6 +98,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                       upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                      supervisorImageUrl:supervisorImageUrl
                     );
                   },
                 );

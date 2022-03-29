@@ -64,9 +64,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
               );
             } else {
               if (snapshot.data.docs.length == 0) {
-                return Center(
-                  child: Text("No Past Feeds"),
-                );
+                return Center(child: Text("No Past Feeds"));
               } else {
                 print(snapshot.data.docs.length);
                 return ListView.builder(
@@ -74,22 +72,34 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                   padding: EdgeInsets.only(left: 10, right: 10),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    print("snapshot.data.docs[index]['complaint']");
+                    print(snapshot.data.docs[index]["complaint"]);
+                    print("snapshot.data.docs[index]['supervisorImageData']");
+                    print(snapshot.data.docs[index].data().containsKey('supervisorImageData'));
+                    String supervisorImageUrl =
+                        snapshot.data.docs[index].data().containsKey('supervisorImageData') == null
+                            ? null
+                            : snapshot.data.docs[index]['supervisorImageData']
+                                ['url'];
                     return ComplaintOverviewCard(
-                      auth: widget.auth,
-                      id: snapshot.data.docs[index]["id"],
-                      complaint: snapshot.data.docs[index]["complaint"],
-                      date: snapshot.data.docs[index]["dateTime"],
-                      status: snapshot.data.docs[index]["status"],
-                      image: snapshot.data.docs[index]["imageData"]["url"],
-                      location: snapshot.data.docs[index]["imageData"]
-                          ["location"],
-                      supervisorDocRef: snapshot.data.docs[index]["supervisorDocRef"],
-                      supervisor: snapshot.data.docs[index]["supervisorName"],
-                      lat: snapshot.data.docs[index]["latitude"],
-                      long: snapshot.data.docs[index]["longitude"],
-                      description: snapshot.data.docs[index]["description"],
-                      citizenEmail: snapshot.data.docs[index]["citizenEmail"],
-                    );
+                        upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                        auth: widget.auth,
+                        id: snapshot.data.docs[index]["id"],
+                        docId: snapshot.data.docs[index].id,
+                        complaint: snapshot.data.docs[index]["complaint"],
+                        date: snapshot.data.docs[index]["dateTime"],
+                        status: snapshot.data.docs[index]["status"],
+                        image: snapshot.data.docs[index]["imageData"]["url"],
+                        location: snapshot.data.docs[index]["imageData"]
+                            ["location"],
+                        supervisorDocRef: snapshot.data.docs[index]
+                            ["supervisorDocRef"],
+                        supervisor: snapshot.data.docs[index]["supervisorName"],
+                        lat: snapshot.data.docs[index]["latitude"],
+                        long: snapshot.data.docs[index]["longitude"],
+                        description: snapshot.data.docs[index]["description"],
+                        citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                        supervisorImageUrl: supervisorImageUrl);
                   },
                 );
               }

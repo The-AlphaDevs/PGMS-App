@@ -26,6 +26,7 @@ class DetailComplaint extends StatefulWidget {
   final citizenEmail;
   final docId;
   final supervisorDocRef;
+  final supervisorImageUrl;
 
   DetailComplaint({
     this.id,
@@ -42,6 +43,7 @@ class DetailComplaint extends StatefulWidget {
     this.citizenEmail,
     this.docId,
     this.supervisorDocRef,
+    this.supervisorImageUrl
   });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
@@ -140,7 +142,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  sendNotifButton(context, screenSize),
+                  // sendNotifButton(context, screenSize),
                   trackComplaintButton(context, screenSize),
                 ],
               ),
@@ -572,6 +574,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                               latitude: latitude,
                               longitude: longitude,
                               status: widget.status,
+                              supervisorImageUrl: widget.supervisorImageUrl
                             )))
               },
               color: DARK_BLUE,
@@ -604,60 +607,61 @@ class _DetailComplaintState extends State<DetailComplaint> {
     await showDialog(context: context, builder: (_) => scorecard);
   }
 
-  Row sendNotifButton(BuildContext context, Size screenSize) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: FlatButton(
-              onPressed: () async {
-                // change status to resolve
-                await FirebaseFirestore.instance
-                    .collection('complaints')
-                    .doc(widget.id)
-                    .update({
-                  'status': 'Resolved',
-                });
+  // Row sendNotifButton(BuildContext context, Size screenSize) {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       Container(
+  //         child: ClipRRect(
+  //           borderRadius: BorderRadius.circular(30),
+  //           child: FlatButton(
+  //             onPressed: () async {
+  //               // change status to resolve
+  //               await FirebaseFirestore.instance
+  //                   .collection('complaints')
+  //                   .doc(widget.id)
+  //                   .update({
+  //                 'status': 'Resolved',
+  //               });
 
-                // set complaint in notif collection of user
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(widget.citizenEmail)
-                    .collection('notifications')
-                    .doc(widget.id)
-                    .set({
-                  'id': widget.id,
-                  'complaint': widget.complaint,
-                  'location': widget.location,
-                  'latitude': widget.lat.toString(),
-                  'longitude': widget.long.toString(),
-                  'date': widget.date.toString(),
-                  'status': 'Resolved',
-                });
-                print(
-                    "Status changed to resolved and complaint added to notif collection!");
-              },
-              color: Colors.orange[900],
-              textColor: Colors.white,
-              padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.012,
-                  horizontal: screenSize.width * 0.03),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.notifications_active, size: 20),
-                  SizedBox(width: screenSize.width * 0.01),
-                  Text("Close Complaint")
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  //               // set complaint in notif collection of user
+  //               await FirebaseFirestore.instance
+  //                   .collection('users')
+  //                   .doc(widget.citizenEmail)
+  //                   .collection('notifications')
+  //                   .doc(widget.id)
+  //                   .set({
+  //                 'id': widget.id,
+  //                 'complaint': widget.complaint,
+  //                 'location': widget.location,
+  //                 'latitude': widget.lat.toString(),
+  //                 'longitude': widget.long.toString(),
+  //                 'date': widget.date.toString(),
+  //                 'status': 'Resolved',
+  //               });
+  //               print(
+  //                   "Status changed to resolved and complaint added to notif collection!");
+  //             },
+  //             color: Colors.orange[900],
+  //             textColor: Colors.white,
+  //             padding: EdgeInsets.symmetric(
+  //                 vertical: screenSize.height * 0.012,
+  //                 horizontal: screenSize.width * 0.03),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: <Widget>[
+  //                 Icon(Icons.notifications_active, size: 20),
+  //                 SizedBox(width: screenSize.width * 0.01),
+  //                 Text("Close Complaint")
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
 }

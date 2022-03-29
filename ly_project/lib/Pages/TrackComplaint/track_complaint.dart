@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
@@ -16,14 +15,25 @@ class TrackComplaints extends StatefulWidget {
   final longitude;
   final status;
   final BaseAuth auth;
+  final supervisorImageUrl;
 
-  TrackComplaints({this.auth, this.id, this.complaint, this.date, this.location, this.latitude, this.longitude, this.status});
+  TrackComplaints({
+    @required this.auth,
+    @required this.id,
+    @required this.complaint,
+    @required this.date,
+    @required this.location,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.status,
+    @required this.supervisorImageUrl,
+  });
   @override
   _TrackComplaintsState createState() => _TrackComplaintsState();
 }
 
-class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProviderStateMixin {
-
+class _TrackComplaintsState extends State<TrackComplaints>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,7 +45,6 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
       body: Column(
         children: [
           SizedBox(height: size.height * 0.05),
-
           ComplaintCard(
             complaint: widget.complaint,
             date: widget.date,
@@ -43,11 +52,12 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
             latitude: widget.latitude,
             longitude: widget.longitude,
           ),
-
           SizedBox(height: size.height * 0.05),
-
-          ComplaintTimeline(id: widget.id, status: widget.status,),
-
+          ComplaintTimeline(
+            id: widget.id,
+            status: widget.status,
+            supervisorImageUrl: widget.supervisorImageUrl
+          ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 100, vertical: 40),
             child: ClipRRect(
@@ -59,31 +69,31 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
                     context: context,
                     dialogType: DialogType.WARNING,
                     animType: AnimType.BOTTOMSLIDE,
-                    title: 'Close Complaint', 
+                    title: 'Close Complaint',
                     desc: 'Do you want to really close this complaint?',
                     btnCancelOnPress: () {
                       // Navigator.pop(context);
                     },
-                    btnOkOnPress: () async{
+                    btnOkOnPress: () async {
                       String result = await closeComplaint();
-                      print("result:"+result);
-                      if(result=="Status Updated"){
+                      print("result:" + result);
+                      if (result == "Status Updated") {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }else if(result=="Status not resolved"){
+                      } else if (result == "Status not resolved") {
                         print("andar aya");
                         AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.ERROR,
-                          title: 'Cannot close Complaint',
-                          desc: 'Cannot close this Complaint since it is not resolved yet!',
-                          btnCancelOnPress: (){},
-                          btnOkOnPress: (){}
-                        )..show();
+                            context: context,
+                            dialogType: DialogType.ERROR,
+                            title: 'Cannot close Complaint',
+                            desc:
+                                'Cannot close this Complaint since it is not resolved yet!',
+                            btnCancelOnPress: () {},
+                            btnOkOnPress: () {})
+                          ..show();
                       }
                     },
                   )..show();
-                  
                 },
                 color: Colors.orange[900],
                 textColor: Colors.white,
@@ -92,7 +102,7 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(Icons.close),
-                    SizedBox(width:15),
+                    SizedBox(width: 15),
                     Text("Close Complaint"),
                   ],
                 ),
@@ -104,26 +114,28 @@ class _TrackComplaintsState extends State<TrackComplaints>with SingleTickerProvi
     );
   }
 
-  Future<String> closeComplaint() async{
+  Future<String> closeComplaint() async {
     final user = widget.auth.currentUserEmail();
-    try{
-      if(widget.status=='Resolved'){
+    try {
+      if (widget.status == 'Resolved') {
         await FirebaseFirestore.instance
-          .collection("complaints")
-          .doc(widget.id)
-          .update({
-            "status": "Closed",
-          });
-        await FirebaseFirestore.instance.collection('users').doc(user).collection('notifications').doc(widget.id).delete();
+            .collection("complaints")
+            .doc(widget.id)
+            .update({
+          "status": "Closed",
+        });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user)
+            .collection('notifications')
+            .doc(widget.id)
+            .delete();
         return "Status Updated";
-      }else{
+      } else {
         return "Status not resolved";
       }
-    }
-    catch(e){
+    } catch (e) {
       return "Failed to update status: $e";
     }
   }
-
-  
 }

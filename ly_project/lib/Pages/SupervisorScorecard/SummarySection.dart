@@ -58,6 +58,7 @@ class SummarySection extends StatelessWidget {
             supervisorName,
             style: TextStyle(
                 fontSize: 17, fontWeight: FontWeight.bold, color: DARK_PURPLE),
+                textAlign: TextAlign.center,
           ),
           SizedBox(height: size.height * 0.015),
           Text(

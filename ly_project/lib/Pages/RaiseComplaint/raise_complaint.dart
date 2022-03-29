@@ -348,7 +348,6 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   return;
                                 }
 
-                                
                                 GeoFirePoint imageLocation =
                                     await ImageLocationServices
                                         .getImageLocation(
@@ -365,13 +364,21 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   await _showErrorDialog(context, "Error",
                                       "Unable to get image location. Please select an image containg location metadata.");
                                   return;
-                                }else{
-                                    print("image ka lat: " + imageLocation.latitude.toString());
-                                    print("image ka long: " + imageLocation.longitude.toString());
-                                    String url = "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+imageLocation.latitude.toString()+"&longitude=" + imageLocation.longitude.toString()+"&localityLanguage=en";
-                                    final response = await http.get(url);                                  
-                                    var responseData = json.decode(response.body);
-                                    print("Locality mila: "+ responseData['locality'].toString()); 
+                                } else {
+                                  print("image ka lat: " +
+                                      imageLocation.latitude.toString());
+                                  print("image ka long: " +
+                                      imageLocation.longitude.toString());
+                                  String url =
+                                      "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
+                                          imageLocation.latitude.toString() +
+                                          "&longitude=" +
+                                          imageLocation.longitude.toString() +
+                                          "&localityLanguage=en";
+                                  final response = await http.get(url);
+                                  var responseData = json.decode(response.body);
+                                  print("Locality mila: " +
+                                      responseData['locality'].toString());
                                 }
 
                                 setState(() => isProcessingImage = true);
@@ -491,13 +498,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'longitude': long.toString(),
         'location': _localityController.text.toString().trim(),
         'resolutionDateTime': null,
-
-        //TODO: Update status when admin side is ready
-        'status': 'Pending',
+        'overdue': false,
+        'status': 'In Progress',
         'supervisorId': supervisorId,
         'supervisorEmail': supervisorEmail,
         'supervisorName': supervisorName,
         'supervisorDocRef': supervisorDocRef,
+        "supervisorImageData": null,
         'upvoteCount': 0,
         "ward": ward,
         "wardId": wardId,
