@@ -115,6 +115,59 @@ class _DetailComplaintState extends State<DetailComplaint> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
+  AlertDialog approveComplaint(context) {
+    Size screenSize = MediaQuery.of(context).size;
+    Widget okButton = OutlinedButton(
+      style: ButtonStyle(
+        side: MaterialStateProperty.all(BorderSide(color: Colors.green)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+      ),
+      child: Text("Approve", style: TextStyle(color: Colors.green[900])),
+      onPressed: () async {
+        try {
+          await changeStatus(true);
+          Navigator.pop(context, null);
+          Navigator.pop(context, null);
+        } catch (e) {
+          print("Error in approval!!");
+          print(e);
+        }
+      },
+    );
+    Widget cancelButton = OutlinedButton(
+        autofocus: true,
+        style: ButtonStyle(
+          side: MaterialStateProperty.all(BorderSide(color: Colors.red)),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          ),
+        ),
+        child: Text("Reject", style: TextStyle(color: Colors.red[900])),
+        onPressed: () async {
+          try {
+            await changeStatus(false);
+            Navigator.pop(context, null);
+            Navigator.pop(context, null);
+          } catch (e) {
+            print("Error in approval!!");
+            print(e);
+          }
+        });
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Approval"),
+      content: Text("Do you want to approve this complaint?"),
+      actions: [okButton, cancelButton],
+      titlePadding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+      contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 8.0),
+      actionsPadding: EdgeInsets.fromLTRB(
+          screenSize.width * 0.05, 10.0, screenSize.width * 0.18, 5.0),
+    );
+    return alert;
+  }
+
   _upload() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -190,69 +243,106 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
               complaintDetails(screenSize),
               SizedBox(height: screenSize.height * 0.025),
-              file == null
+              widget.status == "Pending"
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(
-                          80.0,
-                          screenSize.height * 0.01,
-                          70.0,
-                          screenSize.height * 0.01),
+                          screenSize.width * 0.25,
+                          screenSize.height * 0.005,
+                          screenSize.width * 0.25,
+                          screenSize.height * 0.005),
                       child: MaterialButton(
-                        onPressed: () async => await _upload(),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                approveComplaint(context),
+                          );
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(22.0)),
                         color: Colors.blue,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.photo, color: Colors.white),
+                            Icon(Icons.check_circle_outline_outlined,
+                                color: Colors.white),
                             SizedBox(width: 10),
-                            Text("Add Photo",
+                            Text("Approve",
                                 style: TextStyle(color: Colors.white))
                           ],
                         ),
                       ),
                     )
-                  : Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: Image.file(File(file.path),
-                              fit: BoxFit.cover, width: double.infinity),
-                        ),
-                        //Unselected the image
-                        Positioned(
-                          right: 2,
-                          top: 8,
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundColor: Colors.grey[300],
-                            child: IconButton(
-                              color: Colors.red,
-                              icon: Icon(
-                                Icons.close,
-                                semanticLabel: "Clear selected image",
-                                size: 16,
+                  : widget.status == "In Progress"
+                      ? file == null
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  screenSize.width * 0.25,
+                                  screenSize.height * 0.005,
+                                  screenSize.width * 0.25,
+                                  screenSize.height * 0.005),
+                              child: MaterialButton(
+                                onPressed: () async => await _upload(),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(22.0)),
+                                color: Colors.blue,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.photo, color: Colors.white),
+                                    SizedBox(width: 10),
+                                    Text("Add Photo",
+                                        style: TextStyle(color: Colors.white))
+                                  ],
+                                ),
                               ),
-                              focusColor: Colors.white,
-                              onPressed: () => setState(() => file = null),
-                            ),
-                          ),
-                        ),
+                            )
+                          : Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 6),
+                                  child: Image.file(File(file.path),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity),
+                                ),
+                                //Unselected the image
+                                Positioned(
+                                  right: 2,
+                                  top: 8,
+                                  child: CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: Colors.grey[300],
+                                    child: IconButton(
+                                      color: Colors.red,
+                                      icon: Icon(
+                                        Icons.close,
+                                        semanticLabel: "Clear selected image",
+                                        size: 16,
+                                      ),
+                                      focusColor: Colors.white,
+                                      onPressed: () =>
+                                          setState(() => file = null),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                      : SizedBox(),
+
+              widget.status == "In Progress" ? SizedBox(height: screenSize.height * 0.025) : SizedBox(height: screenSize.height * 0),
+
+              widget.status == "In Progress"
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        sendNotifButton(context, screenSize),
+                        resolveComplaintButton(context, screenSize),
                       ],
-                    ),
-              SizedBox(height: screenSize.height * 0.025),
+                    )
+                  : SizedBox(),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  sendNotifButton(context, screenSize),
-                  resolveComplaintButton(context, screenSize),
-                ],
-              ),
-
-              SizedBox(height: screenSize.height * 0.025),
+              SizedBox(height: screenSize.height * 0.02),
 
               // trackComplaintButton(context, screenSize),
               // SizedBox(
@@ -333,7 +423,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
 
   Container complaintDetails(Size screenSize) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: DARK_PURPLE)),
@@ -569,6 +659,34 @@ class _DetailComplaintState extends State<DetailComplaint> {
   //     return "Error";
   //   }
   // }
+
+  Future<void> changeStatus(approve) async {
+    if (approve) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('complaints')
+            .doc(widget.id)
+            .set({
+          'status': 'In Progress',
+          'dateTime': DateTime.now().toString(),
+        }, SetOptions(merge: true));
+      } catch (e) {
+        print("Error: " + e.toString());
+      }
+    } else {
+      try {
+        await FirebaseFirestore.instance
+            .collection('complaints')
+            .doc(widget.id)
+            .set({
+          'status': 'Rejected',
+          'dateTime': DateTime.now().toString(),
+        }, SetOptions(merge: true));
+      } catch (e) {
+        print("Error: " + e.toString());
+      }
+    }
+  }
 
   Future<String> store(File _image) async {
     String userId = await widget.auth.currentUser();
@@ -847,7 +965,6 @@ class _DetailComplaintState extends State<DetailComplaint> {
     AwesomeDialog alert = AwesomeDialog(
       btnOkOnPress: () {
         Navigator.pop(context);
-        
       },
       desc: message,
       dialogType: DialogType.SUCCES,

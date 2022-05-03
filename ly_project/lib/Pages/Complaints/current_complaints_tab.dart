@@ -23,6 +23,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab>
   Widget build(BuildContext context) {
     super.build(context);
     Size size = MediaQuery.of(context).size;
+    print("INSIDE ONGOING COMPLAINTS");
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: size.width * 0.01, vertical: size.height * 0.03),
@@ -60,15 +61,15 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab>
                 padding: EdgeInsets.only(left: 10, right: 10),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  print("snapshot.data.docs[index]['supervisorImageData']");
-                  print(snapshot.data.docs[index]['supervisorImageData']);
+                  // print("snapshot.data.docs[index]['supervisorImageData']");
+                  // print(snapshot.data.docs[index]['supervisorImageData']);
                   String supervisorImageUrl = snapshot.data.docs[index]
                                   ['supervisorImageData'] ==
                               null
-                          ? null
+                          ? "null"
                           : snapshot.data.docs[index]['supervisorImageData']
                               ['url'];
-
+                  print("supervisorImageUrl: " + supervisorImageUrl);
                   return ComplaintOverviewCard(
                     docId: snapshot.data.docs[index].id,
                     supervisorDocRef: snapshot.data.docs[index]

@@ -19,7 +19,8 @@ class FeedServices {
       FirebaseFirestore.instance
           .collection("complaints")
           .where("supervisorEmail", isEqualTo: supervisorEmail)
-          .where("status", whereIn: ["Resolved", "Closed"]).snapshots();
+          .where("status", whereIn: ["Resolved", "Closed", "Rejected"])
+          .snapshots();
 
   static Stream<QuerySnapshot> getOverdueStream(String supervisorEmail) =>
       FirebaseFirestore.instance
@@ -33,7 +34,7 @@ class FeedServices {
       FirebaseFirestore.instance
           .collection("complaints")
           .where("supervisorEmail", isEqualTo: supervisorEmail)
-          .where("status", whereIn: ["In Progress"])
+          .where("status", whereIn: ["In Progress", "Pending"])
           .orderBy("upvoteCount", descending: true)
           .snapshots();
 }
