@@ -64,9 +64,11 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String _photo = "";
   String appBarTitle = "";
   final _formKey = GlobalKey<FormState>();
+  final _issueFormKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TextEditingController _commentController = new TextEditingController();
+  TextEditingController _issueController = new TextEditingController();
 
   @override
   void initState() {
@@ -144,6 +146,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 children: [
                   // sendNotifButton(context, screenSize),
                   trackComplaintButton(context, screenSize),
+                  if(widget.status == "Resolved")
+                      raiseIssueButton(context, screenSize)
                 ],
               ),
               SizedBox(height: screenSize.height * 0.03),
@@ -191,7 +195,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                           child: StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection("complaints")
-                                .doc(widget.docId)
+                                .doc(widget.id)
                                 .collection("comments")
                                 .snapshots(),
                             builder: (BuildContext context,
@@ -601,12 +605,140 @@ class _DetailComplaintState extends State<DetailComplaint> {
     );
   }
 
+  Row raiseIssueButton(BuildContext context, Size screenSize) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.03,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: FlatButton(
+              onPressed: () => showIssueForm(screenSize),
+              color: Colors.orange,
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.012,
+                  horizontal: screenSize.width * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.report_gmailerrorred_outlined,
+                    size: 20,
+                  ),
+                  SizedBox(width: screenSize.width * 0.01),
+                  Text("Raise issue")
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   showScorecard() async {
     Dialog scorecard = Dialog(
         child: SupervisorScorecard(supervisorDocRef: widget.supervisorDocRef));
     await showDialog(context: context, builder: (_) => scorecard);
   }
 
+  Container getIssueForm(Size size) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.03, vertical: size.height * 0.03),
+      child: Form(
+        key: _issueFormKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Report issue about the work done",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: size.height * 0.04,
+            ),
+            TextFormField(
+              controller: _issueController,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return "Please enter some value";
+                } else {
+                  if (value.length < 3) {
+                    return "Minimum length must be 3";
+                  }
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelStyle:
+                    TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                labelText: "Type your issue here",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderSide: BorderSide(color: Colors.black)),
+              ),
+            ),
+            SizedBox(height: size.height * 0.04),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: FlatButton(
+                    onPressed: () async{
+                      if (validateAndSave(_issueFormKey)) {
+                        var complaintDoc =
+                          FirebaseFirestore.instance.collection("complaints").doc(widget.docId);
+                        print("complaintDoc.path");
+                        print(complaintDoc.path);
+                        String issue = _issueController.text.toString();
+                        await complaintDoc.set({"feedback":issue, "status":"Issue Raised", "issueRaisedDateTime": DateTime.now().toString()}, SetOptions(merge : true));
+                        _issueController.clear();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+                    },
+                    color: Colors.orange,
+                    textColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                        vertical: size.height * 0.012,
+                        horizontal: size.width * 0.03),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.report_gmailerrorred_outlined,
+                          size: 20,
+                        ),
+                        SizedBox(width: size.width * 0.01),
+                        Text("Raise issue")
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  showIssueForm(size) async {
+    Dialog issueForm = Dialog(
+      child: getIssueForm(size),
+    );
+    await showDialog(context: context, builder: (_) => issueForm);
+  }
   // Row sendNotifButton(BuildContext context, Size screenSize) {
   //   return Row(
   //     mainAxisSize: MainAxisSize.min,

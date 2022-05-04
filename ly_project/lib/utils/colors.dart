@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-const Map<String, Color> COMPLAINT_STATUS_COLOR_MAP = {
+final Map<String, Color> COMPLAINT_STATUS_COLOR_MAP = {
+  'Pending': Colors.orange[400],
   'Rejected': Colors.red,
-  'Resolved': Colors.green,
   'In Progress': Colors.blue,
-  'Passed': Colors.cyan
+  'Resolved': Colors.green,
+  'Closed': Colors.green[900],
+  'Issue Raised': Colors.purple[400],
 };
 
 const DARK_PURPLE = Color(0xFF322144);

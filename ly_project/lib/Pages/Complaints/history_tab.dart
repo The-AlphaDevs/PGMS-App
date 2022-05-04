@@ -30,7 +30,7 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
           stream: FirebaseFirestore.instance
               .collection("complaints")
               .where("citizenEmail", isEqualTo: widget.userEmail)
-              .where("status", whereIn: ["Resolved", "Closed"])
+              .where("status", whereIn: ["Resolved", "Closed", "Issue Raised", "Rejected"])
               // .orderBy("dateTime", descending: true)
               .snapshots(),
           builder:

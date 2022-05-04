@@ -45,6 +45,9 @@ const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
 
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
+enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_RAISED, REJECTED}
+const statusString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Raised", "Rejected"];
+
 const EMAIL_REGEX =
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
 
