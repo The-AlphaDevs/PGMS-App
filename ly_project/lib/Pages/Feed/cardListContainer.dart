@@ -50,7 +50,9 @@ class _CardListContainerState extends State<CardListContainer> {
           description: widget.snapshot.data.docs[index]["description"],
           citizenEmail: widget.snapshot.data.docs[index]["citizenEmail"],
           upvoteCount: widget.snapshot.data.docs[index]["upvoteCount"],
-          supervisorImageUrl:supervisorImageUrl
+          supervisorImageUrl:supervisorImageUrl,
+          overdue: widget.snapshot.data.docs[index]["overdue"], 
+          wardId: widget.snapshot.data.docs[index]["wardId"],
         );
       },
     );

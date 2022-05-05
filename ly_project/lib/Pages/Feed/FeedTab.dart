@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/cardListContainer.dart';
-// import 'package:ly_project/Pages/Feed/feedCard.dart';
 import 'package:ly_project/Pages/Feed/feedCardShimmer.dart';
-import 'package:ly_project/Services/FeedServices.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:uuid/uuid.dart';
 

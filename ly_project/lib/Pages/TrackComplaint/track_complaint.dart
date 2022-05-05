@@ -5,6 +5,7 @@ import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Utils/colors.dart';
+import 'package:ly_project/utils/constants.dart';
 
 class TrackComplaints extends StatefulWidget {
   final id;
@@ -16,6 +17,9 @@ class TrackComplaints extends StatefulWidget {
   final status;
   final BaseAuth auth;
   final supervisorImageUrl;
+  final DocumentReference supervisorDocRef;
+  final String wardId;
+  final bool overdue;
 
   TrackComplaints({
     @required this.auth,
@@ -26,7 +30,10 @@ class TrackComplaints extends StatefulWidget {
     @required this.latitude,
     @required this.longitude,
     @required this.status,
-    @required this.supervisorImageUrl,
+    @required this.supervisorImageUrl, 
+    @required this.supervisorDocRef, 
+    @required this.wardId, 
+    @required this.overdue,
     
   });
   @override
@@ -119,29 +126,53 @@ class _TrackComplaintsState extends State<TrackComplaints>
   Future<String> closeComplaint() async {
     final user = widget.auth.currentUserEmail();
     try {
+      DocumentReference complaintDocRef = FirebaseFirestore.instance.collection("complaints").doc(widget.id);
+      DocumentReference wardDocRef = FirebaseFirestore.instance.collection("wards").doc(widget.wardId);
+      DocumentReference supervisorDocRef = widget.supervisorDocRef;
+      DocumentReference notificationDocRef = FirebaseFirestore.instance.collection('users').doc(user).collection('notifications').doc(widget.id);
+      
+      int points = widget.overdue ? OVERDUE_NO_ISSUE_COMPLETION_POINTS : NO_OVERDUE_NO_ISSUE_COMPLETION_POINTS;
+      
       if (widget.status == 'Resolved') {
-        //Change complaint status to "Closed"
-        await FirebaseFirestore.instance
-            .collection("complaints")
-            .doc(widget.id)
-            .set({
-              "status": "Closed",
-              "closedDateTime":DateTime.now().toString()
-              },SetOptions(merge : true)
-            );
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          /// Change complaint status to "Closed"
+          transaction.set(complaintDocRef,
+              {"status": "Closed", "closedDateTime":DateTime.now().toString()},
+              SetOptions(merge : true)
+          ); 
+          
+          /// Update ward points 
+          transaction.update(wardDocRef, {
+            "lifetimeScore": FieldValue.increment(points),
+            "monthlyScore": FieldValue.increment(points),
+            "realtimeScore": FieldValue.increment(points),
+            "weeklyScore": FieldValue.increment(points),
+            "yearlyScore": FieldValue.increment(points),
+          });
 
-        //Delete Notification 
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user)
-            .collection('notifications')
-            .doc(widget.id)
-            .delete();
+          /// Update supervisor points and various complaint count:
+          /// Increment count completed complaints and
+          /// if the complaint was overdue, decrement overdue complaints by 1
+          ///
+          ///  Award supervisor the points for completing the work
+          if(widget.overdue){
+            transaction.update(supervisorDocRef, {
+              "complaintsOverdue": FieldValue.increment(-1),
+              "complaintsCompleted": FieldValue.increment(1),
+              "score": FieldValue.increment(points)
+            });
+          }else{
+            transaction.update(supervisorDocRef, {
+              "complaintsCompleted": FieldValue.increment(1),
+              "score": FieldValue.increment(points)
+            });
+          }
 
-        // TODO: Update ward points and supervisor points.
-        // Combine all queries in a single transaction
-
+          //Delete Notification 
+          transaction.delete(notificationDocRef);
+        });
         return "Status Updated";
+      
       } else {
         return "Status not resolved";
       }

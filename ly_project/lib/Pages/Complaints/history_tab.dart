@@ -99,7 +99,10 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                         long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
-                        supervisorImageUrl: supervisorImageUrl);
+                        supervisorImageUrl: supervisorImageUrl,
+                        overdue: snapshot.data.docs[index]["overdue"], 
+                        wardId: snapshot.data.docs[index]["wardId"],
+                        );
                   },
                 );
               }

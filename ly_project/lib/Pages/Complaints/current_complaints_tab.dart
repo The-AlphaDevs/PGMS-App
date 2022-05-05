@@ -98,7 +98,9 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab> {
                       description: snapshot.data.docs[index]["description"],
                       citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                       upvoteCount: snapshot.data.docs[index]["upvoteCount"],
-                      supervisorImageUrl:supervisorImageUrl
+                      supervisorImageUrl:supervisorImageUrl, 
+                      overdue: snapshot.data.docs[index]["overdue"], 
+                      wardId: snapshot.data.docs[index]["wardId"],
                     );
                   },
                 );

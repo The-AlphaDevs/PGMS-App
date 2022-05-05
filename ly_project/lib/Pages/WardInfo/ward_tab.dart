@@ -40,7 +40,7 @@ class _WardInfoState extends State<WardInfo>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       key: _scaffoldState,

@@ -24,6 +24,8 @@ class ComplaintOverviewCard extends StatefulWidget {
   final upvoteCount;
   final supervisorDocRef;
   final supervisorImageUrl;
+  final String wardId;
+  final overdue;
 
   ComplaintOverviewCard({
     @required this.id,
@@ -41,7 +43,9 @@ class ComplaintOverviewCard extends StatefulWidget {
     @required this.citizenEmail,
     @required this.upvoteCount,
     @required this.supervisorDocRef,
-    @required this.supervisorImageUrl,
+    @required this.supervisorImageUrl, 
+    @required this.wardId, 
+    @required this.overdue,
   });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
@@ -178,7 +182,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   lat: widget.lat,
                   long: widget.long,
                   citizenEmail: widget.citizenEmail,
-                  supervisorImageUrl:widget.supervisorImageUrl
+                  supervisorImageUrl:widget.supervisorImageUrl, 
+                  overdue: widget.overdue, 
+                  wardId: widget.wardId,
                 )),
               ),
             );

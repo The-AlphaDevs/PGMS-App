@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import "package:latlong/latlong.dart";
 
 class ComplaintCard extends StatefulWidget {

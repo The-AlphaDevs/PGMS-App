@@ -37,7 +37,7 @@ class _ComplaintTimelineState extends State<ComplaintTimeline> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     int itemCount = 3;
 
     bool isEdgeIndex(int index) {

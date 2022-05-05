@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ly_project/Services/auth.dart';
-import 'package:ly_project/navigation.dart';
 import 'package:ly_project/Widgets/CurveClipper.dart';
 
 import '../../root_page.dart';

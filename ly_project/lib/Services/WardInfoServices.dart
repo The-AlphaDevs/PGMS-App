@@ -94,7 +94,7 @@ class WardInfoServices {
           }
           break;
         default:
-          none++;
+          print((++none).toString());
       }
     });
 

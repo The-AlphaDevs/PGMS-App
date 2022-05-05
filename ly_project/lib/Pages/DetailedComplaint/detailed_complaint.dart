@@ -25,25 +25,29 @@ class DetailComplaint extends StatefulWidget {
   final description;
   final citizenEmail;
   final docId;
-  final supervisorDocRef;
+  final DocumentReference supervisorDocRef;
   final supervisorImageUrl;
+  final String wardId;
+  final bool overdue;
 
   DetailComplaint({
-    this.id,
-    this.auth,
-    this.complaint,
-    this.description,
-    this.location,
-    this.status,
-    this.image,
-    this.date,
-    this.supervisor,
-    this.lat,
-    this.long,
-    this.citizenEmail,
-    this.docId,
-    this.supervisorDocRef,
-    this.supervisorImageUrl
+    @required this.id,
+    @required this.auth,
+    @required this.complaint,
+    @required this.description,
+    @required this.location,
+    @required this.status,
+    @required this.image,
+    @required this.date,
+    @required this.supervisor,
+    @required this.lat,
+    @required this.long,
+    @required this.citizenEmail,
+    @required this.docId,
+    @required this.supervisorDocRef,
+    @required this.supervisorImageUrl,
+    @required this.wardId, 
+    @required this.overdue,
   });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
@@ -584,7 +588,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
                               latitude: latitude,
                               longitude: longitude,
                               status: widget.status,
-                              supervisorImageUrl: widget.supervisorImageUrl
+                              supervisorImageUrl: widget.supervisorImageUrl, 
+                              overdue: widget.overdue, 
+                              supervisorDocRef: widget.supervisorDocRef, 
+                              wardId: widget.wardId,
                             )))
               },
               color: DARK_BLUE,

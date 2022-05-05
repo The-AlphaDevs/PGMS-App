@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -12,6 +13,8 @@ class NotifsCard extends StatefulWidget {
   final status;
   final BaseAuth auth;
   final supervisorImageUrl;
+
+
   NotifsCard({
     @required this.auth,
     @required this.id,
@@ -36,21 +39,33 @@ class _NotifsCardState extends State<NotifsCard> {
       margin: EdgeInsets.symmetric(vertical: size.height * 0.015),
       color: Colors.amber[100],
       child: ListTile(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TrackComplaints(
-                        id: widget.id,
-                        auth: widget.auth,
-                        complaint: widget.complaint,
-                        date: widget.date,
-                        location: widget.location,
-                        latitude: double.parse(widget.latitude),
-                        longitude: double.parse(widget.longitude),
-                        status: widget.status,
-                        supervisorImageUrl: widget.supervisorImageUrl,
-                      )));
+        onTap: () async{
+          QuerySnapshot complaintSnapshot = await FirebaseFirestore.instance.collection("complaints").where("id", isEqualTo: widget.id).get();
+          if(complaintSnapshot != null){
+            Map<String, dynamic> snapshot = complaintSnapshot.docs.first.data();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => 
+                    TrackComplaints(
+                      auth: widget.auth,
+                      id: snapshot["id"],
+                      complaint: snapshot["complaint"],
+                      date: snapshot["dateTime"],
+                      location: snapshot["imageData"]["location"],
+                      latitude: double.parse(snapshot["latitude"]),
+                      longitude: double.parse(snapshot["longitude"]),
+                      status: snapshot["status"],
+                      supervisorImageUrl: snapshot["supervisorImageData"]["url"],
+                      overdue: snapshot["overdue"], 
+                      supervisorDocRef: snapshot["supervisorDocRef"],
+                      wardId: snapshot["wardId"],
+                    ),
+                ),
+            );
+          }else{
+            print("Error finding complaint!");
+          }
         },
         leading: CircleAvatar(
           radius: size.width * 0.04,

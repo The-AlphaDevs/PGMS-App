@@ -76,6 +76,14 @@ const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_REPORTED, REJECTED}
 const statusString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Reported", "Rejected"];
 
+// const OVERDUE_NO_ISSUE = "Overdue-No-Issues-Complaint-Closure";
+// const NO_OVERDUE_NO_ISSUE = "No-Overdue-No-Issues-Complaint-Closure";
+
+// const Map<String, int> pointsMap = {
+//   "No-Overdue-No-Issues-Complaint-Closure":10,
+//   "Overdue-No-Issues-Complaint-Closure": 5,
+// };
+
 const EMAIL_REGEX =
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
 
@@ -113,9 +121,15 @@ const List<Map<String, String>> dummyPerformanceData = [
   {"Rank": "12","Ward": "Ward R Central","Locality": "Vikroli","Points": "459"},
 ];
 
+
+//Points used for generating supervisor scorecard
 const RESOLUTION_POINTS = 5;
 const COMPLETION_POINTS = 10;
 const OVERDUE_POINTS = -10;
+
+// Points to award to the supervisor and ward when a complaint gets closed
+const NO_OVERDUE_NO_ISSUE_COMPLETION_POINTS = 10;
+const OVERDUE_NO_ISSUE_COMPLETION_POINTS = 5;
 
 const Map<String, dynamic> SUPERVISOR_LEVELS = {
   "levelsCount": 11,
