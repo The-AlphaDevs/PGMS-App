@@ -251,6 +251,7 @@ class _LoginPageState extends State<LoginPage> {
           _emailController.text.toString() +
           " Password: " +
           _passwordController.text.toString());
+      Navigator.pop(context);
       showErrorDialog(context, "SignIn Error",
           "Please enter the correct email and password.");
       return "User doesn't Exist!!";

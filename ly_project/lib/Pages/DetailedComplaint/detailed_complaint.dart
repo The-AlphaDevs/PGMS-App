@@ -263,14 +263,20 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ],
                 ),
               ),
+              widget.status == "In Progress" || widget.status == "Pending"
+              ?
               IconButton(
                 splashColor: Colors.transparent,
                 icon: Icon(Icons.bookmark_border_rounded,
                     size: 25, color: Colors.black),
                 onPressed: () => print("Bookmark"),
-              ),
+              )
+              :
+              SizedBox(height:45)
+              ,
             ],
           ),
+          if(widget.status == "In Progress" || widget.status == "Pending")
           Form(
             key: _formKey,
             child: Row(
@@ -700,7 +706,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                         print("complaintDoc.path");
                         print(complaintDoc.path);
                         String issue = _issueController.text.toString();
-                        await complaintDoc.set({"feedback":issue, "status":"Issue Raised", "issueRaisedDateTime": DateTime.now().toString()}, SetOptions(merge : true));
+                        await complaintDoc.set({"feedback":issue, "status":"Issue Reported", "issueReportedDateTime": DateTime.now().toString()}, SetOptions(merge : true));
                         _issueController.clear();
                         Navigator.pop(context);
                         Navigator.pop(context);

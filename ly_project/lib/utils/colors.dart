@@ -6,7 +6,7 @@ final Map<String, Color> COMPLAINT_STATUS_COLOR_MAP = {
   'In Progress': Colors.blue,
   'Resolved': Colors.green,
   'Closed': Colors.green[900],
-  'Issue Raised': Colors.purple[400],
+  'Issue Reported': Colors.purple[400],
 };
 
 const DARK_PURPLE = Color(0xFF322144);

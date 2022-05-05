@@ -13,6 +13,7 @@ import 'package:ly_project/Services/StorageServices.dart';
 import 'package:ly_project/Widgets/Map.dart';
 import 'package:ly_project/Services/PredictionServices.dart';
 import 'package:ly_project/Utils/colors.dart';
+import 'package:ly_project/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -359,7 +360,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                     return;
                                   },
                                 );
-
+                                String ward = "unassigned";
                                 if (imageLocation == null) {
                                   await _showErrorDialog(context, "Error",
                                       "Unable to get image location. Please select an image containg location metadata.");
@@ -369,16 +370,47 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                       imageLocation.latitude.toString());
                                   print("image ka long: " +
                                       imageLocation.longitude.toString());
-                                  String url =
-                                      "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
-                                          imageLocation.latitude.toString() +
-                                          "&longitude=" +
-                                          imageLocation.longitude.toString() +
-                                          "&localityLanguage=en";
-                                  final response = await http.get(url);
-                                  var responseData = json.decode(response.body);
-                                  print("Locality mila: " +
-                                      responseData['locality'].toString());
+                                  
+                                  setState((){
+                                    lat = imageLocation.latitude;
+                                    long = imageLocation.longitude;
+                                  });
+
+                                  ward =  await getWard(imageLocation.latitude.toString(), imageLocation.longitude.toString());
+                                  print("Locality mila: " + ward??"Empty response");
+                                  
+                                  if(ward.isEmpty || ward == ""){
+                                    ward = "unassigned";
+                                  }else{
+                                    ward = ward.trim();
+                                    ward = ward.replaceAll("Ward", "");
+                                    ward = ward.trim();
+                                    if(ward.contains("/")){
+                                      var split = ward.split("/");
+                                      String wardName = split[0];
+                                      String position = split[1];
+                                      switch(position){
+                                        case "E":
+                                        ward = "$wardName East";
+                                          break;
+                                        case "W":
+                                          ward ="$wardName West";
+                                          break;
+                                        case "N":
+                                          ward ="$wardName North";
+                                          break;
+                                        case "S":
+                                          ward ="$wardName South";
+                                          break;
+                                        case "C":
+                                          ward ="$wardName Central";
+                                          break;
+                                      }
+                                    }
+                                    ward = "Ward " + ward;
+                                    
+                                    print("Formatted Ward: $ward");
+                                  }
                                 }
 
                                 setState(() => isProcessingImage = true);
@@ -396,7 +428,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
 
                                 setState(() => isSubmittingComplaint = true);
                                 String status = await mixtureofcalls(
-                                    context, imageLocation);
+                                    context, imageLocation, ward);
                                 setState(() => isSubmittingComplaint = false);
 
                                 Navigator.pop(context);
@@ -442,7 +474,28 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     );
   }
 
-  Future<String> store(File _image, GeoFirePoint imageLocation) async {
+  Future<String> getWard(String lat, String long) async{
+    try{
+    String url =
+          "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
+              lat.toString() +
+              "&longitude=" +
+              long.toString() +
+              "&localityLanguage=en";
+      final response = await http.get(url);
+      var responseData = json.decode(response.body);
+      String ward =  responseData['locality'].toString();
+      print("Locality mila: " + ward??"Empty response");
+      return ward;
+    }catch(e){
+      print("Error while retrieving ward from imageData");
+      print("ImageData:");
+      print("Lat: {lat.toString()}, Long: {long.toString()}");
+      return "";
+  }  
+}
+
+  Future<String> store(File _image, GeoFirePoint imageLocation, String ward) async {
     // print("Inside store function");
     // print("Upload docs wala user\n");
     // print(user);
@@ -459,14 +512,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     double imageLat = imageLocation.latitude;
     double imageLong = imageLocation.longitude;
     try {
-      ///TODO: Get ward Name and Id
-      String ward = "Ward A";
-      String wardId = "WardA#50ad3f7a-dea5-49aa-b27c-59b72aa0b1c2";
+      String wardId = wardIdMap[ward];
       final emailid = widget.auth.currentUserEmail();
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection("supervisors")
           .where("ward", isEqualTo: ward)
           .get();
+
       QueryDocumentSnapshot supervisorDoc = snapshot.docs.first;
       String supervisorName = supervisorDoc["name"];
       String supervisorEmail = supervisorDoc["email"];
@@ -499,8 +551,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'longitude': long.toString(),
         'location': _localityController.text.toString().trim(),
         'resolutionDateTime': null,
-        'issueRaisedDateTime':null,
-        'rejectedDateTime':null,
+        'issueReportedDateTime':null,
         'closedDateTime':null,
         'issueReassignedDateTime':null,
         'overdue': false,
@@ -522,9 +573,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   }
 
   Future<String> mixtureofcalls(
-      BuildContext context, GeoFirePoint imageLocation) async {
+      BuildContext context, GeoFirePoint imageLocation, String ward) async {
     print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
-    String status = await store(file, imageLocation);
+    String status = await store(file, imageLocation, ward);
     return status;
   }
 

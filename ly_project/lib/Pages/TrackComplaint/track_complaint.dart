@@ -27,6 +27,7 @@ class TrackComplaints extends StatefulWidget {
     @required this.longitude,
     @required this.status,
     @required this.supervisorImageUrl,
+    
   });
   @override
   _TrackComplaintsState createState() => _TrackComplaintsState();
@@ -58,6 +59,7 @@ class _TrackComplaintsState extends State<TrackComplaints>
             status: widget.status,
             supervisorImageUrl: widget.supervisorImageUrl
           ),
+          if(widget.status == "Resolved")
           Container(
             margin: EdgeInsets.symmetric(horizontal: 100, vertical: 40),
             child: ClipRRect(
@@ -118,18 +120,27 @@ class _TrackComplaintsState extends State<TrackComplaints>
     final user = widget.auth.currentUserEmail();
     try {
       if (widget.status == 'Resolved') {
+        //Change complaint status to "Closed"
         await FirebaseFirestore.instance
             .collection("complaints")
             .doc(widget.id)
-            .update({
-          "status": "Closed",
-        });
+            .set({
+              "status": "Closed",
+              "closedDateTime":DateTime.now().toString()
+              },SetOptions(merge : true)
+            );
+
+        //Delete Notification 
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user)
             .collection('notifications')
             .doc(widget.id)
             .delete();
+
+        // TODO: Update ward points and supervisor points.
+        // Combine all queries in a single transaction
+
         return "Status Updated";
       } else {
         return "Status not resolved";

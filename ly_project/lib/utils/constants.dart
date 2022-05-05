@@ -27,6 +27,34 @@ const WARDS = [
   'Ward T',
 ];
 
+const Map<String, String> wardIdMap = {
+  'Ward A': "WardA#50ad3f7a-dea5-49aa-b27c-59b72aa0b1c2",
+  'Ward B': "WardB#8007bb31-6571-4905-92ed-26788504d837",
+  'Ward C': "WardC#d9328d63-6ac3-48bd-8d87-565afa37d1c2",
+  'Ward D': "WardD#9fc00c88-02fa-4a3c-a577-198e9e7a008b",
+  'Ward E': "WardE#d2fa9120-7dd5-432d-be22-fd0de7f98986",
+  'Ward F North': "WardFNorth#e5f11f14-14e1-4d4f-bfd6-aded3eb5eb6b",
+  'Ward F South': "WardFSouth#86c808e9-6c75-4b3f-8e5f-1b82ee779fa7",
+  'Ward G North': "WardGNorth#320192df-ea17-4f0c-b792-be1b2821834a",
+  'Ward G South': "WardGSouth#484e9189-473e-4cf2-941c-5125e5173ee8",
+  'Ward H East': "WardHEast#9474ef81-82ac-4706-a3ae-a8dd12f98116",
+  'Ward H West': "WardHWest#4b9b4bbc-6caa-4d32-bac8-dd7af13a180d",
+  'Ward K East': "WardKEast#4e3d488a-6589-45d7-8b2d-efe1525d81e3",
+  'Ward K West': "WardKWest#053a621a-8036-40e0-b4c6-163553a3e702",
+  'Ward L': "WardL#986d2642-5377-401f-b6f1-93baea9cf6b4",
+  'Ward M East': "WardMEast#a7da5ad3-0763-4665-a07c-957faa1ff18c",
+  'Ward M West': "WardMWest#99adb54a-ce6c-4cf3-9398-c8d359a62b22",
+  'Ward N': "WardN#33dca927-7303-413f-9d0a-42504585d618",
+  'Ward P North': "WardPNorth#b64435f2-ebc2-446f-a20f-8d38f351a7d9",
+  'Ward P South': "WardPSouth#7e79e314-afb5-412d-9b82-39d6fd22e8b3",
+  'Ward R Central': "WardRCentral#abcceb1e-455b-44ba-9211-44d90943c44e",
+  'Ward R North': "WardRNorth#21596834-ab81-4fd6-a35b-e3ec64c28f7d",
+  'Ward R South': "WardRSouth#ce381886-7ce7-464c-a9b8-f3c1b02411e2",
+  'Ward S': "WardS#ea39ccad-b0ba-49ab-8755-2bcdde898327",
+  'Ward T': "WardT#bf0b3c37-a7ea-445b-bee9-2d4b2ed95651",
+  'Unassigned': "WardUnassigned#10ad3f7a-dea5-49aa-b27c-59b72aa0b1c2"
+};
+
 const LEADERBOARD_DURATIONS = [
   "Today",
   "This Week",
@@ -45,8 +73,8 @@ const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
 
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
-enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_RAISED, REJECTED}
-const statusString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Raised", "Rejected"];
+enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_REPORTED, REJECTED}
+const statusString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Reported", "Rejected"];
 
 const EMAIL_REGEX =
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";

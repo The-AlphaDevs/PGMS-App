@@ -271,6 +271,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             ],
                           ),
                           SizedBox(width: size.width * 0.03),
+                          widget.status == "In Progress" || widget.status == "Pending"
+                          ?  
                           Column(
                             children: [
                               Container(
@@ -304,8 +306,28 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                                     TextStyle(color: Colors.grey, fontSize: 10),
                               ),
                             ],
+                          )
+                          :
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children:[
+                              Text(
+                                upvoteCount.toString(),
+                                style:
+                                    TextStyle(color: Colors.grey[700], fontSize: 11),
+                                ),
+                              SizedBox(height: size.height * 0.008),
+
+                              Text(
+                                "Upvotes",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 10),
+                              ),
+                            ],
                           ),
+
                           SizedBox(width: size.width * 0.03),
+                          if(widget.status == "In Progress" || widget.status == "Pending")
                           InkWell(
                             onTap: () => print("Bookmarked!"),
                             borderRadius: BorderRadius.circular(20),
