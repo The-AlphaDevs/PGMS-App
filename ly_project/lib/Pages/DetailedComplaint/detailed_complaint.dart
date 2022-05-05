@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Models/ComplaintModel.dart';
 import 'package:ly_project/Pages/DetailedComplaint/FullScreenImage.dart';
 import 'package:ly_project/Pages/SupervisorScorecard/SupervisorScorecard.dart';
 import 'package:ly_project/Widgets/Map.dart';
@@ -12,54 +13,31 @@ import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
 
 class DetailComplaint extends StatefulWidget {
-  final id;
+
   final BaseAuth auth;
-  final status;
-  final image;
-  final date;
-  final supervisor;
-  final lat;
-  final long;
-  final complaint;
-  final location;
-  final description;
-  final citizenEmail;
   final docId;
-  final DocumentReference supervisorDocRef;
+  final Complaint complaint;
   final supervisorImageUrl;
-  final String wardId;
-  final bool overdue;
+
 
   DetailComplaint({
-    @required this.id,
     @required this.auth,
     @required this.complaint,
-    @required this.description,
-    @required this.location,
-    @required this.status,
-    @required this.image,
-    @required this.date,
-    @required this.supervisor,
-    @required this.lat,
-    @required this.long,
-    @required this.citizenEmail,
     @required this.docId,
-    @required this.supervisorDocRef,
     @required this.supervisorImageUrl,
-    @required this.wardId, 
-    @required this.overdue,
   });
   @override
   _DetailComplaintState createState() => _DetailComplaintState();
 }
 
 class _DetailComplaintState extends State<DetailComplaint> {
+  Complaint complaint;
+
   String id;
   String status;
   String image;
   String date;
   String supervisor;
-  String complaint;
   String location;
   double latitude;
   double longitude;
@@ -77,11 +55,12 @@ class _DetailComplaintState extends State<DetailComplaint> {
   @override
   void initState() {
     super.initState();
-    latitude = double.parse(widget.lat);
-    longitude = double.parse(widget.long);
-    String complaint = widget.complaint.toString();
+    complaint = widget.complaint;
+    latitude = double.parse(complaint.latitude);
+    longitude = double.parse(complaint.longitude);
+    String complaintStr = complaint.complaint.toString();
     appBarTitle =
-        "${complaint.substring(0, complaint.length > 25 ? 25 : complaint.length)} ${complaint.length > 25 ? '...' : ''}";
+        "${complaintStr.substring(0, complaintStr.length > 25 ? 25 : complaintStr.length)} ${complaintStr.length > 25 ? '...' : ''}";
   }
 
   @override
@@ -113,7 +92,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     ),
                     child: ImageFullScreenWrapperWidget(
                       child: CachedNetworkImage(
-                        imageUrl: widget.image,
+                        imageUrl: complaint.imageData.url,
                         placeholder: (context, url) => Center(
                             child: Container(
                                 height: 20,
@@ -150,7 +129,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 children: [
                   // sendNotifButton(context, screenSize),
                   trackComplaintButton(context, screenSize),
-                  if(widget.status == "Resolved")
+                  if(complaint.status == "Resolved")
                       raiseIssueButton(context, screenSize)
                 ],
               ),
@@ -199,7 +178,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                           child: StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection("complaints")
-                                .doc(widget.id)
+                                .doc(widget.docId)
                                 .collection("comments")
                                 .snapshots(),
                             builder: (BuildContext context,
@@ -267,7 +246,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ],
                 ),
               ),
-              widget.status == "In Progress" || widget.status == "Pending"
+              complaint.status == "In Progress" || complaint.status == "Pending"
               ?
               IconButton(
                 splashColor: Colors.transparent,
@@ -280,7 +259,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ,
             ],
           ),
-          if(widget.status == "In Progress" || widget.status == "Pending")
+          if(complaint.status == "In Progress" || complaint.status == "Pending")
           Form(
             key: _formKey,
             child: Row(
@@ -365,7 +344,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
       print("Photo: " + _photo.toString());
       await FirebaseFirestore.instance
           .collection('complaints')
-          .doc(widget.id)
+          .doc(widget.docId)
           .collection('comments')
           .doc()
           .set({
@@ -394,7 +373,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           Container(
             width: screenSize.width * 0.8,
             child: Text(
-              widget.complaint ?? "Complaint Title",
+              complaint.complaint ?? "Complaint Title",
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black,
@@ -421,7 +400,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
               Text(
-                widget.location ?? "Complaint Location",
+                complaint.location ?? "Complaint Location",
                 style: TextStyle(fontSize: 15, color: Colors.grey[800]),
               ),
             ],
@@ -442,7 +421,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
               Flexible(
                 child: Text(
-                  widget.description ?? "Complaint Description",
+                  complaint.description ?? "Complaint Description",
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.black87,
@@ -466,11 +445,11 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
               Text(
-                widget.status,
+                complaint.status,
                 style: TextStyle(
                   fontSize: 15,
-                  color: COMPLAINT_STATUS_COLOR_MAP[widget.status] != null
-                      ? COMPLAINT_STATUS_COLOR_MAP[widget.status]
+                  color: COMPLAINT_STATUS_COLOR_MAP[complaint.status] != null
+                      ? COMPLAINT_STATUS_COLOR_MAP[complaint.status]
                       : Colors.deepOrange,
                   fontWeight: FontWeight.bold,
                 ),
@@ -492,7 +471,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
               InkWell(
-                onTap: () => widget.supervisor != null ? showScorecard() : {},
+                onTap: () => complaint.supervisorName != null ? showScorecard() : {},
                 child: Container(
                   padding: EdgeInsets.only(
                       bottom: 1), //Space between text and underline
@@ -506,7 +485,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ), //width of the underline
                   child: Row(
                     children: [
-                      Text(widget.supervisor ?? "Supervisor Name",
+                      Text(complaint.supervisorName ?? "Supervisor Name",
                           style:
                               TextStyle(fontSize: 15, color: Colors.black87)),
                       SizedBox(width: 3),
@@ -536,7 +515,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
               Text(
-                DateFormat.yMMMMd().format(DateTime.parse(widget.date)),
+                DateFormat.yMMMMd().format(DateTime.parse(complaint.dateTime)),
                 style: TextStyle(fontSize: 15, color: Colors.grey[800]),
               ),
             ],
@@ -556,7 +535,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                 ),
               ),
               Text(
-                DateFormat.jms().format(DateTime.parse(widget.date)),
+                DateFormat.jms().format(DateTime.parse(complaint.dateTime)),
                 style: TextStyle(fontSize: 15, color: Colors.grey[800]),
               ),
             ],
@@ -581,17 +560,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     MaterialPageRoute(
                         builder: (context) => TrackComplaints(
                               auth: widget.auth,
-                              id: widget.id,
-                              complaint: widget.complaint,
-                              date: widget.date,
-                              location: widget.location,
-                              latitude: latitude,
-                              longitude: longitude,
-                              status: widget.status,
-                              supervisorImageUrl: widget.supervisorImageUrl, 
-                              overdue: widget.overdue, 
-                              supervisorDocRef: widget.supervisorDocRef, 
-                              wardId: widget.wardId,
+                              complaint: complaint,
+                              supervisorImageUrl: widget.supervisorImageUrl,
                             )))
               },
               color: DARK_BLUE,
@@ -657,7 +627,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
 
   showScorecard() async {
     Dialog scorecard = Dialog(
-        child: SupervisorScorecard(supervisorDocRef: widget.supervisorDocRef));
+        child: SupervisorScorecard(supervisorDocRef: complaint.supervisorDocRef));
     await showDialog(context: context, builder: (_) => scorecard);
   }
 
@@ -778,7 +748,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   //                   .doc(widget.id)
   //                   .set({
   //                 'id': widget.id,
-  //                 'complaint': widget.complaint,
+  //                 'complaint': complaint.complaint,
   //                 'location': widget.location,
   //                 'latitude': widget.lat.toString(),
   //                 'longitude': widget.long.toString(),

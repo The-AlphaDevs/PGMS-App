@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ly_project/Models/ComplaintModel.dart';
 import 'package:ly_project/Pages/Feed/feedCard.dart';
 import 'package:ly_project/Pages/Feed/feedCardShimmer.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -82,26 +83,10 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab> {
                             : snapshot.data.docs[index]['supervisorImageData']
                                 ['url'];
                     return ComplaintOverviewCard(
-                        upvoteCount: snapshot.data.docs[index]["upvoteCount"],
                         auth: widget.auth,
-                        id: snapshot.data.docs[index]["id"],
+                        complaint: Complaint.fromJSON( snapshot.data.docs[index].data()),
                         docId: snapshot.data.docs[index].id,
-                        complaint: snapshot.data.docs[index]["complaint"],
-                        date: snapshot.data.docs[index]["dateTime"],
-                        status: snapshot.data.docs[index]["status"],
-                        image: snapshot.data.docs[index]["imageData"]["url"],
-                        location: snapshot.data.docs[index]["imageData"]
-                            ["location"],
-                        supervisorDocRef: snapshot.data.docs[index]
-                            ["supervisorDocRef"],
-                        supervisor: snapshot.data.docs[index]["supervisorName"],
-                        lat: snapshot.data.docs[index]["latitude"],
-                        long: snapshot.data.docs[index]["longitude"],
-                        description: snapshot.data.docs[index]["description"],
-                        citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                         supervisorImageUrl: supervisorImageUrl,
-                        overdue: snapshot.data.docs[index]["overdue"], 
-                        wardId: snapshot.data.docs[index]["wardId"],
                         );
                   },
                 );

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ly_project/Models/ComplaintModel.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
 
@@ -13,7 +14,6 @@ class NotifsCard extends StatefulWidget {
   final status;
   final BaseAuth auth;
   final supervisorImageUrl;
-
 
   NotifsCard({
     @required this.auth,
@@ -43,23 +43,15 @@ class _NotifsCardState extends State<NotifsCard> {
           QuerySnapshot complaintSnapshot = await FirebaseFirestore.instance.collection("complaints").where("id", isEqualTo: widget.id).get();
           if(complaintSnapshot != null){
             Map<String, dynamic> snapshot = complaintSnapshot.docs.first.data();
+            Complaint complaint = Complaint.fromJSON(snapshot);
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => 
                     TrackComplaints(
                       auth: widget.auth,
-                      id: snapshot["id"],
-                      complaint: snapshot["complaint"],
-                      date: snapshot["dateTime"],
-                      location: snapshot["imageData"]["location"],
-                      latitude: double.parse(snapshot["latitude"]),
-                      longitude: double.parse(snapshot["longitude"]),
-                      status: snapshot["status"],
+                      complaint: complaint,
                       supervisorImageUrl: snapshot["supervisorImageData"]["url"],
-                      overdue: snapshot["overdue"], 
-                      supervisorDocRef: snapshot["supervisorDocRef"],
-                      wardId: snapshot["wardId"],
                     ),
                 ),
             );

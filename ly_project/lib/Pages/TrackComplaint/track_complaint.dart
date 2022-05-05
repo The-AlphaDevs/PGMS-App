@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ly_project/Models/ComplaintModel.dart';
 import 'package:ly_project/Pages/TrackComplaint/ComplaintTimeline.dart';
 import 'package:ly_project/Pages/TrackComplaint/locationCard.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -8,33 +9,14 @@ import 'package:ly_project/Utils/colors.dart';
 import 'package:ly_project/utils/constants.dart';
 
 class TrackComplaints extends StatefulWidget {
-  final id;
-  final complaint;
-  final date;
-  final location;
-  final latitude;
-  final longitude;
-  final status;
+  final Complaint complaint;
   final BaseAuth auth;
-  final supervisorImageUrl;
-  final DocumentReference supervisorDocRef;
-  final String wardId;
-  final bool overdue;
+  final String supervisorImageUrl;
 
   TrackComplaints({
     @required this.auth,
-    @required this.id,
     @required this.complaint,
-    @required this.date,
-    @required this.location,
-    @required this.latitude,
-    @required this.longitude,
-    @required this.status,
-    @required this.supervisorImageUrl, 
-    @required this.supervisorDocRef, 
-    @required this.wardId, 
-    @required this.overdue,
-    
+    @required this.supervisorImageUrl,
   });
   @override
   _TrackComplaintsState createState() => _TrackComplaintsState();
@@ -42,6 +24,14 @@ class TrackComplaints extends StatefulWidget {
 
 class _TrackComplaintsState extends State<TrackComplaints>
     with SingleTickerProviderStateMixin {
+  Complaint complaint;
+  
+  @override
+  void initState(){
+    super.initState();
+    complaint = widget.complaint;
+  }
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -54,19 +44,19 @@ class _TrackComplaintsState extends State<TrackComplaints>
         children: [
           SizedBox(height: size.height * 0.05),
           ComplaintCard(
-            complaint: widget.complaint,
-            date: widget.date,
-            location: widget.location,
-            latitude: widget.latitude,
-            longitude: widget.longitude,
+            complaint: complaint.complaint,
+            date: complaint.dateTime,
+            location: complaint.location,
+            latitude: double.parse(complaint.latitude),
+            longitude: double.parse(complaint.longitude),
           ),
           SizedBox(height: size.height * 0.05),
           ComplaintTimeline(
-            id: widget.id,
-            status: widget.status,
+            id: complaint.id,
+            status: complaint.status,
             supervisorImageUrl: widget.supervisorImageUrl
           ),
-          if(widget.status == "Resolved")
+          if(complaint.status == "Resolved")
           Container(
             margin: EdgeInsets.symmetric(horizontal: 100, vertical: 40),
             child: ClipRRect(
@@ -126,14 +116,14 @@ class _TrackComplaintsState extends State<TrackComplaints>
   Future<String> closeComplaint() async {
     final user = widget.auth.currentUserEmail();
     try {
-      DocumentReference complaintDocRef = FirebaseFirestore.instance.collection("complaints").doc(widget.id);
-      DocumentReference wardDocRef = FirebaseFirestore.instance.collection("wards").doc(widget.wardId);
-      DocumentReference supervisorDocRef = widget.supervisorDocRef;
-      DocumentReference notificationDocRef = FirebaseFirestore.instance.collection('users').doc(user).collection('notifications').doc(widget.id);
+      DocumentReference complaintDocRef = FirebaseFirestore.instance.collection("complaints").doc(complaint.id);
+      DocumentReference wardDocRef = FirebaseFirestore.instance.collection("wards").doc(complaint.wardId);
+      DocumentReference supervisorDocRef = complaint.supervisorDocRef;
+      DocumentReference notificationDocRef = FirebaseFirestore.instance.collection('users').doc(user).collection('notifications').doc(complaint.id);
       
-      int points = widget.overdue ? OVERDUE_NO_ISSUE_COMPLETION_POINTS : NO_OVERDUE_NO_ISSUE_COMPLETION_POINTS;
+      int points = complaint.overdue ? OVERDUE_NO_ISSUE_COMPLETION_POINTS : NO_OVERDUE_NO_ISSUE_COMPLETION_POINTS;
       
-      if (widget.status == 'Resolved') {
+      if (complaint.status == 'Resolved') {
         await FirebaseFirestore.instance.runTransaction((transaction) async {
           /// Change complaint status to "Closed"
           transaction.set(complaintDocRef,
@@ -155,7 +145,7 @@ class _TrackComplaintsState extends State<TrackComplaints>
           /// if the complaint was overdue, decrement overdue complaints by 1
           ///
           ///  Award supervisor the points for completing the work
-          if(widget.overdue){
+          if(complaint.overdue){
             transaction.update(supervisorDocRef, {
               "complaintsOverdue": FieldValue.increment(-1),
               "complaintsCompleted": FieldValue.increment(1),

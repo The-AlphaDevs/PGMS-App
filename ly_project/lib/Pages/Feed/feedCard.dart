@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ly_project/Models/ComplaintModel.dart';
 import 'package:ly_project/Pages/DetailedComplaint/detailed_complaint.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
@@ -8,44 +9,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
 class ComplaintOverviewCard extends StatefulWidget {
-  final id;
   final BaseAuth auth;
-  final complaint;
-  final status;
-  final date;
-  final image;
-  final location;
-  final supervisor;
-  final lat;
-  final long;
-  final description;
-  final citizenEmail;
-  final docId;
-  final upvoteCount;
-  final supervisorDocRef;
-  final supervisorImageUrl;
-  final String wardId;
-  final overdue;
+  final Complaint complaint;
+  final String docId;
+  final String supervisorImageUrl;
 
   ComplaintOverviewCard({
-    @required this.id,
-    @required this.docId,
     @required this.auth,
     @required this.complaint,
-    @required this.description,
-    @required this.date,
-    @required this.status,
-    @required this.image,
-    @required this.location,
-    @required this.supervisor,
-    @required this.lat,
-    @required this.long,
-    @required this.citizenEmail,
-    @required this.upvoteCount,
-    @required this.supervisorDocRef,
+    @required this.docId,
     @required this.supervisorImageUrl, 
-    @required this.wardId, 
-    @required this.overdue,
   });
   @override
   _ComplaintOverviewCardState createState() => _ComplaintOverviewCardState();
@@ -56,6 +29,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   String complaintId;
   String userEmail;
   int upvoteCount;
+
+  Complaint complaint;
+
 
   Future<void> updateUpvoteCount(DocumentReference upvoteDoc,
       DocumentReference complaintDoc, int updateValue) async {
@@ -147,8 +123,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
   void initState() {
     super.initState();
     userEmail = widget.auth.currentUserEmail();
+    complaint = widget.complaint;
     complaintId = widget.docId;
-    upvoteCount = widget.upvoteCount;
+    upvoteCount = complaint.getUpvoteCount;
     checkIfUpvoted();
   }
 
@@ -169,22 +146,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
               MaterialPageRoute(
                 builder: (context) => (DetailComplaint(
                   auth: widget.auth,
-                  id: widget.id,
                   docId: widget.docId,
-                  complaint: widget.complaint,
-                  description: widget.description,
-                  date: widget.date,
-                  status: widget.status,
-                  image: widget.image,
-                  supervisor: widget.supervisor,
-                  supervisorDocRef: widget.supervisorDocRef,
-                  location: widget.location,
-                  lat: widget.lat,
-                  long: widget.long,
-                  citizenEmail: widget.citizenEmail,
-                  supervisorImageUrl:widget.supervisorImageUrl, 
-                  overdue: widget.overdue, 
-                  wardId: widget.wardId,
+                  complaint: complaint,
+                  supervisorImageUrl: widget.supervisorImageUrl,
                 )),
               ),
             );
@@ -203,10 +167,10 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.complaint.toString().length > 50
-                            ? widget.complaint.toString().substring(0, 51) +
+                        complaint.complaint.toString().length > 50
+                            ? complaint.complaint.toString().substring(0, 51) +
                                 " ..."
-                            : widget.complaint.toString(),
+                            : complaint.complaint.toString(),
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
@@ -218,7 +182,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           SizedBox(width: 5),
                           Flexible(
                             child: Text(
-                              "Posted by " + widget.citizenEmail,
+                              "Posted by " + complaint.citizenEmail
+                              ,
                               overflow: TextOverflow.visible,
                               style: TextStyle(
                                   fontSize: 10,
@@ -237,7 +202,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           SizedBox(width: 5),
                           Text(
                             DateFormat.yMMMMd()
-                                .format(DateTime.parse(widget.date)),
+                                .format(DateTime.parse(complaint.dateTime)),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 10,
@@ -256,14 +221,14 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             children: [
                               SizedBox(height: size.height * 0.005),
                               Text(
-                                widget.status,
+                                complaint.status,
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: COMPLAINT_STATUS_COLOR_MAP[
-                                              widget.status] !=
+                                              complaint.status] !=
                                           null
                                       ? COMPLAINT_STATUS_COLOR_MAP[
-                                          widget.status]
+                                          complaint.status]
                                       : Colors.deepOrange,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -277,7 +242,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             ],
                           ),
                           SizedBox(width: size.width * 0.03),
-                          widget.status == "In Progress" || widget.status == "Pending"
+                          complaint.status == "In Progress" || complaint.status == "Pending"
                           ?  
                           Column(
                             children: [
@@ -333,7 +298,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                           ),
 
                           SizedBox(width: size.width * 0.03),
-                          if(widget.status == "In Progress" || widget.status == "Pending")
+                          if(complaint.status == "In Progress" || complaint.status == "Pending")
                           InkWell(
                             onTap: () => print("Bookmarked!"),
                             borderRadius: BorderRadius.circular(20),
@@ -349,7 +314,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   width: size.width * 0.35,
                   height: size.height * 0.15,
                   child: CachedNetworkImage(
-                    imageUrl: widget.image,
+                    imageUrl: complaint.imageData.url,
                     placeholder: (context, url) => Center(
                       child: Container(
                         height: 25,
