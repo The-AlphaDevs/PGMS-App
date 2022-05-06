@@ -379,7 +379,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   ward =  await getWard(imageLocation.latitude.toString(), imageLocation.longitude.toString());
                                   print("Locality mila: " + ward??"Empty response");
                                   
-                                  if(ward.isEmpty || ward == ""){
+                                  if(ward.isEmpty || ward == "" || ward == "Mumbai Suburban district" || !ward.contains("Ward")){
                                     ward = "unassigned";
                                   }else{
                                     ward = ward.trim();

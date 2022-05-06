@@ -124,7 +124,7 @@ class Complaint{
             supervisorImageData: supervisorImageData,
             supervisorName: json["supervisorName"],
             upvoteCount: json["upvoteCount"],
-            ward: json[""],
+            ward: json["ward"],
             wardId: json["wardId"],
           );
         }
