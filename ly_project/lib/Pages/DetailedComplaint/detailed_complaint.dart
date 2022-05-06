@@ -411,6 +411,26 @@ class _DetailComplaintState extends State<DetailComplaint> {
               Container(
                 width: screenSize.width * 0.25,
                 child: Text(
+                  'Ward: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                complaint.ward ?? "Complaint Ward",
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
                   'Description: ',
                   style: TextStyle(
                     fontSize: 15,
@@ -470,7 +490,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ),
                 ),
               ),
-              InkWell(
+              Flexible(child:InkWell(
                 onTap: () => complaint.supervisorName != null ? showScorecard() : {},
                 child: Container(
                   padding: EdgeInsets.only(
@@ -483,11 +503,14 @@ class _DetailComplaintState extends State<DetailComplaint> {
                       ),
                     ),
                   ), //width of the underline
-                  child: Row(
+                  child:
+                      Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(complaint.supervisorName ?? "Supervisor Name",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.black87)),
+                       Flexible(child:Text(complaint.supervisorName ?? "Supervisor Name",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black87)),),
+                    
                       SizedBox(width: 3),
                       Icon(
                         Icons.open_in_new,
@@ -497,6 +520,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     ],
                   ),
                 ),
+              ),
               ),
             ],
           ),

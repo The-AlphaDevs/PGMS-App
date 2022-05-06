@@ -5,6 +5,7 @@ import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,6 +19,9 @@ import 'package:uuid/uuid.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as Im;
+import 'package:path_provider/path_provider.dart';
+import 'dart:math' as Math;
 
 class RaiseComplaint extends StatefulWidget {
   final BaseAuth auth;
@@ -124,6 +128,37 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
       showSnackbar("Something went wrong while selecting the image");
     }
   }
+
+  Future<File> testCompressAndGetFile(File file) async {
+    var target = "C:/Projects/PGMS/PGMS-App/ly_project/assets/citizenComplaint.jpeg";
+    print("file abolute path: " + file.absolute.path.toString());
+    var result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        target,
+        quality: 90,
+      );
+
+    print("IMAGE COMPRESSED");
+    print(file.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
+
+  Future<File> compressImage() async {
+  // File imageFile = await ImagePicker.pickImage();
+  final tempDir = await getTemporaryDirectory();
+  final path = tempDir.path;
+  int rand = new Math.Random().nextInt(10000);
+
+  Im.Image image = Im.decodeImage(file.readAsBytesSync());
+  // Im.Image smallerImage = Im.copyResize(image, 500); // choose the size here, it will maintain aspect ratio
+  
+  var compressedImage = new File('$path/img_$rand.jpg')..writeAsBytesSync(Im.encodeJpg(image, quality: 80));
+  print("IMAGE COMPRESSED");
+  print(compressedImage.lengthSync());
+  return compressedImage;
+}
 
   void _scrollToTop() {
     _scrollController.animateTo(
@@ -360,7 +395,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                     return;
                                   },
                                 );
-                                String ward = "unassigned";
+                                String ward = "Unassigned";
                                 if (imageLocation == null) {
                                   await _showErrorDialog(context, "Error",
                                       "Unable to get image location. Please select an image containg location metadata.");
@@ -380,7 +415,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   print("Locality mila: " + ward??"Empty response");
                                   
                                   if(ward.isEmpty || ward == "" || ward == "Mumbai Suburban district" || !ward.contains("Ward")){
-                                    ward = "unassigned";
+                                    ward = "Unassigned";
                                   }else{
                                     ward = ward.trim();
                                     ward = ward.replaceAll("Ward", "");
@@ -408,9 +443,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                       }
                                     }
                                     ward = "Ward " + ward;
-                                    
-                                    print("Formatted Ward: $ward");
                                   }
+                                  print("Formatted Ward: $ward");
                                 }
 
                                 setState(() => isProcessingImage = true);
@@ -427,8 +461,10 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                 _showDialog(context);
 
                                 setState(() => isSubmittingComplaint = true);
-                                String status = await mixtureofcalls(
-                                    context, imageLocation, ward);
+
+                                                              
+
+                                String status = await mixtureofcalls(context, imageLocation, ward);
                                 setState(() => isSubmittingComplaint = false);
 
                                 Navigator.pop(context);
@@ -508,7 +544,12 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
     // print(imageUrl);
 
     String userId = await widget.auth.currentUser();
-    imageUrl = await StorageServices.uploadImage(userId, _image);
+
+    //image Compression
+    // File result = await testCompressAndGetFile(file);
+    File result = await compressImage();
+
+    imageUrl = await StorageServices.uploadImage(userId, result);
     double imageLat = imageLocation.latitude;
     double imageLong = imageLocation.longitude;
     try {
@@ -581,7 +622,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   }
 
   Future<String> mixtureofcalls(
-      BuildContext context, GeoFirePoint imageLocation, String ward) async {
+    BuildContext context, GeoFirePoint imageLocation, String ward) async {
     print("mixtureofcalls Function Call!!!!!!!!!!!!!!!!!");
     String status = await store(file, imageLocation, ward);
     return status;
