@@ -336,7 +336,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        sendNotifButton(context, screenSize),
+                        // sendNotifButton(context, screenSize),
                         resolveComplaintButton(context, screenSize),
                       ],
                     )
@@ -401,7 +401,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add, color: Colors.white, size: 20),
+                        Icon(Icons.check_box_outlined, color: Colors.white, size: 20),
                         SizedBox(width: screenSize.width * 0.01),
                         Text("Solve Complaint",
                             style: TextStyle(color: Colors.white))

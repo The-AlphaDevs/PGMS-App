@@ -319,7 +319,7 @@ class StatsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                   child: Text(title,
                       style: TextStyle(fontSize: 16, color: Colors.grey[900]),
                       textAlign: TextAlign.center)),

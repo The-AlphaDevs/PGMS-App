@@ -64,7 +64,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab>
                   // print("snapshot.data.docs[index]['supervisorImageData']");
                   // print(snapshot.data.docs[index]['supervisorImageData']);
                   String supervisorImageUrl = snapshot.data.docs[index]
-                                  ['supervisorImageData'] ==
+                                  ['supervisorImageData']["url"] ==
                               null
                           ? "null"
                           : snapshot.data.docs[index]['supervisorImageData']
