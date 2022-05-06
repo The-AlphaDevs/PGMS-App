@@ -74,7 +74,7 @@ const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
 enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_REPORTED, REJECTED}
-const statusWithNoIssuesString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Reported"];
+const statusWithNoIssuesString = ["Pending", "In Progress", "Resolved", "Closed"];
 const statusWithIssueString = ["Pending", "In Progress", "Resolved", "Issue Reported", "Closed"];
 const statusForRejectedString = ["Pending", "Rejected"];
 
@@ -186,7 +186,7 @@ const Map<String, dynamic> SUPERVISOR_LEVELS = {
 /// tl means timeline (Checkout `ComplaintTimeline.dart`)
 
 Map <String, String> tlCompleteTitles = {
-  "Pending":  "Complaint Approved",
+  "Pending":  "Complaint Registered",
   "In Progress":  "Pothole Filled",
   "Resolved": "Complaint Resolved",
   "Closed": "Complaint Closed",
@@ -205,13 +205,13 @@ Map <String, String> tlOngoingTitles = {
 
 Map <String, String> tlIncompleteTitles = {
   "In Progress":  "Work not started",
-  "Resolved": "Work yet to be completed",
+  "Resolved": "Work is yet to be completed",
   "Closed": "Complaint Not Closed",
   "Issue Reported":"No Issue Reported",
 };
 
 Map <String, String> tlCompleteMessages = {
-  "Pending": "The complaint has been approved by the supervisor" , 
+  "Pending": "The complaint has been submitted to the supervisor" , 
   "In Progress": "Pothole filling is complete.",
   "Resolved": "The complaint has been marked as completed by the supervisor.  You can close it if you find the work done to be satisfactory.",
   "Closed": "You closed the complaint.",
