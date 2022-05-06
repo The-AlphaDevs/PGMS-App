@@ -5,7 +5,7 @@ final Map<String, Color> COMPLAINT_STATUS_COLOR_MAP = {
   'Rejected': Colors.red,
   'In Progress': Colors.blue,
   'Resolved': Colors.green,
-  'Closed': Colors.green[900],
+  'Closed': Colors.deepPurple,
   'Issue Reported': Colors.purple[400],
 };
 

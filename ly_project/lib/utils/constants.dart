@@ -74,7 +74,9 @@ const Map<String, String> L_DURATIONS_TO_DB_FIELD_MAP = {
 const OCCUPATIONS = ["Service", "Student", "Business", "Other", "Housewife"];
 
 enum Stauts {PENDING, IN_PROGRESS, RESOLVED, CLOSED, ISSUE_REPORTED, REJECTED}
-const statusString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Reported", "Rejected"];
+const statusWithNoIssuesString = ["Pending", "In Progress", "Resolved", "Closed", "Issue Reported"];
+const statusWithIssueString = ["Pending", "In Progress", "Resolved", "Issue Reported", "Closed"];
+const statusForRejectedString = ["Pending", "Rejected"];
 
 // const OVERDUE_NO_ISSUE = "Overdue-No-Issues-Complaint-Closure";
 // const NO_OVERDUE_NO_ISSUE = "No-Overdue-No-Issues-Complaint-Closure";
@@ -179,4 +181,56 @@ const Map<String, dynamic> SUPERVISOR_LEVELS = {
       "levelName": "Godlevel"
     }
   }
+};
+
+/// tl means timeline (Checkout `ComplaintTimeline.dart`)
+
+Map <String, String> tlCompleteTitles = {
+  "Pending":  "Complaint Approved",
+  "In Progress":  "Pothole Filled",
+  "Resolved": "Complaint Resolved",
+  "Closed": "Complaint Closed",
+  "Issue Reported": "Issue Reported",
+  "Rejected": "Complaint Rejected"
+};
+
+Map <String, String> tlOngoingTitles = {
+  "Pending":  "Pending for approval",
+  "In Progress":  "Work In Progress",
+  "Resolved": "Work Done By BMC",
+  "Closed": "Complaint Closed",
+  "Issue Reported": "Issue Reported",
+  "Rejected": "Complaint Rejected"
+};
+
+Map <String, String> tlIncompleteTitles = {
+  "In Progress":  "Work not started",
+  "Resolved": "Work yet to be completed",
+  "Closed": "Complaint Not Closed",
+  "Issue Reported":"No Issue Reported",
+};
+
+Map <String, String> tlCompleteMessages = {
+  "Pending": "The complaint has been approved by the supervisor" , 
+  "In Progress": "Pothole filling is complete.",
+  "Resolved": "The complaint has been marked as completed by the supervisor.  You can close it if you find the work done to be satisfactory.",
+  "Closed": "You closed the complaint.",
+  "Issue Reported":"You raised an issue about the work done.",
+  "Rejected": "The complaint has been rejected.\n\nPlease make sure that similar complaint has not been filed before. Do not report false issues to the admin."
+};
+
+Map <String, String> tlIncompleteMessages = {
+  "In Progress": "The pothole is yet to be filled.",
+  "Resolved": "The complaint is yet to be resolved.",
+  "Issue Reported": "No issues raised yet.",
+  "Closed": "You will be able to close the complaint once it is resolved.",
+};
+
+Map <String, String> tlOngoingMessages = {
+  "Pending": "Your complaint is yet to be approved by the supervisor. The work will begin after its approval." , 
+  "In Progress": "Pothole filling is in progress..",
+  "Resolved": "Complaint has been marked as completed by the supervisor. You can close it if you find the work done to be satisfactory.",
+  "Closed": "The complaint has been resolved and closed successfully.",
+  "Issue Reported":"You raised an issue about the work done. The admin will take further necessary actions.",
+  "Rejected": "The complaint has been rejected.\n\nPlease make sure that similar complaint hsa not been filed before. Do not report fake issue to the admin."
 };

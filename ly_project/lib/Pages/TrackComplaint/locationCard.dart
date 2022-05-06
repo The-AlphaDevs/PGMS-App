@@ -38,7 +38,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(25.0),
       child: Card(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 6),
           elevation: 6,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(11),
@@ -57,7 +57,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.complaint,
@@ -67,11 +67,8 @@ class _ComplaintCardState extends State<ComplaintCard> {
                             fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: size.height*0.02,
+                        height: size.height*0.015,
                       ),
-                      
-
-                      SizedBox(height: 10),
                       
                       Flexible(
                         flex: 10,
@@ -86,12 +83,12 @@ class _ComplaintCardState extends State<ComplaintCard> {
                       ),
 
                       SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
 
                       Row(
                         
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
                             Icons.calendar_today,
