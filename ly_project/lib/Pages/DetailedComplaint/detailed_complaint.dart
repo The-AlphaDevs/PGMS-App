@@ -1,19 +1,23 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/Scorecard.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ly_project/Services/ImageLocationServices.dart';
 import 'package:ly_project/Services/PredictonServices.dart';
 import 'package:ly_project/Services/StorageServices.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/Pages/DetailedComplaint/FullScreenImage.dart';
 import 'package:ly_project/Widgets/Map.dart';
 import 'package:ly_project/utils/colors.dart';
+
 
 class DetailComplaint extends StatefulWidget {
   final id;
@@ -74,6 +78,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String fileUrl;
 
   File file;
+    double lat, long;
+  Map<String, IfdTag> imgTags = {};
 
   String imageUrl =
       "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
@@ -128,6 +134,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
       onPressed: () async {
         try {
           await changeStatus(true);
+          await FirebaseFirestore.instance.collection('supervisors').doc(widget.supervisorEmail).update({'complaintsAssigned': FieldValue.increment(1)});
           Navigator.pop(context, null);
           Navigator.pop(context, null);
         } catch (e) {
@@ -382,7 +389,33 @@ class _DetailComplaintState extends State<DetailComplaint> {
                             "Cannot resolve this complaint since pothole is detected in the image.");
                         return;
                       }
-
+                      GeoFirePoint imageLocation =
+                                    await ImageLocationServices
+                                        .getImageLocation(
+                                  file: file,
+                                  setImageMetadata: (tags) => imgTags = tags,
+                                  errorCallback: (errorMessage) async {
+                                    await _showErrorDialog(
+                                        context, "Error", errorMessage);
+                                    return;
+                                  },
+                                );
+                                String ward = "unassigned";
+                                if (imageLocation == null) {
+                                  await _showErrorDialog(context, "Error",
+                                      "Unable to get image location. Please select an image containg location metadata.");
+                                  return;
+                                } else {
+                                  print("image ka lat: " +
+                                      imageLocation.latitude.toString());
+                                  print("image ka long: " +
+                                      imageLocation.longitude.toString());
+                                  
+                                  setState((){
+                                    lat = imageLocation.latitude;
+                                    long = imageLocation.longitude;
+                                  });
+                                }
                       _showDialog(context);
 
                       setState(() => isSubmittingComplaint = true);
@@ -702,11 +735,12 @@ class _DetailComplaintState extends State<DetailComplaint> {
           .set({
         'supervisorImageData': {
           'dateTime': DateTime.now().toString(),
-          'lat': 100,
-          'long': 100,
+          'lat': lat,
+          'long': long,
           'submittedBy': emailid,
           'userType': 'supervisor',
           'url': imageUrl,
+          'location': null,
         },
         'resolutionDateTime': DateTime.now().toString(),
         'status': 'Resolved',

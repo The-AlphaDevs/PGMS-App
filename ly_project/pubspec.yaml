@@ -43,11 +43,13 @@ dependencies:
   awesome_dialog: ^1.3.2
   pie_chart: ^4.0.1
   flutter_image_compress: ^0.7.0
+  exif: ^1.0.3
 
   cloud_firestore: ^0.16.0+1
   firebase_storage: ^7.0.0
   firebase_auth: ^0.20.1
   top_modal_sheet: ^1.0.0
+  geoflutterfire: ^2.2.2
 
   tflite: ^1.0.6
   # firebase_messaging: ^5.0.2
