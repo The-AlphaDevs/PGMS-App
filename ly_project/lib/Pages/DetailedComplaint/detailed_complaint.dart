@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ly_project/Pages/Comments/commentsCard.dart';
 import 'package:ly_project/Services/auth.dart';
 import 'package:ly_project/utils/colors.dart';
+import 'package:geolocator/geolocator.dart';
 
 class DetailComplaint extends StatefulWidget {
 
@@ -45,6 +46,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String _name = "";
   String _photo = "";
   String appBarTitle = "";
+  double distanceInMeters;
   final _formKey = GlobalKey<FormState>();
   final _issueFormKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -63,10 +65,15 @@ class _DetailComplaintState extends State<DetailComplaint> {
         "${complaintStr.substring(0, complaintStr.length > 25 ? 25 : complaintStr.length)} ${complaintStr.length > 25 ? '...' : ''}";
   }
 
+  void printDistance(){
+    distanceInMeters = Geolocator.distanceBetween(19.0729945, 72.89921259972223, 19.072989, 72.899208);
+    print("distanceInMeters: " + distanceInMeters.toString() + " meters");
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-
+    printDistance();
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -83,7 +90,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: screenSize.height * 0.03),
+              SizedBox(height: screenSize.height * 0.02),
               CarouselSlider(
                 items: [
                   Container(
@@ -95,6 +102,27 @@ class _DetailComplaintState extends State<DetailComplaint> {
                         imageUrl: complaint.imageData.url,
                         placeholder: (context, url) => Center(
                             child: Container(
+                                height: 40,
+                                width: 500,
+                                child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.fitHeight,
+                      ),
+                      dark: true,
+                    ),
+                  ),
+
+                  ComplaintMap(latitude: latitude, longitude: longitude),
+
+                  complaint.supervisorImageData.url != null ? Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    child: ImageFullScreenWrapperWidget(
+                      child: CachedNetworkImage(
+                        imageUrl: complaint.supervisorImageData.url,
+                        placeholder: (context, url) => Center(
+                            child: Container(
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator())),
@@ -103,8 +131,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                       ),
                       dark: true,
                     ),
-                  ),
-                  ComplaintMap(latitude: latitude, longitude: longitude),
+                  ):Center(child: Text("Supervisor Image Not Available", style: TextStyle(fontWeight: FontWeight.bold),),),
                 ],
                 options: CarouselOptions(
                   height: screenSize.height * 0.30,
@@ -127,14 +154,17 @@ class _DetailComplaintState extends State<DetailComplaint> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  
                   // sendNotifButton(context, screenSize),
                   trackComplaintButton(context, screenSize),
                   if(complaint.status == "Resolved")
                       raiseIssueButton(context, screenSize)
+
                 ],
               ),
               SizedBox(height: screenSize.height * 0.03),
               commentBar(context, screenSize),
+              SizedBox(height: screenSize.height * 0.01),
             ],
           ),
         ),
@@ -149,7 +179,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
           vertical: screenSize.height * 0.003,
           horizontal: screenSize.width * 0.02),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5), color: Colors.grey[200]),
+          borderRadius: BorderRadius.circular(5), color: Colors.grey[300]),
       child: Column(
         children: [
           Row(
@@ -291,6 +321,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ),
                 ),
                 FlatButton(
+                  
                   onPressed: () async {
                     if (validateAndSave(_formKey)) {
                       String result = await uploadcomments();
@@ -312,7 +343,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     }
                   },
                   child: Text('Post',
-                      style: TextStyle(color: Colors.blue, fontSize: 15)),
+                      style: TextStyle(color: DARK_BLUE, fontSize: 15)),
                 ),
               ],
             ),

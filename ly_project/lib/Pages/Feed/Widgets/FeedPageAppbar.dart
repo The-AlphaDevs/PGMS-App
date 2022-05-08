@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Feed/notifsPage.dart';
@@ -30,14 +31,25 @@ class _FeedPageAppbarState extends State<FeedPageAppbar> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(width: 30),
-        Text('PGMS',
-            style: TextStyle(
-                fontSize: 25.0, color: Colors.white, fontFamily: 'Amaranth')),
+        // Text('PGMS',
+        //     style: TextStyle(
+        //         fontSize: 25.0, color: Colors.white, fontFamily: 'Amaranth')),
+        Container(
+            width: size.width*0.3,
+            height: size.height*0.06,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/head.png"), //adding background image
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
         StreamBuilder(
           stream: notificationStream,
           builder:

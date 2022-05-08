@@ -414,12 +414,24 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   ward =  await getWard(imageLocation.latitude.toString(), imageLocation.longitude.toString());
                                   print("Locality mila: " + ward??"Empty response");
                                   
-                                  if(ward.isEmpty || ward == "" || ward == "Mumbai Suburban district" || !ward.contains("Ward")){
-                                    ward = "Unassigned";
-                                  }else{
-                                    ward = ward.trim();
-                                    ward = ward.replaceAll("Ward", "");
-                                    ward = ward.trim();
+
+                                  if(ward=='null'){
+                                    Navigator.pop(context);
+                                
+                                    await _showErrorDialog(context, "Error",
+                                      'Please upload an image of a pothole in the Mumbai Region.');
+                                    return;
+                                  }
+                                  
+                                  // if(ward.isEmpty || ward == "" || ward == "Mumbai Suburban district" || !ward.contains("Ward")){
+                                  //   ward = "Unassigned";
+                                  // }
+                                  
+                                  else{
+                                    // ward = ward.trim();
+                                    // ward = ward.replaceAll("Ward", "");
+                                    // ward = ward.trim();
+
                                     if(ward.contains("/")){
                                       var split = ward.split("/");
                                       String wardName = split[0];
@@ -461,8 +473,6 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                 _showDialog(context);
 
                                 setState(() => isSubmittingComplaint = true);
-
-                                                              
 
                                 String status = await mixtureofcalls(context, imageLocation, ward);
                                 setState(() => isSubmittingComplaint = false);
@@ -511,22 +521,31 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
   }
 
   Future<String> getWard(String lat, String long) async{
+    print("GET WARD");
+    print("Latitude" + lat);
+    print("Longitude" + long);
+    
     try{
     String url =
-          "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
+          // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
+          "https://pgms-admin.herokuapp.com/getWard?lat=" +
               lat.toString() +
-              "&longitude=" +
-              long.toString() +
-              "&localityLanguage=en";
+              // "&longitude=" +
+              "&long=" +
+              long.toString();
+              // "&localityLanguage=en";
       final response = await http.get(url);
       var responseData = json.decode(response.body);
-      String ward =  responseData['locality'].toString();
-      print("Locality mila: " + ward??"Empty response");
+      print("Response Data: ");
+      print(responseData);
+      // String ward =  responseData['locality'].toString();
+      String ward =  responseData['ward'].toString();
+      print("Ward mila: " + ward??"Empty response");
       return ward;
     }catch(e){
-      print("Error while retrieving ward from imageData");
+      print("Error: " + e.toString());
       print("ImageData:");
-      print("Lat: {lat.toString()}, Long: {long.toString()}");
+      print("Lat: ${lat.toString()}, Long: ${long.toString()}");
       return "";
   }  
 }
