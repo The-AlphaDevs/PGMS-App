@@ -81,8 +81,8 @@ class Complaint{
                 url: null,
             );
           }else{
-            double lat = json["supervisorImageData"]["lat"] != null ? double.parse(json["supervisorImageData"]["lat"]): null ;
-            double long = json["supervisorImageData"]["long"] != null ? double.parse(json["supervisorImageData"]["long"]) : null;
+            double lat = json["supervisorImageData"]["lat"] != null ? json["supervisorImageData"]["lat"]: null ;
+            double long = json["supervisorImageData"]["long"] != null ? json["supervisorImageData"]["long"] : null;
             supervisorImageData = ImageData(
               dateTime:  json["supervisorImageData"]["dateTime"], 
               location: json["supervisorImageData"]["location"], 
