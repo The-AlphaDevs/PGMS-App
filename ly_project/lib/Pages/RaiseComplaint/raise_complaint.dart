@@ -586,6 +586,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
       DocumentReference supervisorDocRef = FirebaseFirestore.instance
           .collection("supervisors")
           .doc(supervisorDoc.id);
+      String dateTime = DateTime.now().toString();
+      String location = _localityController.text.toString();
+      String description = _descriptionController.text.toString().trim();
 
       docname = uuid.v4();
       await FirebaseFirestore.instance
@@ -594,13 +597,13 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
           .set({
         'citizenEmail': emailid,
         'complaint': _grievanceController.text.toString().trim(),
-        'description': _descriptionController.text.toString().trim(),
-        'dateTime': DateTime.now().toString(),
+        'description': description,
+        'dateTime': dateTime,
         "feedback":null,
         'id': docname,
         'imageData': {
-          'dateTime': DateTime.now().toString(),
-          'location': _localityController.text.toString(),
+          'dateTime': dateTime,
+        'location': location.trim(),
           'submittedBy': emailid,
           'lat': imageLat,
           'long': imageLong,
@@ -609,7 +612,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         },
         'latitude': lat.toString(),
         'longitude': long.toString(),
-        'location': _localityController.text.toString().trim(),
+        'location': location.trim(),
         'resolutionDateTime': null,
         'issueReportedDateTime':null,
         'closedDateTime':null,
@@ -632,6 +635,31 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'upvoteCount': 0,
         "ward": ward,
         "wardId": wardId,
+      });
+
+      // set complaint in notif collection of supervisor
+      await FirebaseFirestore.instance
+          .collection('supervisors')
+          .doc(supervisorEmail)
+          .collection('notifications')
+          .doc(docname)
+          .set({
+        'supervisorDocRef': supervisorDocRef,
+        'docId': docname,
+        'id': docname,
+        'ward': ward,
+        'complaint': _grievanceController.text.toString().trim(),
+        'dateTime': dateTime,
+        'status': 'Pending',
+        'imageurl': imageUrl,
+        'location': location.trim(),
+        'supervisorName': supervisorName,
+        'supervisorEmail': supervisorEmail,
+        'latitude': lat.toString(),
+        'longitude': long.toString(),
+        'description': description,
+        'citizenEmail': emailid,
+        'supervisorImageUrl': null
       });
       return "Success";
     } catch (e) {
