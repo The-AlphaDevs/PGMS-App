@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:ly_project/Pages/DetailedComplaint/Scorecard.dart';
 import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
@@ -69,6 +70,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   String location;
   double latitude;
   double longitude;
+  double distanceInMeters;
   String description;
   // String _comment = "";
   // String _name = "";
@@ -113,6 +115,19 @@ class _DetailComplaintState extends State<DetailComplaint> {
   void dispose() async {
     super.dispose();
     await PredictionServices.disposeModel();
+  }
+
+  bool printDistance(double originalImgLat, double originalImgLong, double solveImgLat, double solveImgLong){
+    distanceInMeters = Geolocator.distanceBetween(originalImgLat, originalImgLong, solveImgLat, solveImgLong);
+    print("distanceInMeters: " + distanceInMeters.toString() + " meters");
+    if(distanceInMeters<1.5){
+      print("Image Approved");
+      return true;
+    }
+    else{
+      print("Image Rejected");
+      return false;
+    }
   }
 
   void showSnackbar(String message, [int duration = 3]) {
@@ -400,10 +415,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
                                     return;
                                   },
                                 );
-                                String ward = "unassigned";
+                                String ward = "Unassigned";
                                 if (imageLocation == null) {
                                   await _showErrorDialog(context, "Error",
-                                      "Unable to get image location. Please select an image containg location metadata.");
+                                      "Unable to get image location. Please select an image containing location metadata.");
                                   return;
                                 } else {
                                   print("image ka lat: " +
@@ -415,6 +430,16 @@ class _DetailComplaintState extends State<DetailComplaint> {
                                     lat = imageLocation.latitude;
                                     long = imageLocation.longitude;
                                   });
+
+                                  //check location of solve complaint image from original image
+                                  if(printDistance(double.parse(widget.lat), double.parse(widget.long), imageLocation.latitude, imageLocation.longitude)){
+                                    print("print distance Success!");
+                                  }
+                                  else{
+                                    await _showErrorDialog(
+                                        context, "Error", "Location of the image is " + distanceInMeters.toStringAsFixed(2) + " meters far away from original location. Please try again.");
+                                    return;
+                                  }
                                 }
                       _showDialog(context);
 
