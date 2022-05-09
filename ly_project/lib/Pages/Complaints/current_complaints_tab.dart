@@ -86,8 +86,8 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab>
                     supervisor: snapshot.data.docs[index]["supervisorName"],
                     supervisorEmail: snapshot.data.docs[index]
                         ["supervisorEmail"],
-                    lat: snapshot.data.docs[index]["latitude"],
-                    long: snapshot.data.docs[index]["longitude"],
+                    lat: snapshot.data.docs[index]["imageData"]["lat"],
+                    long: snapshot.data.docs[index]["imageData"]["long"],
                     description: snapshot.data.docs[index]["description"],
                     citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                     upvoteCount: snapshot.data.docs[index]["upvoteCount"],

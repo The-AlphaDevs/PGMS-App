@@ -98,8 +98,8 @@ class _DetailComplaintState extends State<DetailComplaint> {
   @override
   void initState() {
     super.initState();
-    latitude = double.parse(widget.lat);
-    longitude = double.parse(widget.long);
+    latitude = widget.lat;
+    longitude = widget.long;
     String complaint = widget.complaint.toString();
 
     appBarTitle = complaint == null
@@ -237,7 +237,28 @@ class _DetailComplaintState extends State<DetailComplaint> {
                       dark: true,
                     ),
                   ),
+
                   ComplaintMap(latitude: latitude, longitude: longitude),
+
+                  //display supervisor image
+                  widget.supervisorImageUrl != "null" ? Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    child: ImageFullScreenWrapperWidget(
+                      child: CachedNetworkImage(
+                        imageUrl: widget.supervisorImageUrl,
+                        placeholder: (context, url) => Center(
+                            child: Container(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.fitHeight,
+                      ),
+                      dark: true,
+                    ),
+                  ):Center(child: Text("Supervisor Image Not Available", style: TextStyle(fontWeight: FontWeight.bold),),),
                 ],
                 options: CarouselOptions(
                   height: screenSize.height * 0.30,
