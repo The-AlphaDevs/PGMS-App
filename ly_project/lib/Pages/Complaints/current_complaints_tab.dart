@@ -76,6 +76,7 @@ class _CurrentComplaintsTabState extends State<CurrentComplaintsTab>
                         ["supervisorDocRef"],
                     auth: widget.auth,
                     id: snapshot.data.docs[index]["id"],
+                    ward: snapshot.data.docs[index]["ward"],
                     complaint: snapshot.data.docs[index]["complaint"],
                     date: snapshot.data.docs[index]["dateTime"],
                     status: snapshot.data.docs[index]["status"],

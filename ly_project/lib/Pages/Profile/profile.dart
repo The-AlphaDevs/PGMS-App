@@ -11,7 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:ly_project/Utils/colors.dart';
-import 'package:ly_project/Utils/constants.dart';
+import 'package:ly_project/utils/constants.dart';
 
 
 class ProfileScreen extends StatefulWidget {

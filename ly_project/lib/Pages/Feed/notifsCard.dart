@@ -20,6 +20,7 @@ class NotifsCard extends StatefulWidget {
   final supervisorDocRef;
   final supervisorEmail;
   final supervisorImageUrl;
+  final ward;
 
   NotifsCard({
     @required this.id,
@@ -33,6 +34,7 @@ class NotifsCard extends StatefulWidget {
     @required this.supervisor,
     @required this.lat,
     @required this.long,
+    @required this.ward,
     @required this.citizenEmail,
     @required this.docId,
     @required this.supervisorDocRef,
@@ -64,7 +66,7 @@ class _NotifsCardState extends State<NotifsCard> {
                         docId: widget.docId,
                         complaint: widget.complaint,
                         description: widget.description,
-                        // name: widget.name,
+                        ward: widget.ward,
                         date: widget.date,
                         status: widget.status,
                         image: widget.image,

@@ -86,6 +86,7 @@ class _NotificationsState extends State<Notifications> {
                         supervisorEmail: snapshot.data.docs[index]
                             ["supervisorEmail"],
                         lat: snapshot.data.docs[index]["latitude"],
+                        ward: snapshot.data.docs[index]["ward"],
                         long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],

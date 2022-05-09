@@ -37,6 +37,7 @@ class DetailComplaint extends StatefulWidget {
   final docId;
   final supervisorDocRef;
   final supervisorImageUrl;
+  final ward;
 
   DetailComplaint({
     @required this.id,
@@ -52,6 +53,7 @@ class DetailComplaint extends StatefulWidget {
     @required this.long,
     @required this.citizenEmail,
     @required this.docId,
+    @required this.ward,
     @required this.supervisorDocRef,
     @required this.supervisorEmail,
     @required this.supervisorImageUrl,
@@ -136,8 +138,9 @@ class _DetailComplaintState extends State<DetailComplaint> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  AlertDialog approveComplaint(context) {
-    Size screenSize = MediaQuery.of(context).size;
+  AlertDialog approveComplaint(BuildContext context, String updatedStatus) {
+    bool isApproved = updatedStatus.toLowerCase() == "approve";
+
     Widget okButton = OutlinedButton(
       style: ButtonStyle(
         side: MaterialStateProperty.all(BorderSide(color: Colors.green)),
@@ -145,10 +148,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
       ),
-      child: Text("Approve", style: TextStyle(color: Colors.green[900])),
+      child: Text("Yes", style: TextStyle(color: Colors.green[900])),
       onPressed: () async {
         try {
-          await changeStatus(true);
+          await changeStatus(isApproved);
           await FirebaseFirestore.instance.collection('supervisors').doc(widget.supervisorEmail).update({'complaintsAssigned': FieldValue.increment(1)});
           Navigator.pop(context, null);
           Navigator.pop(context, null);
@@ -166,26 +169,15 @@ class _DetailComplaintState extends State<DetailComplaint> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           ),
         ),
-        child: Text("Reject", style: TextStyle(color: Colors.red[900])),
-        onPressed: () async {
-          try {
-            await changeStatus(false);
-            Navigator.pop(context, null);
-            Navigator.pop(context, null);
-          } catch (e) {
-            print("Error in approval!!");
-            print(e);
-          }
-        });
+        child: Text("No", style: TextStyle(color: Colors.red[900])),
+        onPressed: () => Navigator.pop(context, null));
 
     AlertDialog alert = AlertDialog(
-      title: Text("Approval"),
-      content: Text("Do you want to approve this complaint?"),
+      title: Text("Confirmation"),
+      content: Text("Do you want to $updatedStatus this complaint?"),
       actions: [okButton, cancelButton],
       titlePadding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
-      contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 8.0),
-      actionsPadding: EdgeInsets.fromLTRB(
-          screenSize.width * 0.05, 10.0, screenSize.width * 0.18, 5.0),
+      contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 8.0), 
     );
     return alert;
   }
@@ -266,35 +258,13 @@ class _DetailComplaintState extends State<DetailComplaint> {
               complaintDetails(screenSize),
               SizedBox(height: screenSize.height * 0.025),
               widget.status == "Pending"
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          screenSize.width * 0.25,
-                          screenSize.height * 0.005,
-                          screenSize.width * 0.25,
-                          screenSize.height * 0.005),
-                      child: MaterialButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                approveComplaint(context),
-                          );
-                        },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22.0)),
-                        color: Colors.blue,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check_circle_outline_outlined,
-                                color: Colors.white),
-                            SizedBox(width: 10),
-                            Text("Approve",
-                                style: TextStyle(color: Colors.white))
-                          ],
-                        ),
-                      ),
-                    )
+                  ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      approveComplaintButton(context, screenSize),
+                      rejectComplaintButton(context, screenSize)
+                    ],
+                  )
                   : widget.status == "In Progress"
                       ? file == null
                           ? Padding(
@@ -375,6 +345,88 @@ class _DetailComplaintState extends State<DetailComplaint> {
           ),
         ),
       ),
+    );
+  }
+
+Row rejectComplaintButton(BuildContext context, Size screenSize) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.03,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: FlatButton(
+              onPressed: () => {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => approveComplaint(context, "reject"))
+              },
+              color: Colors.red,
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.012,
+                  horizontal: screenSize.width * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.close,
+                    size: 20,
+                  ),
+                  SizedBox(width: screenSize.width * 0.01),
+                  Text("Reject")
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+Row approveComplaintButton(BuildContext context, Size screenSize) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.03,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: FlatButton(
+              onPressed: () => {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => approveComplaint(context, "Approve"))
+              },
+              color: Colors.green,
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.012,
+                  horizontal: screenSize.width * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check,
+                    size: 20,
+                  ),
+                  SizedBox(width: screenSize.width * 0.01),
+                  Text("Approve")
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -519,6 +571,26 @@ class _DetailComplaintState extends State<DetailComplaint> {
               ),
               Text(
                 widget.location ?? "Complaint Location",
+                style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height * 0.008),
+          Row(
+            children: [
+              Container(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  'Ward: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                widget.ward ?? "Complaint Ward",
                 style: TextStyle(fontSize: 15, color: Colors.grey[800]),
               ),
             ],
@@ -718,7 +790,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
   //   }
   // }
 
-  Future<void> changeStatus(approve) async {
+  Future<void> changeStatus(bool approve) async {
     if (approve) {
       try {
         await FirebaseFirestore.instance
@@ -982,6 +1054,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   'supervisorDocRef': widget.supervisorDocRef,
                   'docId': widget.docId,
                   'id': widget.id,
+                  'ward': widget.ward,
                   'complaint': widget.complaint,
                   'dateTime': widget.date,
                   'status': 'In Progress',

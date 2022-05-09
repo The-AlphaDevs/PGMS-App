@@ -24,6 +24,7 @@ class ComplaintOverviewCard extends StatefulWidget {
   final supervisorDocRef;
   final supervisorEmail;
   final supervisorImageUrl;
+  final ward;
 
   ComplaintOverviewCard({
     @required this.id,
@@ -43,7 +44,8 @@ class ComplaintOverviewCard extends StatefulWidget {
     @required this.overdue,
     @required this.supervisorDocRef,
     @required this.supervisorEmail,
-    @required this.supervisorImageUrl,
+    @required this.supervisorImageUrl, 
+    @required this.ward,
 
   });
   @override
@@ -95,7 +97,8 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   citizenEmail: widget.citizenEmail,
                   supervisorDocRef: widget.supervisorDocRef,
                   supervisorEmail: widget.supervisorEmail,
-                  supervisorImageUrl: widget.supervisorImageUrl,
+                  supervisorImageUrl: widget.supervisorImageUrl, 
+                  ward: widget.ward,
                 ),
               ),
             );
@@ -193,13 +196,12 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             children: [
                               Container(
                                 // width: size.width*0.08,
-                                height: size.height * 0.035,
+                                height: size.height * 0.032,
                                 child: Text(
                                   upvoteCount.toString(),
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyle(fontSize: 15),
                                 ),
                               ),
-                              // SizedBox(height: size.height*0.00),
                               Text(
                                 "Upvotes",
                                 style:
@@ -208,12 +210,6 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                             ],
                           ),
                           SizedBox(width: size.width * 0.03),
-                          InkWell(
-                            onTap: () => print("Bookmarked!"),
-                            borderRadius: BorderRadius.circular(20),
-                            child: Icon(Icons.bookmark_border_rounded,
-                                size: size.height * 0.03, color: Colors.grey),
-                          ),
                         ],
                       ),
                     ],

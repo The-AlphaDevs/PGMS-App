@@ -81,6 +81,7 @@ class _FeedTabState extends State<FeedTab> {
                       docId: snapshot.data.docs[index].id,
                       supervisorDocRef: snapshot.data.docs[index]["supervisorDocRef"],
                       id: snapshot.data.docs[index]["id"],
+                      ward: snapshot.data.docs[index]["ward"],
                       auth: widget.auth,
                       complaint: snapshot.data.docs[index]["complaint"],
                       date: snapshot.data.docs[index]["dateTime"],
