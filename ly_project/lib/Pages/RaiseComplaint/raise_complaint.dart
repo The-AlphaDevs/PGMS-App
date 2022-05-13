@@ -655,8 +655,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
         'location': location.trim(),
         'supervisorName': supervisorName,
         'supervisorEmail': supervisorEmail,
-        'latitude': lat.toString(),
-        'longitude': long.toString(),
+        'latitude': lat,
+        'longitude': long,
         'description': description,
         'citizenEmail': emailid,
         'supervisorImageUrl': null
