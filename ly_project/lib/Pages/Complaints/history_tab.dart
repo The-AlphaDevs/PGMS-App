@@ -69,11 +69,32 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab>
                           : snapshot.data.docs[index]['supervisorImageData']
                               ['url'];
                   return ComplaintOverviewCard(
+                    // docId: snapshot.data.docs[index].id,
+                    // supervisorDocRef: snapshot.data.docs[index]
+                    //     ["supervisorDocRef"],
+                    // supervisorEmail: snapshot.data.docs[index]
+                    //     ["supervisorEmail"],
+                    // auth: widget.auth,
+                    // id: snapshot.data.docs[index]["id"],
+                    // ward: snapshot.data.docs[index]["ward"],
+                    // complaint: snapshot.data.docs[index]["complaint"],
+                    // date: snapshot.data.docs[index]["dateTime"],
+                    // status: snapshot.data.docs[index]["status"],
+                    // image: snapshot.data.docs[index]["imageData"]["url"],
+                    // location: snapshot.data.docs[index]["imageData"]
+                    //     ["location"],
+                    // supervisor: snapshot.data.docs[index]["supervisorName"],
+                    // lat: snapshot.data.docs[index]["latitude"],
+                    // long: snapshot.data.docs[index]["longitude"],
+                    // description: snapshot.data.docs[index]["description"],
+                    // citizenEmail: snapshot.data.docs[index]["citizenEmail"],
+                    // upvoteCount: snapshot.data.docs[index]["upvoteCount"],
+                    // overdue: snapshot.data.docs[index]["overdue"],
+                    // supervisorImageUrl: supervisorImageUrl,
+
                     docId: snapshot.data.docs[index].id,
                     supervisorDocRef: snapshot.data.docs[index]
                         ["supervisorDocRef"],
-                    supervisorEmail: snapshot.data.docs[index]
-                        ["supervisorEmail"],
                     auth: widget.auth,
                     id: snapshot.data.docs[index]["id"],
                     ward: snapshot.data.docs[index]["ward"],
@@ -84,8 +105,10 @@ class _ComplaintsHistoryTabState extends State<ComplaintsHistoryTab>
                     location: snapshot.data.docs[index]["imageData"]
                         ["location"],
                     supervisor: snapshot.data.docs[index]["supervisorName"],
-                    lat: snapshot.data.docs[index]["latitude"],
-                    long: snapshot.data.docs[index]["longitude"],
+                    supervisorEmail: snapshot.data.docs[index]
+                        ["supervisorEmail"],
+                    lat: snapshot.data.docs[index]["imageData"]["lat"],
+                    long: snapshot.data.docs[index]["imageData"]["long"],
                     description: snapshot.data.docs[index]["description"],
                     citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                     upvoteCount: snapshot.data.docs[index]["upvoteCount"],

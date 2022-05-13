@@ -241,7 +241,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                   ComplaintMap(latitude: latitude, longitude: longitude),
 
                   //display supervisor image
-                  widget.supervisorImageUrl != "null" ? Container(
+                  widget.supervisorImageUrl != null ? Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                     ),
@@ -471,6 +471,7 @@ Row approveComplaintButton(BuildContext context, Size screenSize) {
                       setState(() => isProcessingImage = true);
                       bool isPotholeDetected = await checkForPotholes();
                       setState(() => isProcessingImage = false);
+                      return;
 
                       if (isPotholeDetected) {
                         await _showErrorDialog(context, "Error",
@@ -505,7 +506,7 @@ Row approveComplaintButton(BuildContext context, Size screenSize) {
                                   });
 
                                   //check location of solve complaint image from original image
-                                  if(printDistance(double.parse(widget.lat), double.parse(widget.long), imageLocation.latitude, imageLocation.longitude)){
+                                  if(printDistance(widget.lat, widget.long, imageLocation.latitude, imageLocation.longitude)){
                                     print("print distance Success!");
                                   }
                                   else{
@@ -1142,7 +1143,7 @@ Row approveComplaintButton(BuildContext context, Size screenSize) {
   Future<bool> checkForPotholes() async {
     if (isModelLoaded && file != null) {
       final output = await PredictionServices.classifyImage(file);
-      print(output.toString());
+      // print(output.toString());
       return output.isNotEmpty;
     }
     return false;

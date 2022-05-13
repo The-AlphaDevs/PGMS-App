@@ -9,6 +9,7 @@ class PredictionServices {
       useGpuDelegate: true,
       numThreads: 1,
     );
+    print("Model result: " + result);
     return result;  
   }
 
@@ -21,6 +22,8 @@ class PredictionServices {
           numResults: 2,
           threshold: 0.2,
           asynch: true);
+      print("classify image output: " );
+      print(output);
       return output;
     } catch (e) {
       print("Error in image classification.");

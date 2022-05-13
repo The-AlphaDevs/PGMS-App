@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ly_project/Pages/Performance/PerformanceTab/DonutChart.dart';
 import 'package:ly_project/Pages/Performance/PerformanceTab/Shimmers/ShimmerScorecard.dart';
@@ -16,7 +17,7 @@ class PersonalPerformance extends StatefulWidget {
 
 class _PersonalPerformanceState extends State<PersonalPerformance>
     with AutomaticKeepAliveClientMixin<PersonalPerformance> {
-  String email = "dummysupervisor@gmail.com";
+  String email = FirebaseAuth.instance.currentUser.email;
   @override
   Widget build(BuildContext context) {
     super.build(context);

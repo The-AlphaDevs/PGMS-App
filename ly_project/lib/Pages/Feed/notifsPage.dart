@@ -74,7 +74,7 @@ class _NotificationsState extends State<Notifications> {
                       return NotifsCard(
                         supervisorDocRef: snapshot.data.docs[index]
                             ["supervisorDocRef"],
-                        docId: snapshot.data.docs[index]['docId'],
+                        docId: snapshot.data.docs[index]["docId"],
                         id: snapshot.data.docs[index]["id"],
                         auth: widget.auth,
                         complaint: snapshot.data.docs[index]["complaint"],
@@ -85,9 +85,9 @@ class _NotificationsState extends State<Notifications> {
                         supervisor: snapshot.data.docs[index]["supervisorName"],
                         supervisorEmail: snapshot.data.docs[index]
                             ["supervisorEmail"],
-                        lat: snapshot.data.docs[index]["latitude"],
+                        lat: double.parse(snapshot.data.docs[index]["latitude"]),
                         ward: snapshot.data.docs[index]["ward"],
-                        long: snapshot.data.docs[index]["longitude"],
+                        long: double.parse(snapshot.data.docs[index]["longitude"]),
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                         supervisorImageUrl: snapshot.data.docs[index]["supervisorImageUrl"],
