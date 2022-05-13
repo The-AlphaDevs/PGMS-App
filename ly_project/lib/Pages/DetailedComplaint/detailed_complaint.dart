@@ -670,7 +670,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                     size: 20,
                   ),
                   SizedBox(width: screenSize.width * 0.01),
-                  Text("Raise issue")
+                  Text("Report Issue")
                 ],
               ),
             ),
