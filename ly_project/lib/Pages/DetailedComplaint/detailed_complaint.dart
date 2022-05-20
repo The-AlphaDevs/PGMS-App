@@ -11,7 +11,7 @@ import 'package:ly_project/Pages/TrackComplaint/track_complaint.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ly_project/Services/ImageLocationServices.dart';
+import 'package:ly_project/Services/imageLocationServices.dart';
 import 'package:ly_project/Services/PredictonServices.dart';
 import 'package:ly_project/Services/StorageServices.dart';
 import 'package:ly_project/Services/auth.dart';
@@ -471,7 +471,7 @@ Row approveComplaintButton(BuildContext context, Size screenSize) {
                       setState(() => isProcessingImage = true);
                       bool isPotholeDetected = await checkForPotholes();
                       setState(() => isProcessingImage = false);
-                      return;
+
 
                       if (isPotholeDetected) {
                         await _showErrorDialog(context, "Error",

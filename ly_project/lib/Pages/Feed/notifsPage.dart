@@ -85,9 +85,9 @@ class _NotificationsState extends State<Notifications> {
                         supervisor: snapshot.data.docs[index]["supervisorName"],
                         supervisorEmail: snapshot.data.docs[index]
                             ["supervisorEmail"],
-                        lat: double.parse(snapshot.data.docs[index]["latitude"]),
+                        lat: snapshot.data.docs[index]["latitude"],
                         ward: snapshot.data.docs[index]["ward"],
-                        long: double.parse(snapshot.data.docs[index]["longitude"]),
+                        long: snapshot.data.docs[index]["longitude"],
                         description: snapshot.data.docs[index]["description"],
                         citizenEmail: snapshot.data.docs[index]["citizenEmail"],
                         supervisorImageUrl: snapshot.data.docs[index]["supervisorImageUrl"],
