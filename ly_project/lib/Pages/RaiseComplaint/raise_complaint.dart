@@ -369,6 +369,9 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                             color: DARK_BLUE,
                             onPressed: () async {
                               if (validateAndSave(_formKey)) {
+                                // setState(() => isSubmittingComplaint = true);
+                                // return;
+                                
                                 FocusScope.of(context).unfocus();
 
                                 if (lat == null && long == null) {
@@ -410,6 +413,8 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                     lat = imageLocation.latitude;
                                     long = imageLocation.longitude;
                                   });
+
+                                  setState(() => isProcessingImage = true);
 
                                   ward =  await getWard(imageLocation.latitude.toString(), imageLocation.longitude.toString());
                                   print("Locality mila: " + ward??"Empty response");
@@ -459,7 +464,7 @@ class _RaiseComplaintState extends State<RaiseComplaint> {
                                   print("Formatted Ward: $ward");
                                 }
 
-                                setState(() => isProcessingImage = true);
+                                
                                 bool isPotholeDetected =
                                     await checkForPotholes();
                                 setState(() => isProcessingImage = false);

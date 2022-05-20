@@ -58,8 +58,10 @@ class _DetailComplaintState extends State<DetailComplaint> {
   void initState() {
     super.initState();
     complaint = widget.complaint;
-    latitude = double.parse(complaint.latitude);
-    longitude = double.parse(complaint.longitude);
+    // latitude = double.parse(complaint.latitude);
+    latitude = complaint.imageData.lat;
+    // longitude = double.parse(complaint.longitude);
+    longitude = complaint.imageData.long;
     String complaintStr = complaint.complaint.toString();
     appBarTitle =
         "${complaintStr.substring(0, complaintStr.length > 25 ? 25 : complaintStr.length)} ${complaintStr.length > 25 ? '...' : ''}";
@@ -253,6 +255,7 @@ class _DetailComplaintState extends State<DetailComplaint> {
                                         name: snapshot.data.docs[index]["name"],
                                         comment: snapshot.data.docs[index]
                                             ["comment"],
+                                        timestamp: snapshot.data.docs[index]["timestamp"]
                                       );
                                     },
                                   );

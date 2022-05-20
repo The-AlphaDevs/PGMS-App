@@ -38,13 +38,14 @@ class StatsCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(title,
-                    style: TextStyle(fontSize: 16, color: Colors.grey[900]),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[900]),
                     textAlign: TextAlign.center)
               ),
               SizedBox(height: size.height * 0.01),
               Text(count, style: TextStyle(fontSize: 20)),
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.005),
               Text(points, style: TextStyle(color: pointsColor)),
+              // SizedBox(height: size.height * 0.01),
             ],
           ),
         ),

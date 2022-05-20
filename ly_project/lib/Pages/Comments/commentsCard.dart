@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ly_project/utils/colors.dart';
+import 'package:intl/intl.dart';
 
 class CommentsCard extends StatefulWidget {
   final photo;
   final name;
   final comment;
+  final timestamp;
 
-  CommentsCard({this.photo, this.name, this.comment});
+  CommentsCard({this.photo, this.name, this.comment, this.timestamp});
   @override
   _CommentsCardState createState() => _CommentsCardState();
 }
@@ -21,6 +23,7 @@ class _CommentsCardState extends State<CommentsCard> {
     super.initState();
     isExpanded = widget.comment.length < 100;
     showOrHideReadMore = widget.comment.length >= 100;
+    print("isExpanded: " + isExpanded.toString());
   }
 
   @override
@@ -47,9 +50,18 @@ class _CommentsCardState extends State<CommentsCard> {
             ),
           ),
         ),
-        title: Text(
-          widget.name,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.name,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(
+                DateFormat.yMMMMd().format(DateTime.parse(widget.timestamp)),
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: Colors.grey),
+              ),
+          ],
         ),
         subtitle: InkWell(
           onTap: () {
@@ -59,13 +71,14 @@ class _CommentsCardState extends State<CommentsCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height:size.height*0.001),
               Text(
-                isExpanded
-                    ? widget.comment 
-                    : widget.comment.toString().substring(0, 100) + (showOrHideReadMore ? "..." : ""),
-                style: TextStyle(fontSize: 15),
+                // isExpanded
+                widget.comment,
+                    // : widget.comment.toString().substring(0, 100) + (showOrHideReadMore ? "..." : ""),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
               ),
-              SizedBox(height:3),
+              SizedBox(height:size.height*0.001),
               Text(
                 isExpanded
                     ? (showOrHideReadMore ? "collapse" : "")
@@ -73,6 +86,12 @@ class _CommentsCardState extends State<CommentsCard> {
                         (showOrHideReadMore ? "read more" : ""),
                 style: TextStyle(fontSize: 13, color: Colors.blue),
               ),
+              SizedBox(height:size.height*0.0005),
+              // Text(
+                
+              //   DateFormat.yMMMMd().format(DateTime.parse(widget.timestamp)),
+              //   style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: Colors.grey),
+              // ),
             ],
           ),
         ),

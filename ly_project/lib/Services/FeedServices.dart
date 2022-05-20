@@ -4,6 +4,7 @@ class FeedServices {
   static get complaintStream => FirebaseFirestore.instance
       .collection("complaints")
       .where("status", whereIn: ["Pending", "In Progress"])
+      // .where("")
       .orderBy("upvoteCount", descending: true)
       .snapshots()
       .distinct();
